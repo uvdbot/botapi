@@ -1,0 +1,50 @@
+name: Build API scheme
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install httpx beautifulsoup4 pydantic
+
+      - name: Run build script
+        run: |
+          python compiler.py
+
+      - name: Update version to match the date
+        run: |
+          VERSION=$(date +'%Y.%m.%d')
+          sed -i "s/version=.*/version=\"$VERSION\",/" setup.py
+
+      - name: Commit changes
+        run: |
+          VERSION=$(date +'%Y.%m.%d')
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Updated to $VERSION"
+          git push || true
