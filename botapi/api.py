@@ -12,7 +12,7 @@ import orjson
 
 log = logging.getLogger(__name__)
 
-class BotAPI(BaseModel,  Methods, arbitrary_types_allowed=True):
+class BotAPI(BaseModel, Methods, arbitrary_types_allowed=True):
     token: str
     api_url: str = "https://api.telegram.org"
     parse_mode: str = "HTML"
