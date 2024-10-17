@@ -13,6 +13,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_USERNAME: stefanodvx
+      GITHUB_EMAIL: 69367859+stefanodvx@users.noreply.github.com
 
     permissions:
       contents: write
@@ -43,8 +46,8 @@ jobs:
       - name: Commit changes
         run: |
           VERSION=$(date +'%Y.%m.%d')
-          git config --local user.name "GitHub Actions"
-          git config --local user.email "actions@github.com"
+          git config --local user.name "${{ env.GITHUB_USERNAME }}"
+          git config --local user.email "${{ env.GITHUB_EMAIL }}"
           git add .
           git diff-index --quiet HEAD || git commit -m "Updated to $VERSION"
           git push || true

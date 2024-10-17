@@ -12,20 +12,11 @@ import orjson
 
 log = logging.getLogger(__name__)
 
-session = httpx.AsyncClient(timeout=120)
-
-class BotAPI(
-    BaseModel,
-    Methods,
-):
-    class Config:
-        arbitrary_types_allowed = True
-
+class BotAPI(BaseModel,  Methods, arbitrary_types_allowed=True):
     token: str
     api_url: str = "https://api.telegram.org"
-    parse_mode: str = Field(default="HTML")
-    
-    session: httpx.AsyncClient = None
+    parse_mode: str = "HTML"
+    session: httpx.AsyncClient = httpx.AsyncClient(timeout=120)
 
     def _compose_api_url(self, method: str) -> str:
         return f"{self.api_url}/bot{self.token}/{method}"
@@ -53,7 +44,7 @@ class BotAPI(
     
     async def _send_request(self, method: str, data: Dict) -> Any:
         converted_data = BotAPI._convert_data(data)
-        request = await session.post(
+        request = await self.session.post(
             url=self._compose_api_url(method),
             data=converted_data,
         )
