@@ -14,7 +14,7 @@ This wrapper uses `orjson`, which is a much faster Cython json utility. Every me
 
 ## TODO
 - [ ] Bound methods
-- [ ] More costumization
+- [ ] More customization
 - [ ] Improved dispatcher and built-in support for `getUpdates`
 
 ---
