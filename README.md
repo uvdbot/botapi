@@ -1,2 +1,22 @@
-# botapi
-Autogeneratated Telegram BotAPI wrapper in Python
+## Fully updated
+All models and methods are automatically generated and updated from official BotAPI documentation.
+
+## Built-in dispatcher
+Built-in dispatcher for Webhook updates and Smart Plugins (load handler files from a directory)
+
+## Fast and Async
+This wrapper uses orjson, which is a much faster Cython json utility. Every method is fully async, with httpx.
+
+## Other...
+* Easy and accurata type hintings
+* Handlers decorators
+* Global parameters (e.g.: parse_mode)
+
+## TODO
+- [ ] Bound methods
+- [ ] More costumization
+- [ ] Improved dispatcher and built-in support for getUpdates
+
+---
+
+Feel free to open Issues and Pull Requests.
