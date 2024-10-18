@@ -185,7 +185,11 @@ def start_value(value: str | re.Pattern) -> Filter:
     Filter for the start command with a specific value.
     """
     def func(flt: Any, api: botapi.BotAPI, update: Update) -> bool:
-        if not text_filter(flt, api, update):
+        if not update.message:
+            return False
+        if not update.message.text:
+            return False
+        if not update.message.text.startswith("/"):
             return False
         command_args = update.message.text.split()
         if not len(command_args) > 1:
@@ -209,7 +213,7 @@ def regex(pattern: str | re.Pattern) -> Filter:
     """
     def func(flt: Any, api: botapi.BotAPI, update: Update) -> bool:
         return (
-            text_filter(flt, api, update) and
+            bool(update.message) and bool(update.message.text) and
             (re.match(flt.pattern, update.message.text) if
             isinstance(flt.pattern , str) else
             flt.pattern.match(update.message.text))
