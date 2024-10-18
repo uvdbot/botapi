@@ -15,12 +15,13 @@ import logging
 
 log = logging.getLogger(__name__)
 
-class Dispatcher(BaseModel):
-    handlers_path: Path
-    handlers: List[Handler] = []
-
-    class Config:
-        arbitrary_types_allowed = True
+class Dispatcher:
+    def __init__(
+        self,
+        handlers_path: Path,
+    ):
+        self.handlers_path: Path = handlers_path
+        self.handlers: List[Handler] = []
 
     # Dynamically import and load every handler
     def load_handlers(self):

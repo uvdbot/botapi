@@ -3,25 +3,36 @@ from __future__ import annotations
 from botapi.errors import TelegramAPIError
 from botapi.methods import Methods
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 
-import threading
 import logging
 import httpx
 import orjson
 
 log = logging.getLogger(__name__)
 
-class BotAPI(BaseModel, Methods):
-    token: str
-    api_url: str = "https://api.telegram.org"
-    parse_mode: str = "HTML"
-    session: httpx.AsyncClient = httpx.AsyncClient(timeout=120)
-    sudoers: List[int] = Field(default_factory=list)
+class BotAPI(Methods):
+    def __init__(
+        self,
+        token: str,
+        api_url: str = "https://api.telegram.org",
+        parse_mode: Optional[str] = None,
+        session: Optional[httpx.AsyncClient] = None,
+        sudoers: Optional[List[int]] = None
 
-    class Config:
-        arbitrary_types_allowed = True
+    ):
+        self.token: str = token
+        self.api_url: str = api_url
+        self.parse_mode: Optional[str] = parse_mode or "HTML"
+        self.session: httpx.AsyncClient = session or httpx.AsyncClient(timeout=120)
+        self.sudoers: List[int] = sudoers or []
+
+        assert isinstance(self.token, str)
+        assert isinstance(self.api_url, str)
+        assert isinstance(self.parse_mode, str)
+        assert isinstance(self.session, httpx.AsyncClient)
+        assert isinstance(self.sudoers, list)
 
     def _compose_api_url(self, method: str) -> str:
         return f"{self.api_url}/bot{self.token}/{method}"
