@@ -16,11 +16,13 @@ class BotAPI(BaseModel, Methods):
     token: str
     api_url: str = "https://api.telegram.org"
     parse_mode: str = "HTML"
-    session: httpx.AsyncClient = httpx.AsyncClient(timeout=120)
+    session: httpx.AsyncClient = Field(
+        default=httpx.AsyncClient(timeout=120))
     sudoers: List[int] = Field(default_factory=list)
 
     class Config:
         arbitrary_types_allowed = True
+
 
     def _compose_api_url(self, method: str) -> str:
         return f"{self.api_url}/bot{self.token}/{method}"
