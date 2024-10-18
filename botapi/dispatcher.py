@@ -6,10 +6,11 @@ from botapi.handlers import (
     Handler
 )
 from botapi.filters import Filter
-from pydantic import BaseModel
+from botapi.types import Update
 from typing import Optional, Callable, List
 from pathlib import Path
 
+import botapi
 import importlib
 import logging
 
@@ -39,6 +40,14 @@ class Dispatcher:
                 n += 1
         load(self.handlers_path)
         log.info(f"Handlers imported ({n})")
+
+    async def handle_update(
+        self,
+        api: botapi.BotAPI,
+        update: Update,
+    ):
+        for handler in self.handlers:
+            await handler.run(api, update)
 
     def message(self, filters: Optional[Filter] = None):
         def decorator(func: Callable) -> Callable:
