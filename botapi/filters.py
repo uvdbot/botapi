@@ -8,7 +8,7 @@ import re
 class Filter:
     def __call__(
         self,
-        client: botapi.BotAPI,
+        api: botapi.BotAPI,
         update: Update
     ):
         return NotImplementedError
@@ -28,10 +28,10 @@ class InvertFilter(Filter):
 
     def __call__(
         self,
-        client: botapi.BotAPI,
+        api: botapi.BotAPI,
         update: Update
     ):
-        return not self.filter(client, update)
+        return not self.filter(api, update)
 
 class AndFilter(Filter):
     def __init__(self, *filters: Filter):
@@ -39,11 +39,11 @@ class AndFilter(Filter):
 
     def __call__(
         self,
-        client: botapi.BotAPI,
+        api: botapi.BotAPI,
         update: Update
     ):
         return all(
-            filter(client, update)
+            filter(api, update)
             for filter in self.filters
         )
 
@@ -53,11 +53,11 @@ class OrFilter(Filter):
 
     def __call__(
         self,
-        client: botapi.BotAPI,
+        api: botapi.BotAPI,
         update: Update
     ):
         return any(
-            filter(client, update)
+            filter(api, update)
             for filter in self.filters
         )
 

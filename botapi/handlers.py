@@ -30,8 +30,6 @@ class MessageHandler(Handler):
         if not bool(update.message):
             return False
         if callable(self.filters):
-            import inspect
-            print(inspect.signature(self.filters).parameters)
             return self.filters(api, update)
         return True
 
@@ -44,7 +42,6 @@ class CallbackQueryHandler(Handler):
         if not bool(update.callback_query):
             return False
         if callable(self.filters):
-            return False
             return self.filters(api, update)
         return True
 
