@@ -139,13 +139,13 @@ url = create_filter(url_filter)
 
 def sudo_filter(_, api: botapi.BotAPI, update: Update) -> bool:
     return (
-            bool(update.message) and
-            bool(update.message.from_user) and
-            update.message.from_user.id in api.sudoers
+        bool(update.message) and
+        bool(update.message.from_user) and
+        update.message.from_user.id in api.sudoers
     ) or (
-            bool(update.callback_query) and
-            bool(update.callback_query.from_user) and
-            update.callback_query.from_user.id in api.sudoers
+        bool(update.callback_query) and
+        bool(update.callback_query.from_user) and
+        update.callback_query.from_user.id in api.sudoers
     )
 sudo = create_filter(sudo_filter)
 """Filter for sudo users"""
@@ -207,15 +207,15 @@ def regex(pattern: str | re.Pattern) -> Filter:
     """
     def func(flt: Any, api: botapi.BotAPI, update: Update) -> bool:
         return (
-                text_filter(flt, api, update) and
-                (re.match(flt.pattern, update.message.text) if
-                isinstance(flt.pattern , str) else
-                flt.pattern.match(update.message.text))
+            text_filter(flt, api, update) and
+            (re.match(flt.pattern, update.message.text) if
+            isinstance(flt.pattern , str) else
+            flt.pattern.match(update.message.text))
         ) or (
-                bool(update.callback_query) and
-                (re.match(flt.pattern, update.callback_query.data)
-                if isinstance(flt.pattern, str) else
-                flt.pattern.match(update.callback_query.data))
+            bool(update.callback_query) and
+            (re.match(flt.pattern, update.callback_query.data)
+            if isinstance(flt.pattern, str) else
+            flt.pattern.match(update.callback_query.data))
         )
     return create_filter(
         func,

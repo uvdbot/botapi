@@ -30,6 +30,8 @@ class MessageHandler(Handler):
         if not bool(update.message):
             return False
         if callable(self.filters):
+            import inspect
+            print(inspect.signature(self.filters).parameters)
             return self.filters(api, update)
         return True
 
