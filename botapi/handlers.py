@@ -7,17 +7,17 @@ import botapi
 
 class Handler:
     def __init__(
-            self,
-            callback: Callable,
-            filters: Filter,
+        self,
+        callback: Callable,
+        filters: Filter,
     ):
         self.callback = callback
         self.filters = filters
 
     def check(
-            self,
-            api: botapi.BotAPI,
-            update: Update
+        self,
+        api: botapi.BotAPI,
+        update: Update
     ):
         pass
 
