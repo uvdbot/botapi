@@ -4,8 +4,9 @@ from botapi.errors import TelegramAPIError
 from botapi.methods import Methods
 
 from pydantic import BaseModel, Field
-from typing import Dict, Any, List
+from typing import Optional, Dict, Any, List
 
+import threading
 import logging
 import httpx
 import orjson
@@ -18,6 +19,15 @@ class BotAPI(BaseModel, Methods):
     parse_mode: str = "HTML"
     session: httpx.AsyncClient = httpx.AsyncClient(timeout=120)
     sudoers: List[int] = Field(default_factory=list)
+
+    lock: Optional[type(threading.Lock())] = Field(
+        exclude=True,
+        title="lock"
+    )
+    rlock: Any = Field(
+        exclude=True,
+        title="rlock"
+    )
 
     class Config:
         arbitrary_types_allowed = True
