@@ -71,10 +71,6 @@ def create_filter(
         (Filter,),
         {"__call__": func, **kwargs}
     )
-    print(str(filter))
-    print(repr(filter))
-    print(str(filter()))
-    print(repr(filter()))
     return filter()
 
 def text_filter(_, __, update: Update) -> bool:

@@ -42,6 +42,7 @@ class CallbackQueryHandler(Handler):
         if not bool(update.callback_query):
             return False
         if callable(self.filters):
+            return False
             return self.filters(api, update)
         return True
 
