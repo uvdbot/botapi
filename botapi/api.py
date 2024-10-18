@@ -4,7 +4,7 @@ from botapi.errors import TelegramAPIError
 from botapi.methods import Methods
 
 from pydantic import BaseModel, Field
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 import logging
 import httpx
@@ -17,6 +17,7 @@ class BotAPI(BaseModel, Methods, arbitrary_types_allowed=True):
     api_url: str = "https://api.telegram.org"
     parse_mode: str = "HTML"
     session: httpx.AsyncClient = httpx.AsyncClient(timeout=120)
+    sudoers: List[int] = Field(default_factory=list)
 
     def _compose_api_url(self, method: str) -> str:
         return f"{self.api_url}/bot{self.token}/{method}"
