@@ -20,18 +20,8 @@ class BotAPI(BaseModel, Methods):
     session: httpx.AsyncClient = httpx.AsyncClient(timeout=120)
     sudoers: List[int] = Field(default_factory=list)
 
-    lock: Optional[type(threading.Lock())] = Field(
-        exclude=True,
-        title="lock"
-    )
-    rlock: Any = Field(
-        exclude=True,
-        title="rlock"
-    )
-
     class Config:
         arbitrary_types_allowed = True
-        copy_on_model_validation = False
 
     def _compose_api_url(self, method: str) -> str:
         return f"{self.api_url}/bot{self.token}/{method}"
