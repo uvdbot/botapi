@@ -30,6 +30,7 @@ class MessageHandler(Handler):
         if not bool(update.message):
             return False
         if callable(self.filters):
+            return False
             return self.filters(api, update)
         return True
 
