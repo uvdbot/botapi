@@ -7,22 +7,22 @@ import botapi
 
 class Handler:
     def __init__(
-        self,
-        callback: Callable,
-        filters: Filter,
+            self,
+            callback: Callable,
+            filters: Filter,
     ):
         self.callback = callback
         self.filters = filters
 
-    async def run(
-        self,
-        api: botapi.BotAPI,
-        update: Update
+    def check(
+            self,
+            api: botapi.BotAPI,
+            update: Update
     ):
         pass
 
 class MessageHandler(Handler):
-    async def run(
+    def check(
         self,
         api: botapi.BotAPI,
         update: Update
@@ -30,41 +30,35 @@ class MessageHandler(Handler):
         if not bool(update.message):
             return False
         if callable(self.filters):
-            if self.filters(api, update):
-                return await self.callback(api, update)
-            return False
+            return self.filters(api, update)
         return True
-    
+
 class CallbackQueryHandler(Handler):
-    async def run(
+    def check(
         self,
-        api: botapi.api.BotAPI,
-        update: botapi.types.Update
+        api: botapi.BotAPI,
+        update: Update
     ):
         if not bool(update.callback_query):
             return False
         if callable(self.filters):
-            if self.filters(api, update):
-                return await self.callback(api, update)
-            return False
+            return self.filters(api, update)
         return True
-    
+
 class InlineQueryHandler(Handler):
-    async def run(
+    def check(
         self,
-        api: botapi.api.BotAPI,
-        update: botapi.types.Update
+        api: botapi.BotAPI,
+        update: Update
     ):
         if not bool(update.inline_query):
             return False
         if callable(self.filters):
-            if self.filters(api, update):
-                return await self.callback(api, update)
-            return False
+            return self.filters(api, update)
         return True
-    
+
 class ChosenInlineResultHandler(Handler):
-    async def run(
+    def check(
         self,
         api: botapi.api.BotAPI,
         update: botapi.types.Update
@@ -72,7 +66,5 @@ class ChosenInlineResultHandler(Handler):
         if not bool(update.chosen_inline_result):
             return False
         if callable(self.filters):
-            if self.filters(api, update):
-                return await self.callback(api, update)
-            return False
+            return self.filters(api, update)
         return True

@@ -6,7 +6,7 @@ import botapi
 import re
 
 class Filter:
-    async def __call__(
+    def __call__(
         self,
         client: botapi.BotAPI,
         update: Update

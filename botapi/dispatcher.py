@@ -47,7 +47,8 @@ class Dispatcher:
         update: Update,
     ):
         for handler in self.handlers:
-            await handler.run(api, update)
+            if handler.check(api, update):
+                await handler.callback(api, update)
 
     def message(self, filters: Optional[Filter] = None):
         def decorator(func: Callable) -> Callable:
