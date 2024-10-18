@@ -1,13 +1,15 @@
 from typing import Callable
 
-import botapi.api
-import botapi.types
+from botapi.filters import Filter
+from botapi.types import Update
+
+import botapi
 
 class Handler:
     async def run(
         self,
-        api: botapi.api.BotAPI,
-        update: botapi.types.Update
+        api: botapi.BotAPI,
+        update: Update
     ):
         pass
 
@@ -15,20 +17,20 @@ class MessageHandler(Handler):
     def __init__(
         self,
         callback: Callable,
-        filters: Callable,
+        filters: Filter,
     ):
         self.callback = callback
         self.filters = filters
 
     async def run(
         self,
-        api: botapi.api.BotAPI,
-        update: botapi.types.Update
+        api: botapi.BotAPI,
+        update: Update
     ):
         if not bool(update.message):
             return False
-        if self.filters != None:
-            if self.filters(update):
+        if self.filters is not None:
+            if self.filters(api, update):
                 return await self.callback(api, update)
         else:
             return await self.callback(api, update)
@@ -50,8 +52,8 @@ class CallbackQueryHandler(Handler):
     ):
         if not bool(update.callback_query):
             return False
-        if self.filters != None:
-            if self.filters(update):
+        if self.filters is not None:
+            if self.filters(api, update):
                 return await self.callback(api, update)
         else:
             return await self.callback(api, update)
@@ -73,8 +75,8 @@ class InlineQueryHandler(Handler):
     ):
         if not bool(update.inline_query):
             return False
-        if self.filters != None:
-            if self.filters(update):
+        if self.filters is not None:
+            if self.filters(api, update):
                 return await self.callback(api, update)
         else:
             return await self.callback(api, update)
@@ -96,8 +98,8 @@ class ChosenInlineResultHandler(Handler):
     ):
         if not bool(update.chosen_inline_result):
             return False
-        if self.filters != None:
-            if self.filters(update):
+        if self.filters is not None:
+            if self.filters(api, update):
                 return await self.callback(api, update)
         else:
             return await self.callback(api, update)

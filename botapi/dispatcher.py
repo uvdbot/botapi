@@ -5,8 +5,9 @@ from botapi.handlers import (
     ChosenInlineResultHandler,
     Handler
 )
+from botapi.filters import Filter
 from pydantic import BaseModel
-from typing import Callable, List
+from typing import Optional, Callable, List
 from pathlib import Path
 
 import importlib
@@ -14,10 +15,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
-class Dispatcher(BaseModel):
-    class Config:
-        arbitrary_types_allowed = True
-
+class Dispatcher(BaseModel, arbitrary_types_allowed=True):
     handlers_path: Path
     handlers: List[Handler] = []
 
@@ -38,7 +36,7 @@ class Dispatcher(BaseModel):
         load(self.handlers_path)
         log.info(f"Handlers imported ({n})")
 
-    def message(self, filters=None):
+    def message(self, filters: Optional[Filter] = None):
         def decorator(func: Callable) -> Callable:
             self.handlers.append(
                 MessageHandler(
@@ -49,7 +47,7 @@ class Dispatcher(BaseModel):
             return func
         return decorator
 
-    def callback_query(self, filters=None):
+    def callback_query(self, filters: Optional[Filter] = None):
         def decorator(func: Callable) -> Callable:
             self.handlers.append(
                 CallbackQueryHandler(
@@ -60,7 +58,7 @@ class Dispatcher(BaseModel):
             return func
         return decorator
 
-    def inline_query(self, filters=None):
+    def inline_query(self, filters: Optional[Filter] = None):
         def decorator(func: Callable) -> Callable:
             self.handlers.append(
                 InlineQueryHandler(
@@ -71,7 +69,7 @@ class Dispatcher(BaseModel):
             return func
         return decorator
 
-    def chosen_inline_result(self, filters=None):
+    def chosen_inline_result(self, filters: Optional[Filter] = None):
         def decorator(func: Callable) -> Callable:
             self.handlers.append(
                 ChosenInlineResultHandler(
