@@ -17,7 +17,7 @@ class BotAPI(BaseModel, Methods):
     token: str
     api_url: str = "https://api.telegram.org"
     parse_mode: str = "HTML"
-    session: httpx.AsyncClient = None # httpx.AsyncClient(timeout=120)
+    session: httpx.AsyncClient = httpx.AsyncClient(timeout=120)
     sudoers: List[int] = Field(default_factory=list)
 
     class Config:
