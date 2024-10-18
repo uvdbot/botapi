@@ -158,7 +158,9 @@ def command(
     Filter for commands.
     """
     def func(flt: Any, api: botapi.BotAPI, update: Update) -> bool:
-        if not text_filter(flt, api, update):
+        if not update.message:
+            return False
+        if not update.message.text:
             return False
         if not update.message.text.startswith("/"):
             return False
