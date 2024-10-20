@@ -37,10 +37,12 @@ class BotAPI(Methods):
     def _compose_api_url(self, method: str) -> str:
         return f"{self.api_url}/bot{self.token}/{method}"
 
-    @staticmethod
-    def _convert_data(data: Dict) -> Dict:
+    def _convert_data(self, data: Dict) -> Dict:
         for key, value in data.items():
             if isinstance(value, BaseModel):
+                if hasattr(value, "parse_mode"):
+                    setattr(value, "parse_mode",
+                        self.parse_mode)
                 data[key] = orjson.dumps(
                     value.model_dump(
                         mode="json",
@@ -53,13 +55,13 @@ class BotAPI(Methods):
                         mode="json",
                         exclude_none=True,
                     )
-                    if isinstance(item, BaseModel) else item
-                    for item in value
+                    if isinstance(item, BaseModel)
+                    else item for item in value
                 ]).decode("utf-8")
         return data
     
     async def _send_request(self, method: str, data: Dict) -> Any:
-        converted_data = BotAPI._convert_data(data)
+        converted_data = self._convert_data(data)
         request = await self.session.post(
             url=self._compose_api_url(method),
             data=converted_data,
