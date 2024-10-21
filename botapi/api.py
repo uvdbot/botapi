@@ -54,12 +54,6 @@ class BotAPI(Methods):
                 for item in field
             ]).decode("utf-8")
         
-        elif isinstance(field, dict):
-            return orjson.dumps({
-                key: self._convert_field(value)
-                for key, value in field.items()
-            }).decode("utf-8")
-
         return field
 
     def _convert_data(self, data: Dict) -> Dict:
