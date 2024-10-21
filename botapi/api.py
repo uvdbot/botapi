@@ -57,6 +57,7 @@ class BotAPI(Methods):
     def _convert_data(self, data: Dict) -> Dict:
         for key, value in data.items():
             data[key] = self._convert_field(value)
+        return data
     
     async def _send_request(self, method: str, data: Dict) -> Any:
         converted_data = self._convert_data(data)
