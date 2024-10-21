@@ -37,28 +37,26 @@ class BotAPI(Methods):
     def _compose_api_url(self, method: str) -> str:
         return f"{self.api_url}/bot{self.token}/{method}"
 
-    def _convert_field(self, field: Any) -> Any:
-        if isinstance(field, BaseModel):
-            if hasattr(field, "parse_mode"):
-                setattr(field, "parse_mode", self.parse_mode)
-            return orjson.dumps(
-                field.model_dump(
-                    mode="json",
-                    exclude_none=True,
-                )
-            ).decode("utf-8")
-        
-        elif isinstance(field, list):
-            return orjson.dumps([
-                self._convert_field(item)
-                for item in field
-            ]).decode("utf-8")
-        
-        return field
-
     def _convert_data(self, data: Dict) -> Dict:
+        def serialize(value: Any) -> Any:
+            if isinstance(value, list):
+                return orjson.dumps([
+                    serialize(item) for item in value
+                ]).decode("utf-8")
+
+            if isinstance(value, BaseModel):
+                if hasattr(value, "parse_mode"):
+                    value.parse_mode = self.parse_mode # type: ignore
+                return orjson.dumps(
+                    value.model_dump(
+                        mode="json",
+                        exclude_none=True
+                    )
+                ).decode("utf-8")
+            return value
+
         return {
-            key: self._convert_field(value)
+            key: serialize(value)
             for key, value in data.items()
         }
     
