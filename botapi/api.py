@@ -47,17 +47,26 @@ class BotAPI(Methods):
                     exclude_none=True,
                 )
             ).decode("utf-8")
-        if isinstance(field, list):
+        
+        elif isinstance(field, list):
             return orjson.dumps([
                 self._convert_field(item)
                 for item in field
             ]).decode("utf-8")
+        
+        elif isinstance(field, dict):
+            return orjson.dumps({
+                key: self._convert_field(value)
+                for key, value in field.items()
+            }).decode("utf-8")
+
         return field
 
     def _convert_data(self, data: Dict) -> Dict:
-        for key, value in data.items():
-            data[key] = self._convert_field(value)
-        return data
+        return {
+            key: self._convert_field(value)
+            for key, value in data.items()
+        }
     
     async def _send_request(self, method: str, data: Dict) -> Any:
         converted_data = self._convert_data(data)
