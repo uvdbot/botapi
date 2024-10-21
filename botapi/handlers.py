@@ -60,8 +60,8 @@ class InlineQueryHandler(Handler):
 class ChosenInlineResultHandler(Handler):
     def check(
         self,
-        api: botapi.api.BotAPI,
-        update: botapi.types.Update
+        api: botapi.BotAPI,
+        update: Update
     ):
         if not bool(update.chosen_inline_result):
             return False
