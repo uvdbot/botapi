@@ -62,6 +62,7 @@ class BotAPI(Methods):
     
     async def _send_request(self, method: str, data: Dict) -> Any:
         converted_data = self._convert_data(data)
+        log.info(f"Sending request to {method} with data: {converted_data}")
         request = await self.session.post(
             url=self._compose_api_url(method),
             data=converted_data,
