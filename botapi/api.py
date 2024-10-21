@@ -41,8 +41,7 @@ class BotAPI(Methods):
         for key, value in data.items():
             if isinstance(value, BaseModel):
                 if hasattr(value, "parse_mode"):
-                    setattr(value, "parse_mode",
-                        self.parse_mode)
+                    setattr(value, "parse_mode", self.parse_mode)
                 data[key] = orjson.dumps(
                     value.model_dump(
                         mode="json",
@@ -51,12 +50,8 @@ class BotAPI(Methods):
                 ).decode("utf-8")
             elif isinstance(value, list):
                 data[key] = orjson.dumps([
-                    item.model_dump(
-                        mode="json",
-                        exclude_none=True,
-                    )
-                    if isinstance(item, BaseModel)
-                    else item for item in value
+                    self._convert_data(item)
+                    for item in value
                 ]).decode("utf-8")
         return data
     
