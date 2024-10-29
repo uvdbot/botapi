@@ -68,3 +68,15 @@ class ChosenInlineResultHandler(Handler):
         if callable(self.filters):
             return self.filters(api, update)
         return True
+    
+class PreCheckoutQueryHandler(Handler):
+    def check(
+        self,
+        api: botapi.BotAPI,
+        update: Update
+    ):
+        if not bool(update.pre_checkout_query):
+            return False
+        if callable(self.filters):
+            return self.filters(api, update)
+        return True

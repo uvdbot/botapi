@@ -110,6 +110,14 @@ def private_filter(_, __, update: Update) -> bool:
 private = create_filter(private_filter)
 """Filter for private chats"""
 
+def successful_payment_filter(_, __, update: Update) -> bool:
+    return (
+        bool(update.message) and
+        bool(update.message.successful_payment)
+    )
+successful_payment = create_filter(successful_payment_filter)
+"""Filter for successful payments"""
+
 def group_filter(_, __, update: Update) -> bool:
     return (
         bool(update.message)
