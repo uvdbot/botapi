@@ -35,6 +35,7 @@ class BotAPI(Methods):
         if self.test_server:
             url += "test/"
         url += method
+        return url
 
     def _convert_field(self, field: Any) -> str:
         if isinstance(field, BaseModel):
