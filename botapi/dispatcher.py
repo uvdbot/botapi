@@ -3,6 +3,7 @@ from botapi.handlers import (
     CallbackQueryHandler,
     InlineQueryHandler,
     ChosenInlineResultHandler,
+    PreCheckoutQueryHandler,
     Handler
 )
 from botapi.filters import Filter
@@ -87,6 +88,17 @@ class Dispatcher:
         def decorator(func: Callable) -> Callable:
             self.handlers.append(
                 ChosenInlineResultHandler(
+                    callback=func,
+                    filters=filters,
+                )
+            )
+            return func
+        return decorator
+
+    def pre_checkout_query(self, filters: Optional[Filter] = None):
+        def decorator(func: Callable) -> Callable:
+            self.handlers.append(
+                PreCheckoutQueryHandler(
                     callback=func,
                     filters=filters,
                 )
