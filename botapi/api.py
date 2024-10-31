@@ -36,19 +36,18 @@ class BotAPI(Methods):
         url += method
         return url
 
-    def _convert_field(self, field: Any) -> str:
-        if isinstance(field, BaseModel):
-            for key in dir(field):
-                if key.startswith("_"):
-                    continue
-                value = getattr(field, key)
-                setattr(field, key, self._convert_field(value))
-            if hasattr(field, "parse_mode"):
-                field.parse_mode = self.parse_mode
-            return field.model_dump(
-                mode="json",
-                exclude_none=True
-            )
+    def _convert_field(
+        self,
+        field: Any,
+    ) -> str:
+        if isinstance(field, dict):
+            for key, value in field.items():
+                if isinstance(value, BaseModel):
+                    field[key] = self._convert_data(
+                        value.model_dump(mode="json")
+                    )
+                if key == "parse_mode":
+                    field[key] = self.parse_mode
         return field
 
     def _convert_data(self, data: Dict) -> Dict:
@@ -57,11 +56,13 @@ class BotAPI(Methods):
                 data[key] = orjson.dumps([
                     self._convert_field(item)
                     for item in value
-                ]).decode("utf-8")
+                ]).decode()
             elif isinstance(value, BaseModel):
-                data[key] = orjson.dumps(
-                    self._convert_field(value)
-                ).decode("utf-8")
+                data[key] = self._convert_data(
+                    value.model_dump(mode="json")
+                )
+            else:
+                data[key] = self._convert_field(value)
         return data
     
     async def _send_request(self, method: str, data: Dict) -> Any:
