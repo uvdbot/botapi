@@ -1210,6 +1210,7 @@ class InlineKeyboardButton(BaseModel):
     switch_inline_query: Optional[str] = Field(default=None)
     switch_inline_query_current_chat: Optional[str] = Field(default=None)
     switch_inline_query_chosen_chat: Optional[SwitchInlineQueryChosenChat] = Field(default=None)
+    copy_text: Optional[CopyTextButton] = Field(default=None)
     callback_game: Optional[CallbackGame] = Field(default=None)
     pay: Optional[bool] = Field(default=None)
 
@@ -1245,6 +1246,16 @@ class SwitchInlineQueryChosenChat(BaseModel):
     allow_bot_chats: Optional[bool] = Field(default=None)
     allow_group_chats: Optional[bool] = Field(default=None)
     allow_channel_chats: Optional[bool] = Field(default=None)
+
+class CopyTextButton(BaseModel):
+    """
+    This object represents an inline keyboard button that
+    copies specified text to the clipboard.
+
+    Reference: https://core.telegram.org/bots/api#copytextbutton
+    """
+
+    text: str
 
 class CallbackQuery(BaseModel):
     """
@@ -2916,6 +2927,16 @@ class TransactionPartnerTelegramAds(BaseModel):
 
     type: Literal["telegram_ads"] = "telegram_ads"
 
+class TransactionPartnerTelegramApi(BaseModel):
+    """
+    Describes a transaction with payment for paid broadcasting.
+
+    Reference: https://core.telegram.org/bots/api#transactionpartnertelegramapi
+    """
+
+    type: Literal["telegram_api"] = "telegram_api"
+    request_count: int
+
 class TransactionPartnerOther(BaseModel):
     """
     Describes a transaction with an unknown source or
@@ -3296,6 +3317,7 @@ TransactionPartner = Union[
     TransactionPartnerUser,
     TransactionPartnerFragment,
     TransactionPartnerTelegramAds,
+    TransactionPartnerTelegramApi,
     TransactionPartnerOther,
 ]
 
@@ -3390,6 +3412,7 @@ InlineKeyboardMarkup.model_rebuild()
 InlineKeyboardButton.model_rebuild()
 LoginUrl.model_rebuild()
 SwitchInlineQueryChosenChat.model_rebuild()
+CopyTextButton.model_rebuild()
 CallbackQuery.model_rebuild()
 ForceReply.model_rebuild()
 ChatPhoto.model_rebuild()
@@ -3498,6 +3521,7 @@ RevenueWithdrawalStateFailed.model_rebuild()
 TransactionPartnerUser.model_rebuild()
 TransactionPartnerFragment.model_rebuild()
 TransactionPartnerTelegramAds.model_rebuild()
+TransactionPartnerTelegramApi.model_rebuild()
 TransactionPartnerOther.model_rebuild()
 StarTransaction.model_rebuild()
 StarTransactions.model_rebuild()

@@ -87,6 +87,7 @@ from botapi.types import (
     InlineKeyboardButton,
     LoginUrl,
     SwitchInlineQueryChosenChat,
+    CopyTextButton,
     CallbackQuery,
     ForceReply,
     ChatPhoto,
@@ -195,6 +196,7 @@ from botapi.types import (
     TransactionPartnerUser,
     TransactionPartnerFragment,
     TransactionPartnerTelegramAds,
+    TransactionPartnerTelegramApi,
     TransactionPartnerOther,
     StarTransaction,
     StarTransactions,
@@ -389,6 +391,7 @@ class Methods:
         link_preview_options: Optional[LinkPreviewOptions] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -410,6 +413,7 @@ class Methods:
             "link_preview_options": link_preview_options,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -487,6 +491,7 @@ class Methods:
         show_caption_above_media: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[MessageId]:
@@ -516,6 +521,7 @@ class Methods:
             "show_caption_above_media": show_caption_above_media,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -573,6 +579,7 @@ class Methods:
         has_spoiler: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -596,6 +603,7 @@ class Methods:
             "has_spoiler": has_spoiler,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -617,6 +625,7 @@ class Methods:
         thumbnail: Optional[Union[InputFile, str]] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -648,6 +657,7 @@ class Methods:
             "thumbnail": thumbnail,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -667,6 +677,7 @@ class Methods:
         disable_content_type_detection: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -693,6 +704,7 @@ class Methods:
             "disable_content_type_detection": disable_content_type_detection,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -717,6 +729,7 @@ class Methods:
         supports_streaming: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -749,6 +762,7 @@ class Methods:
             "supports_streaming": supports_streaming,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -772,6 +786,7 @@ class Methods:
         has_spoiler: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -803,6 +818,7 @@ class Methods:
             "has_spoiler": has_spoiler,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -821,6 +837,7 @@ class Methods:
         duration: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -852,6 +869,7 @@ class Methods:
             "duration": duration,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -869,6 +887,7 @@ class Methods:
         thumbnail: Optional[Union[InputFile, str]] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -892,6 +911,7 @@ class Methods:
             "thumbnail": thumbnail,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -911,6 +931,7 @@ class Methods:
         show_caption_above_media: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -933,6 +954,7 @@ class Methods:
             "show_caption_above_media": show_caption_above_media,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -946,6 +968,7 @@ class Methods:
         message_thread_id: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
     ) -> Optional[List[Message]]:
@@ -967,6 +990,7 @@ class Methods:
             "media": media,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
         })
@@ -985,6 +1009,7 @@ class Methods:
         proximity_alert_radius: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -1008,6 +1033,7 @@ class Methods:
             "proximity_alert_radius": proximity_alert_radius,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -1029,6 +1055,7 @@ class Methods:
         google_place_type: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -1054,6 +1081,7 @@ class Methods:
             "google_place_type": google_place_type,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -1071,6 +1099,7 @@ class Methods:
         vcard: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -1092,6 +1121,7 @@ class Methods:
             "vcard": vcard,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -1119,6 +1149,7 @@ class Methods:
         is_closed: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -1150,6 +1181,7 @@ class Methods:
             "is_closed": is_closed,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -1164,6 +1196,7 @@ class Methods:
         emoji: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -1183,6 +1216,7 @@ class Methods:
             "emoji": emoji,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -2673,21 +2707,22 @@ class Methods:
     ) -> Optional[Message]:
         """
         Use this method to edit animation, audio, document,
-        photo, or video messages. If a message is
-        part of a message album, then it can
-        be edited only to an audio for audio
-        albums, only to a document for document albums
-        and to a photo or a video otherwise.
-        When an inline message is edited, a new
-        file can't be uploaded; use a previously uploaded
-        file via its file_id or specify a URL.
-        On success, if the edited message is not
-        an inline message, the edited Message is returned,
-        otherwise True is returned. Note that business messages
-        that were not sent by the bot and
-        do not contain an inline keyboard can only
-        be edited within 48 hours from the time
-        they were sent.
+        photo, or video messages, or to add media
+        to text messages. If a message is part
+        of a message album, then it can be
+        edited only to an audio for audio albums,
+        only to a document for document albums and
+        to a photo or a video otherwise. When
+        an inline message is edited, a new file
+        can't be uploaded; use a previously uploaded file
+        via its file_id or specify a URL. On
+        success, if the edited message is not an
+        inline message, the edited Message is returned, otherwise
+        True is returned. Note that business messages that
+        were not sent by the bot and do
+        not contain an inline keyboard can only be
+        edited within 48 hours from the time they
+        were sent.
 
         Reference: https://core.telegram.org/bots/api#editmessagemedia
         """
@@ -2881,6 +2916,7 @@ class Methods:
         emoji: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -2901,6 +2937,7 @@ class Methods:
             "emoji": emoji,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -3289,6 +3326,7 @@ class Methods:
         is_flexible: Optional[bool] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
@@ -3326,6 +3364,7 @@ class Methods:
             "is_flexible": is_flexible,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -3505,6 +3544,7 @@ class Methods:
         message_thread_id: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
@@ -3523,6 +3563,7 @@ class Methods:
             "game_short_name": game_short_name,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
