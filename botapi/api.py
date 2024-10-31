@@ -41,13 +41,13 @@ class BotAPI(Methods):
         log.info(type(field))
         log.info(isinstance(field, BaseModel))
         if isinstance(field, BaseModel):
-            for key, value in field.model_fields.items():
+            for key in field.model_fields.keys():
+                log.info(f"Converting key: {key}")
+                value = getattr(field, key)
                 if isinstance(value, BaseModel):
                     setattr(
                         field, key,
-                        self._convert_field(
-                            getattr(field, key)
-                        )
+                        self._convert_field(value)
                     )
                 if key == "parse_mode":
                     setattr(field, key, self.parse_mode)
