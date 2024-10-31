@@ -2659,7 +2659,7 @@ class Methods:
         try:
             return Message.model_validate(response)
         except ValidationError:
-                pass
+            pass
         return response
 
     async def edit_message_caption(
@@ -2701,7 +2701,7 @@ class Methods:
         try:
             return Message.model_validate(response)
         except ValidationError:
-                pass
+            pass
         return response
 
     async def edit_message_media(
@@ -2746,7 +2746,7 @@ class Methods:
         try:
             return Message.model_validate(response)
         except ValidationError:
-                pass
+            pass
         return response
 
     async def edit_message_live_location(
@@ -2790,7 +2790,7 @@ class Methods:
         try:
             return Message.model_validate(response)
         except ValidationError:
-                pass
+            pass
         return response
 
     async def stop_message_live_location(
@@ -2820,7 +2820,7 @@ class Methods:
         try:
             return Message.model_validate(response)
         except ValidationError:
-                pass
+            pass
         return response
 
     async def edit_message_reply_markup(
@@ -2854,7 +2854,7 @@ class Methods:
         try:
             return Message.model_validate(response)
         except ValidationError:
-                pass
+            pass
         return response
 
     async def stop_poll(
