@@ -48,6 +48,8 @@ class BotAPI(Methods):
                     )
                 if key == "parse_mode":
                     field[key] = self.parse_mode
+                if value is None:
+                    field.pop(key)
         return field
 
     def _convert_data(self, data: Dict) -> Dict:
