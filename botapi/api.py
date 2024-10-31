@@ -36,20 +36,25 @@ class BotAPI(Methods):
         url += method
         return url
 
-    def _convert_field(
-        self,
-        field: Any,
-    ) -> str:
-        if isinstance(field, dict):
-            for key, value in field.items():
+    def _convert_field(self, field: Any) -> str:
+        log.info(f"Converting field: {field}")
+        log.info(type(field))
+        log.info(isinstance(field, BaseModel))
+        if isinstance(field, BaseModel):
+            for key, value in field.model_fields.items():
                 if isinstance(value, BaseModel):
-                    field[key] = self._convert_data(
-                        value.model_dump(mode="json")
+                    setattr(
+                        field, key,
+                        self._convert_field(
+                            getattr(field, key)
+                        )
                     )
                 if key == "parse_mode":
-                    field[key] = self.parse_mode
-                if value is None:
-                    field.pop(key)
+                    setattr(field, key, self.parse_mode)
+            return field.model_dump(
+                mode="json",
+                exclude_none=True
+            )
         return field
 
     def _convert_data(self, data: Dict) -> Dict:
@@ -58,18 +63,15 @@ class BotAPI(Methods):
                 data[key] = orjson.dumps([
                     self._convert_field(item)
                     for item in value
-                ]).decode()
+                ]).decode("utf-8")
             elif isinstance(value, BaseModel):
-                data[key] = self._convert_data(
-                    value.model_dump(mode="json")
-                )
-            else:
-                data[key] = self._convert_field(value)
+                data[key] = orjson.dumps(
+                    self._convert_field(value)
+                ).decode("utf-8")
         return data
     
     async def _send_request(self, method: str, data: Dict) -> Any:
         converted_data = self._convert_data(data)
-        log.info(f"Converted data: {converted_data}")
         request = await self.session.post(
             url=self._compose_api_url(method),
             data=converted_data,
