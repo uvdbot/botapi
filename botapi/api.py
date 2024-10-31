@@ -21,7 +21,6 @@ class BotAPI(Methods):
         session: Optional[httpx.AsyncClient] = None,
         sudoers: Optional[List[int]] = None,
         test_server: Optional[bool] = False,
-
     ):
         self.token: str = token
         self.api_url: str = api_url
@@ -38,6 +37,9 @@ class BotAPI(Methods):
         return url
 
     def _convert_field(self, field: Any) -> str:
+        log.info(f"Converting field: {field}")
+        log.info(type(field))
+        log.info(isinstance(field, BaseModel))
         if isinstance(field, BaseModel):
             if hasattr(field, "parse_mode"):
                 field.parse_mode = self.parse_mode
