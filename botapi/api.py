@@ -43,6 +43,7 @@ class BotAPI(Methods):
         if isinstance(field, BaseModel):
             for key in field.model_fields.keys():
                 log.info(f"Converting key: {key}")
+                log.info(type(getattr(field, key)))
                 value = getattr(field, key)
                 if isinstance(value, BaseModel):
                     setattr(

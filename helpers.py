@@ -131,8 +131,8 @@ def return_type_to_string(type: Any) -> Optional[str]:
 
 def parse_return_value(description: str) -> Any:
     return_value_patterns = [
-        r"on success.*?the edited ([a-zA-Z]+) is returned",
         r"on success,*?the edited ([a-zA-Z]+) is returned, otherwise ([a-zA-Z]+) is returned",
+        r"on success.*?the edited ([a-zA-Z]+) is returned",
         r"returns.*?in form of a ([a-zA-Z]+) object.",
         r"on success, an ((?:Array\s+of\s+)+[a-zA-Z]+).*?returned.",
         r"returns the ([a-zA-Z]+) of the sent message.",
