@@ -50,7 +50,7 @@ def generate_types():
             final_file += generate_parent_type_string(type)
         else:
             final_file += generate_type_string(type)
-        final_file += "\n\n"
+        final_file += " \n\n"
 
     for type in types.values():
         if len(type.children) == 0:
@@ -63,7 +63,7 @@ def generate_types():
 
 def generate_methods():
     final_file = "from __future__ import annotations\n\n"
-    final_file += "from pydantic import TypeAdapter\n"
+    final_file += "from pydantic import TypeAdapter, ValidationError\n"
     final_file += "from typing import Union, Optional, List\n\n"
     final_file += "from botapi.types import ("
     for type in types:

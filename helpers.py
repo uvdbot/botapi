@@ -108,6 +108,19 @@ def return_type_to_string(type: Any) -> Optional[str]:
             return f"[TypeAdapter({value}).validate_python(x) for x in response]"
         else:
             return f"[{value}.model_validate(x) for x in response]"
+    if isinstance(type, tuple):
+        if all(x in RAW_TYPES for x in type):
+            return "response"
+        for x in filter(lambda x: x not in RAW_TYPES, type):
+            string = "try:\n"
+            if x in TYPE_VALIDATORS:
+                string += f"    return TypeAdapter({x}).validate_python(response)"
+            else:
+                string += f"    return {x}.model_validate(response)"
+            string += "except ValidationError:\n"
+            string += "    pass"
+        for x in filter(lambda x: x in RAW_TYPES, type):
+            string += f"    return response"
     else:
         if type in RAW_TYPES:
             return "response"
@@ -119,6 +132,7 @@ def return_type_to_string(type: Any) -> Optional[str]:
 def parse_return_value(description: str) -> Any:
     return_value_patterns = [
         r"on success.*?the edited ([a-zA-Z]+) is returned",
+        r"on success,*?the edited ([a-zA-Z]+) is returned, otherwise ([a-zA-Z]+) is returned",
         r"returns.*?in form of a ([a-zA-Z]+) object.",
         r"on success, an ((?:Array\s+of\s+)+[a-zA-Z]+).*?returned.",
         r"returns the ([a-zA-Z]+) of the sent message.",
@@ -137,6 +151,9 @@ def parse_return_value(description: str) -> Any:
     for pattern in return_value_patterns:
         match = re.search(pattern, description, re.IGNORECASE)
         if match:
+            if len(match.groups()) > 1:
+                value = " or ".join(match.groups())
+                return parse_return_value(value)
             return parse_telegram_type(match.group(1))
     return None
 
