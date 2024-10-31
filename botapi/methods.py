@@ -2631,7 +2631,7 @@ class Methods:
         entities: Optional[List[MessageEntity]] = None,
         link_preview_options: Optional[LinkPreviewOptions] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Message]:
+    ) -> Optional[Union[Message, bool]]:
         """
         Use this method to edit text and game
         messages. On success, if the edited message is
@@ -2656,7 +2656,11 @@ class Methods:
             "link_preview_options": link_preview_options,
             "reply_markup": reply_markup,
         })
-        return Message.model_validate(response)
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+                pass
+        return response
 
     async def edit_message_caption(
         self: botapi.BotAPI,
@@ -2669,7 +2673,7 @@ class Methods:
         caption_entities: Optional[List[MessageEntity]] = None,
         show_caption_above_media: Optional[bool] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Message]:
+    ) -> Optional[Union[Message, bool]]:
         """
         Use this method to edit captions of messages.
         On success, if the edited message is not
@@ -2694,7 +2698,11 @@ class Methods:
             "show_caption_above_media": show_caption_above_media,
             "reply_markup": reply_markup,
         })
-        return Message.model_validate(response)
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+                pass
+        return response
 
     async def edit_message_media(
         self: botapi.BotAPI,
@@ -2704,7 +2712,7 @@ class Methods:
         message_id: Optional[int] = None,
         inline_message_id: Optional[str] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Message]:
+    ) -> Optional[Union[Message, bool]]:
         """
         Use this method to edit animation, audio, document,
         photo, or video messages, or to add media
@@ -2735,7 +2743,11 @@ class Methods:
             "media": media,
             "reply_markup": reply_markup,
         })
-        return Message.model_validate(response)
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+                pass
+        return response
 
     async def edit_message_live_location(
         self: botapi.BotAPI,
@@ -2750,7 +2762,7 @@ class Methods:
         heading: Optional[int] = None,
         proximity_alert_radius: Optional[int] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Message]:
+    ) -> Optional[Union[Message, bool]]:
         """
         Use this method to edit live location messages.
         A location can be edited until its live_period
@@ -2775,7 +2787,11 @@ class Methods:
             "proximity_alert_radius": proximity_alert_radius,
             "reply_markup": reply_markup,
         })
-        return Message.model_validate(response)
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+                pass
+        return response
 
     async def stop_message_live_location(
         self: botapi.BotAPI,
@@ -2784,7 +2800,7 @@ class Methods:
         message_id: Optional[int] = None,
         inline_message_id: Optional[str] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Message]:
+    ) -> Optional[Union[Message, bool]]:
         """
         Use this method to stop updating a live
         location message before live_period expires. On success, if
@@ -2801,7 +2817,11 @@ class Methods:
             "inline_message_id": inline_message_id,
             "reply_markup": reply_markup,
         })
-        return Message.model_validate(response)
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+                pass
+        return response
 
     async def edit_message_reply_markup(
         self: botapi.BotAPI,
@@ -2810,7 +2830,7 @@ class Methods:
         message_id: Optional[int] = None,
         inline_message_id: Optional[str] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Message]:
+    ) -> Optional[Union[Message, bool]]:
         """
         Use this method to edit only the reply
         markup of messages. On success, if the edited
@@ -2831,7 +2851,11 @@ class Methods:
             "inline_message_id": inline_message_id,
             "reply_markup": reply_markup,
         })
-        return Message.model_validate(response)
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+                pass
+        return response
 
     async def stop_poll(
         self: botapi.BotAPI,
