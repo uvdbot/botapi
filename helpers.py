@@ -237,8 +237,6 @@ def generate_method_string(method: TelegramMethod):
         else:
             string += f"{parameter.name}: Optional[{parameter_type_string}] = None,"
     string += "\n" + tab(1) + ")"
-    if isinstance(method.return_type, tuple):
-        print(method.return_type)
     return_type_string = type_to_string(method.return_type)
     string += f" -> Optional[{return_type_string}]:"
     string += "\n" + tab(2, '"""\n')
