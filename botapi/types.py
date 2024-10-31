@@ -39,7 +39,7 @@ class Update(BaseModel):
     chat_member: Optional[ChatMemberUpdated] = Field(default=None)
     chat_join_request: Optional[ChatJoinRequest] = Field(default=None)
     chat_boost: Optional[ChatBoostUpdated] = Field(default=None)
-    removed_chat_boost: Optional[ChatBoostRemoved] = Field(default=None)
+    removed_chat_boost: Optional[ChatBoostRemoved] = Field(default=None) 
 
 class WebhookInfo(BaseModel):
     """
@@ -56,7 +56,7 @@ class WebhookInfo(BaseModel):
     last_error_message: Optional[str] = Field(default=None)
     last_synchronization_error_date: Optional[int] = Field(default=None)
     max_connections: Optional[int] = Field(default=None)
-    allowed_updates: Optional[List[str]] = Field(default=None)
+    allowed_updates: Optional[List[str]] = Field(default=None) 
 
 class User(BaseModel):
     """
@@ -77,7 +77,7 @@ class User(BaseModel):
     can_read_all_group_messages: Optional[bool] = Field(default=None)
     supports_inline_queries: Optional[bool] = Field(default=None)
     can_connect_to_business: Optional[bool] = Field(default=None)
-    has_main_web_app: Optional[bool] = Field(default=None)
+    has_main_web_app: Optional[bool] = Field(default=None) 
 
 class Chat(BaseModel):
     """
@@ -92,7 +92,7 @@ class Chat(BaseModel):
     username: Optional[str] = Field(default=None)
     first_name: Optional[str] = Field(default=None)
     last_name: Optional[str] = Field(default=None)
-    is_forum: Optional[bool] = Field(default=None)
+    is_forum: Optional[bool] = Field(default=None) 
 
 class ChatFullInfo(BaseModel):
     """
@@ -144,7 +144,7 @@ class ChatFullInfo(BaseModel):
     can_set_sticker_set: Optional[bool] = Field(default=None)
     custom_emoji_sticker_set_name: Optional[str] = Field(default=None)
     linked_chat_id: Optional[int] = Field(default=None)
-    location: Optional[ChatLocation] = Field(default=None)
+    location: Optional[ChatLocation] = Field(default=None) 
 
 class Message(BaseModel):
     """
@@ -237,7 +237,7 @@ class Message(BaseModel):
     video_chat_ended: Optional[VideoChatEnded] = Field(default=None)
     video_chat_participants_invited: Optional[VideoChatParticipantsInvited] = Field(default=None)
     web_app_data: Optional[WebAppData] = Field(default=None)
-    reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
+    reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None) 
 
 class MessageId(BaseModel):
     """
@@ -246,7 +246,7 @@ class MessageId(BaseModel):
     Reference: https://core.telegram.org/bots/api#messageid
     """
 
-    message_id: int
+    message_id: int 
 
 class MessageEntity(BaseModel):
     """
@@ -262,7 +262,7 @@ class MessageEntity(BaseModel):
     url: Optional[str] = Field(default=None)
     user: Optional[User] = Field(default=None)
     language: Optional[str] = Field(default=None)
-    custom_emoji_id: Optional[str] = Field(default=None)
+    custom_emoji_id: Optional[str] = Field(default=None) 
 
 class TextQuote(BaseModel):
     """
@@ -276,7 +276,7 @@ class TextQuote(BaseModel):
     text: str
     position: int
     entities: Optional[List[MessageEntity]] = Field(default=None)
-    is_manual: Optional[bool] = Field(default=None)
+    is_manual: Optional[bool] = Field(default=None) 
 
 class ExternalReplyInfo(BaseModel):
     """
@@ -310,7 +310,7 @@ class ExternalReplyInfo(BaseModel):
     invoice: Optional[Invoice] = Field(default=None)
     location: Optional[Location] = Field(default=None)
     poll: Optional[Poll] = Field(default=None)
-    venue: Optional[Venue] = Field(default=None)
+    venue: Optional[Venue] = Field(default=None) 
 
 class ReplyParameters(BaseModel):
     """
@@ -326,7 +326,7 @@ class ReplyParameters(BaseModel):
     quote: Optional[str] = Field(default=None)
     quote_parse_mode: Optional[str] = Field(default=None)
     quote_entities: Optional[List[MessageEntity]] = Field(default=None)
-    quote_position: Optional[int] = Field(default=None)
+    quote_position: Optional[int] = Field(default=None) 
 
 class MessageOriginUser(BaseModel):
     """
@@ -338,7 +338,7 @@ class MessageOriginUser(BaseModel):
 
     type: Literal["user"] = "user"
     date: int
-    sender_user: User
+    sender_user: User 
 
 class MessageOriginHiddenUser(BaseModel):
     """
@@ -350,7 +350,7 @@ class MessageOriginHiddenUser(BaseModel):
 
     type: Literal["hidden_user"] = "hidden_user"
     date: int
-    sender_user_name: str
+    sender_user_name: str 
 
 class MessageOriginChat(BaseModel):
     """
@@ -363,7 +363,7 @@ class MessageOriginChat(BaseModel):
     type: Literal["chat"] = "chat"
     date: int
     sender_chat: Chat
-    author_signature: Optional[str] = Field(default=None)
+    author_signature: Optional[str] = Field(default=None) 
 
 class MessageOriginChannel(BaseModel):
     """
@@ -377,7 +377,7 @@ class MessageOriginChannel(BaseModel):
     date: int
     chat: Chat
     message_id: int
-    author_signature: Optional[str] = Field(default=None)
+    author_signature: Optional[str] = Field(default=None) 
 
 class PhotoSize(BaseModel):
     """
@@ -391,7 +391,7 @@ class PhotoSize(BaseModel):
     file_unique_id: str
     width: int
     height: int
-    file_size: Optional[int] = Field(default=None)
+    file_size: Optional[int] = Field(default=None) 
 
 class Animation(BaseModel):
     """
@@ -409,7 +409,7 @@ class Animation(BaseModel):
     thumbnail: Optional[PhotoSize] = Field(default=None)
     file_name: Optional[str] = Field(default=None)
     mime_type: Optional[str] = Field(default=None)
-    file_size: Optional[int] = Field(default=None)
+    file_size: Optional[int] = Field(default=None) 
 
 class Audio(BaseModel):
     """
@@ -427,7 +427,7 @@ class Audio(BaseModel):
     file_name: Optional[str] = Field(default=None)
     mime_type: Optional[str] = Field(default=None)
     file_size: Optional[int] = Field(default=None)
-    thumbnail: Optional[PhotoSize] = Field(default=None)
+    thumbnail: Optional[PhotoSize] = Field(default=None) 
 
 class Document(BaseModel):
     """
@@ -442,7 +442,7 @@ class Document(BaseModel):
     thumbnail: Optional[PhotoSize] = Field(default=None)
     file_name: Optional[str] = Field(default=None)
     mime_type: Optional[str] = Field(default=None)
-    file_size: Optional[int] = Field(default=None)
+    file_size: Optional[int] = Field(default=None) 
 
 class Story(BaseModel):
     """
@@ -452,7 +452,7 @@ class Story(BaseModel):
     """
 
     chat: Chat
-    id: int
+    id: int 
 
 class Video(BaseModel):
     """
@@ -469,7 +469,7 @@ class Video(BaseModel):
     thumbnail: Optional[PhotoSize] = Field(default=None)
     file_name: Optional[str] = Field(default=None)
     mime_type: Optional[str] = Field(default=None)
-    file_size: Optional[int] = Field(default=None)
+    file_size: Optional[int] = Field(default=None) 
 
 class VideoNote(BaseModel):
     """
@@ -484,7 +484,7 @@ class VideoNote(BaseModel):
     length: int
     duration: int
     thumbnail: Optional[PhotoSize] = Field(default=None)
-    file_size: Optional[int] = Field(default=None)
+    file_size: Optional[int] = Field(default=None) 
 
 class Voice(BaseModel):
     """
@@ -497,7 +497,7 @@ class Voice(BaseModel):
     file_unique_id: str
     duration: int
     mime_type: Optional[str] = Field(default=None)
-    file_size: Optional[int] = Field(default=None)
+    file_size: Optional[int] = Field(default=None) 
 
 class PaidMediaInfo(BaseModel):
     """
@@ -507,7 +507,7 @@ class PaidMediaInfo(BaseModel):
     """
 
     star_count: int
-    paid_media: List[PaidMedia]
+    paid_media: List[PaidMedia] 
 
 class PaidMediaPreview(BaseModel):
     """
@@ -519,7 +519,7 @@ class PaidMediaPreview(BaseModel):
     type: Literal["preview"] = "preview"
     width: Optional[int] = Field(default=None)
     height: Optional[int] = Field(default=None)
-    duration: Optional[int] = Field(default=None)
+    duration: Optional[int] = Field(default=None) 
 
 class PaidMediaPhoto(BaseModel):
     """
@@ -529,7 +529,7 @@ class PaidMediaPhoto(BaseModel):
     """
 
     type: Literal["photo"] = "photo"
-    photo: List[PhotoSize]
+    photo: List[PhotoSize] 
 
 class PaidMediaVideo(BaseModel):
     """
@@ -539,7 +539,7 @@ class PaidMediaVideo(BaseModel):
     """
 
     type: Literal["video"] = "video"
-    video: Video
+    video: Video 
 
 class Contact(BaseModel):
     """
@@ -552,7 +552,7 @@ class Contact(BaseModel):
     first_name: str
     last_name: Optional[str] = Field(default=None)
     user_id: Optional[int] = Field(default=None)
-    vcard: Optional[str] = Field(default=None)
+    vcard: Optional[str] = Field(default=None) 
 
 class Dice(BaseModel):
     """
@@ -563,7 +563,7 @@ class Dice(BaseModel):
     """
 
     emoji: str
-    value: int
+    value: int 
 
 class PollOption(BaseModel):
     """
@@ -575,7 +575,7 @@ class PollOption(BaseModel):
 
     text: str
     voter_count: int
-    text_entities: Optional[List[MessageEntity]] = Field(default=None)
+    text_entities: Optional[List[MessageEntity]] = Field(default=None) 
 
 class InputPollOption(BaseModel):
     """
@@ -587,7 +587,7 @@ class InputPollOption(BaseModel):
 
     text: str
     text_parse_mode: Optional[str] = Field(default=None)
-    text_entities: Optional[List[MessageEntity]] = Field(default=None)
+    text_entities: Optional[List[MessageEntity]] = Field(default=None) 
 
 class PollAnswer(BaseModel):
     """
@@ -600,7 +600,7 @@ class PollAnswer(BaseModel):
     poll_id: str
     option_ids: List[int]
     voter_chat: Optional[Chat] = Field(default=None)
-    user: Optional[User] = Field(default=None)
+    user: Optional[User] = Field(default=None) 
 
 class Poll(BaseModel):
     """
@@ -622,7 +622,7 @@ class Poll(BaseModel):
     explanation: Optional[str] = Field(default=None)
     explanation_entities: Optional[List[MessageEntity]] = Field(default=None)
     open_period: Optional[int] = Field(default=None)
-    close_date: Optional[int] = Field(default=None)
+    close_date: Optional[int] = Field(default=None) 
 
 class Location(BaseModel):
     """
@@ -636,7 +636,7 @@ class Location(BaseModel):
     horizontal_accuracy: Optional[float] = Field(default=None)
     live_period: Optional[int] = Field(default=None)
     heading: Optional[int] = Field(default=None)
-    proximity_alert_radius: Optional[int] = Field(default=None)
+    proximity_alert_radius: Optional[int] = Field(default=None) 
 
 class Venue(BaseModel):
     """
@@ -651,7 +651,7 @@ class Venue(BaseModel):
     foursquare_id: Optional[str] = Field(default=None)
     foursquare_type: Optional[str] = Field(default=None)
     google_place_id: Optional[str] = Field(default=None)
-    google_place_type: Optional[str] = Field(default=None)
+    google_place_type: Optional[str] = Field(default=None) 
 
 class WebAppData(BaseModel):
     """
@@ -662,7 +662,7 @@ class WebAppData(BaseModel):
     """
 
     data: str
-    button_text: str
+    button_text: str 
 
 class ProximityAlertTriggered(BaseModel):
     """
@@ -675,7 +675,7 @@ class ProximityAlertTriggered(BaseModel):
 
     traveler: User
     watcher: User
-    distance: int
+    distance: int 
 
 class MessageAutoDeleteTimerChanged(BaseModel):
     """
@@ -685,7 +685,7 @@ class MessageAutoDeleteTimerChanged(BaseModel):
     Reference: https://core.telegram.org/bots/api#messageautodeletetimerchanged
     """
 
-    message_auto_delete_time: int
+    message_auto_delete_time: int 
 
 class ChatBoostAdded(BaseModel):
     """
@@ -695,7 +695,7 @@ class ChatBoostAdded(BaseModel):
     Reference: https://core.telegram.org/bots/api#chatboostadded
     """
 
-    boost_count: int
+    boost_count: int 
 
 class BackgroundFillSolid(BaseModel):
     """
@@ -705,7 +705,7 @@ class BackgroundFillSolid(BaseModel):
     """
 
     type: Literal["solid"] = "solid"
-    color: int
+    color: int 
 
 class BackgroundFillGradient(BaseModel):
     """
@@ -717,7 +717,7 @@ class BackgroundFillGradient(BaseModel):
     type: Literal["gradient"] = "gradient"
     top_color: int
     bottom_color: int
-    rotation_angle: int
+    rotation_angle: int 
 
 class BackgroundFillFreeformGradient(BaseModel):
     """
@@ -728,7 +728,7 @@ class BackgroundFillFreeformGradient(BaseModel):
     """
 
     type: Literal["freeform_gradient"] = "freeform_gradient"
-    colors: List[int]
+    colors: List[int] 
 
 class BackgroundTypeFill(BaseModel):
     """
@@ -740,7 +740,7 @@ class BackgroundTypeFill(BaseModel):
 
     type: Literal["fill"] = "fill"
     fill: BackgroundFill
-    dark_theme_dimming: int
+    dark_theme_dimming: int 
 
 class BackgroundTypeWallpaper(BaseModel):
     """
@@ -754,7 +754,7 @@ class BackgroundTypeWallpaper(BaseModel):
     document: Document
     dark_theme_dimming: int
     is_blurred: Optional[bool] = Field(default=None)
-    is_moving: Optional[bool] = Field(default=None)
+    is_moving: Optional[bool] = Field(default=None) 
 
 class BackgroundTypePattern(BaseModel):
     """
@@ -771,7 +771,7 @@ class BackgroundTypePattern(BaseModel):
     fill: BackgroundFill
     intensity: int
     is_inverted: Optional[bool] = Field(default=None)
-    is_moving: Optional[bool] = Field(default=None)
+    is_moving: Optional[bool] = Field(default=None) 
 
 class BackgroundTypeChatTheme(BaseModel):
     """
@@ -782,7 +782,7 @@ class BackgroundTypeChatTheme(BaseModel):
     """
 
     type: Literal["chat_theme"] = "chat_theme"
-    theme_name: str
+    theme_name: str 
 
 class ChatBackground(BaseModel):
     """
@@ -791,7 +791,7 @@ class ChatBackground(BaseModel):
     Reference: https://core.telegram.org/bots/api#chatbackground
     """
 
-    type: BackgroundType
+    type: BackgroundType 
 
 class ForumTopicCreated(BaseModel):
     """
@@ -803,7 +803,7 @@ class ForumTopicCreated(BaseModel):
 
     name: str
     icon_color: int
-    icon_custom_emoji_id: Optional[str] = Field(default=None)
+    icon_custom_emoji_id: Optional[str] = Field(default=None) 
 
 class ForumTopicClosed(BaseModel):
     """
@@ -815,7 +815,7 @@ class ForumTopicClosed(BaseModel):
     """
 
     pass
-
+ 
 
 class ForumTopicEdited(BaseModel):
     """
@@ -826,7 +826,7 @@ class ForumTopicEdited(BaseModel):
     """
 
     name: Optional[str] = Field(default=None)
-    icon_custom_emoji_id: Optional[str] = Field(default=None)
+    icon_custom_emoji_id: Optional[str] = Field(default=None) 
 
 class ForumTopicReopened(BaseModel):
     """
@@ -838,7 +838,7 @@ class ForumTopicReopened(BaseModel):
     """
 
     pass
-
+ 
 
 class GeneralForumTopicHidden(BaseModel):
     """
@@ -850,7 +850,7 @@ class GeneralForumTopicHidden(BaseModel):
     """
 
     pass
-
+ 
 
 class GeneralForumTopicUnhidden(BaseModel):
     """
@@ -862,7 +862,7 @@ class GeneralForumTopicUnhidden(BaseModel):
     """
 
     pass
-
+ 
 
 class SharedUser(BaseModel):
     """
@@ -877,7 +877,7 @@ class SharedUser(BaseModel):
     first_name: Optional[str] = Field(default=None)
     last_name: Optional[str] = Field(default=None)
     username: Optional[str] = Field(default=None)
-    photo: Optional[List[PhotoSize]] = Field(default=None)
+    photo: Optional[List[PhotoSize]] = Field(default=None) 
 
 class UsersShared(BaseModel):
     """
@@ -889,7 +889,7 @@ class UsersShared(BaseModel):
     """
 
     request_id: int
-    users: List[SharedUser]
+    users: List[SharedUser] 
 
 class ChatShared(BaseModel):
     """
@@ -904,7 +904,7 @@ class ChatShared(BaseModel):
     chat_id: int
     title: Optional[str] = Field(default=None)
     username: Optional[str] = Field(default=None)
-    photo: Optional[List[PhotoSize]] = Field(default=None)
+    photo: Optional[List[PhotoSize]] = Field(default=None) 
 
 class WriteAccessAllowed(BaseModel):
     """
@@ -920,7 +920,7 @@ class WriteAccessAllowed(BaseModel):
 
     from_request: Optional[bool] = Field(default=None)
     web_app_name: Optional[str] = Field(default=None)
-    from_attachment_menu: Optional[bool] = Field(default=None)
+    from_attachment_menu: Optional[bool] = Field(default=None) 
 
 class VideoChatScheduled(BaseModel):
     """
@@ -930,7 +930,7 @@ class VideoChatScheduled(BaseModel):
     Reference: https://core.telegram.org/bots/api#videochatscheduled
     """
 
-    start_date: int
+    start_date: int 
 
 class VideoChatStarted(BaseModel):
     """
@@ -942,7 +942,7 @@ class VideoChatStarted(BaseModel):
     """
 
     pass
-
+ 
 
 class VideoChatEnded(BaseModel):
     """
@@ -952,7 +952,7 @@ class VideoChatEnded(BaseModel):
     Reference: https://core.telegram.org/bots/api#videochatended
     """
 
-    duration: int
+    duration: int 
 
 class VideoChatParticipantsInvited(BaseModel):
     """
@@ -962,7 +962,7 @@ class VideoChatParticipantsInvited(BaseModel):
     Reference: https://core.telegram.org/bots/api#videochatparticipantsinvited
     """
 
-    users: List[User]
+    users: List[User] 
 
 class GiveawayCreated(BaseModel):
     """
@@ -972,7 +972,7 @@ class GiveawayCreated(BaseModel):
     Reference: https://core.telegram.org/bots/api#giveawaycreated
     """
 
-    prize_star_count: Optional[int] = Field(default=None)
+    prize_star_count: Optional[int] = Field(default=None) 
 
 class Giveaway(BaseModel):
     """
@@ -990,7 +990,7 @@ class Giveaway(BaseModel):
     prize_description: Optional[str] = Field(default=None)
     country_codes: Optional[List[str]] = Field(default=None)
     prize_star_count: Optional[int] = Field(default=None)
-    premium_subscription_month_count: Optional[int] = Field(default=None)
+    premium_subscription_month_count: Optional[int] = Field(default=None) 
 
 class GiveawayWinners(BaseModel):
     """
@@ -1011,7 +1011,7 @@ class GiveawayWinners(BaseModel):
     unclaimed_prize_count: Optional[int] = Field(default=None)
     only_new_members: Optional[bool] = Field(default=None)
     was_refunded: Optional[bool] = Field(default=None)
-    prize_description: Optional[str] = Field(default=None)
+    prize_description: Optional[str] = Field(default=None) 
 
 class GiveawayCompleted(BaseModel):
     """
@@ -1024,7 +1024,7 @@ class GiveawayCompleted(BaseModel):
     winner_count: int
     unclaimed_prize_count: Optional[int] = Field(default=None)
     giveaway_message: Optional[Message] = Field(default=None)
-    is_star_giveaway: Optional[bool] = Field(default=None)
+    is_star_giveaway: Optional[bool] = Field(default=None) 
 
 class LinkPreviewOptions(BaseModel):
     """
@@ -1037,7 +1037,7 @@ class LinkPreviewOptions(BaseModel):
     url: Optional[str] = Field(default=None)
     prefer_small_media: Optional[bool] = Field(default=None)
     prefer_large_media: Optional[bool] = Field(default=None)
-    show_above_text: Optional[bool] = Field(default=None)
+    show_above_text: Optional[bool] = Field(default=None) 
 
 class UserProfilePhotos(BaseModel):
     """
@@ -1047,7 +1047,7 @@ class UserProfilePhotos(BaseModel):
     """
 
     total_count: int
-    photos: List[List[PhotoSize]]
+    photos: List[List[PhotoSize]] 
 
 class File(BaseModel):
     """
@@ -1064,7 +1064,7 @@ class File(BaseModel):
     file_id: str
     file_unique_id: str
     file_size: Optional[int] = Field(default=None)
-    file_path: Optional[str] = Field(default=None)
+    file_path: Optional[str] = Field(default=None) 
 
 class WebAppInfo(BaseModel):
     """
@@ -1073,7 +1073,7 @@ class WebAppInfo(BaseModel):
     Reference: https://core.telegram.org/bots/api#webappinfo
     """
 
-    url: str
+    url: str 
 
 class ReplyKeyboardMarkup(BaseModel):
     """
@@ -1090,7 +1090,7 @@ class ReplyKeyboardMarkup(BaseModel):
     resize_keyboard: Optional[bool] = Field(default=None)
     one_time_keyboard: Optional[bool] = Field(default=None)
     input_field_placeholder: Optional[str] = Field(default=None)
-    selective: Optional[bool] = Field(default=None)
+    selective: Optional[bool] = Field(default=None) 
 
 class KeyboardButton(BaseModel):
     """
@@ -1110,7 +1110,7 @@ class KeyboardButton(BaseModel):
     request_contact: Optional[bool] = Field(default=None)
     request_location: Optional[bool] = Field(default=None)
     request_poll: Optional[KeyboardButtonPollType] = Field(default=None)
-    web_app: Optional[WebAppInfo] = Field(default=None)
+    web_app: Optional[WebAppInfo] = Field(default=None) 
 
 class KeyboardButtonRequestUsers(BaseModel):
     """
@@ -1128,7 +1128,7 @@ class KeyboardButtonRequestUsers(BaseModel):
     max_quantity: Optional[int] = Field(default=None)
     request_name: Optional[bool] = Field(default=None)
     request_username: Optional[bool] = Field(default=None)
-    request_photo: Optional[bool] = Field(default=None)
+    request_photo: Optional[bool] = Field(default=None) 
 
 class KeyboardButtonRequestChat(BaseModel):
     """
@@ -1152,7 +1152,7 @@ class KeyboardButtonRequestChat(BaseModel):
     bot_is_member: Optional[bool] = Field(default=None)
     request_title: Optional[bool] = Field(default=None)
     request_username: Optional[bool] = Field(default=None)
-    request_photo: Optional[bool] = Field(default=None)
+    request_photo: Optional[bool] = Field(default=None) 
 
 class KeyboardButtonPollType(BaseModel):
     """
@@ -1163,7 +1163,7 @@ class KeyboardButtonPollType(BaseModel):
     Reference: https://core.telegram.org/bots/api#keyboardbuttonpolltype
     """
 
-    type: Optional[str] = Field(default=None)
+    type: Optional[str] = Field(default=None) 
 
 class ReplyKeyboardRemove(BaseModel):
     """
@@ -1181,7 +1181,7 @@ class ReplyKeyboardRemove(BaseModel):
     """
 
     remove_keyboard: bool
-    selective: Optional[bool] = Field(default=None)
+    selective: Optional[bool] = Field(default=None) 
 
 class InlineKeyboardMarkup(BaseModel):
     """
@@ -1191,7 +1191,7 @@ class InlineKeyboardMarkup(BaseModel):
     Reference: https://core.telegram.org/bots/api#inlinekeyboardmarkup
     """
 
-    inline_keyboard: List[List[InlineKeyboardButton]]
+    inline_keyboard: List[List[InlineKeyboardButton]] 
 
 class InlineKeyboardButton(BaseModel):
     """
@@ -1212,7 +1212,7 @@ class InlineKeyboardButton(BaseModel):
     switch_inline_query_chosen_chat: Optional[SwitchInlineQueryChosenChat] = Field(default=None)
     copy_text: Optional[CopyTextButton] = Field(default=None)
     callback_game: Optional[CallbackGame] = Field(default=None)
-    pay: Optional[bool] = Field(default=None)
+    pay: Optional[bool] = Field(default=None) 
 
 class LoginUrl(BaseModel):
     """
@@ -1230,7 +1230,7 @@ class LoginUrl(BaseModel):
     url: str
     forward_text: Optional[str] = Field(default=None)
     bot_username: Optional[str] = Field(default=None)
-    request_write_access: Optional[bool] = Field(default=None)
+    request_write_access: Optional[bool] = Field(default=None) 
 
 class SwitchInlineQueryChosenChat(BaseModel):
     """
@@ -1245,7 +1245,7 @@ class SwitchInlineQueryChosenChat(BaseModel):
     allow_user_chats: Optional[bool] = Field(default=None)
     allow_bot_chats: Optional[bool] = Field(default=None)
     allow_group_chats: Optional[bool] = Field(default=None)
-    allow_channel_chats: Optional[bool] = Field(default=None)
+    allow_channel_chats: Optional[bool] = Field(default=None) 
 
 class CopyTextButton(BaseModel):
     """
@@ -1255,7 +1255,7 @@ class CopyTextButton(BaseModel):
     Reference: https://core.telegram.org/bots/api#copytextbutton
     """
 
-    text: str
+    text: str 
 
 class CallbackQuery(BaseModel):
     """
@@ -1278,7 +1278,7 @@ class CallbackQuery(BaseModel):
     message: Optional[Message] = Field(default=None)
     inline_message_id: Optional[str] = Field(default=None)
     data: Optional[str] = Field(default=None)
-    game_short_name: Optional[str] = Field(default=None)
+    game_short_name: Optional[str] = Field(default=None) 
 
 class ForceReply(BaseModel):
     """
@@ -1296,7 +1296,7 @@ class ForceReply(BaseModel):
 
     force_reply: bool
     input_field_placeholder: Optional[str] = Field(default=None)
-    selective: Optional[bool] = Field(default=None)
+    selective: Optional[bool] = Field(default=None) 
 
 class ChatPhoto(BaseModel):
     """
@@ -1308,7 +1308,7 @@ class ChatPhoto(BaseModel):
     small_file_id: str
     small_file_unique_id: str
     big_file_id: str
-    big_file_unique_id: str
+    big_file_unique_id: str 
 
 class ChatInviteLink(BaseModel):
     """
@@ -1327,7 +1327,7 @@ class ChatInviteLink(BaseModel):
     member_limit: Optional[int] = Field(default=None)
     pending_join_request_count: Optional[int] = Field(default=None)
     subscription_period: Optional[int] = Field(default=None)
-    subscription_price: Optional[int] = Field(default=None)
+    subscription_price: Optional[int] = Field(default=None) 
 
 class ChatAdministratorRights(BaseModel):
     """
@@ -1351,7 +1351,7 @@ class ChatAdministratorRights(BaseModel):
     can_post_messages: Optional[bool] = Field(default=None)
     can_edit_messages: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
-    can_manage_topics: Optional[bool] = Field(default=None)
+    can_manage_topics: Optional[bool] = Field(default=None) 
 
 class ChatMemberUpdated(BaseModel):
     """
@@ -1368,7 +1368,7 @@ class ChatMemberUpdated(BaseModel):
     new_chat_member: ChatMember
     invite_link: Optional[ChatInviteLink] = Field(default=None)
     via_join_request: Optional[bool] = Field(default=None)
-    via_chat_folder_invite_link: Optional[bool] = Field(default=None)
+    via_chat_folder_invite_link: Optional[bool] = Field(default=None) 
 
 class ChatMemberOwner(BaseModel):
     """
@@ -1381,7 +1381,7 @@ class ChatMemberOwner(BaseModel):
     status: Literal["creator"] = "creator"
     user: User
     is_anonymous: bool
-    custom_title: Optional[str] = Field(default=None)
+    custom_title: Optional[str] = Field(default=None) 
 
 class ChatMemberAdministrator(BaseModel):
     """
@@ -1409,7 +1409,7 @@ class ChatMemberAdministrator(BaseModel):
     can_edit_messages: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
     can_manage_topics: Optional[bool] = Field(default=None)
-    custom_title: Optional[str] = Field(default=None)
+    custom_title: Optional[str] = Field(default=None) 
 
 class ChatMemberMember(BaseModel):
     """
@@ -1421,7 +1421,7 @@ class ChatMemberMember(BaseModel):
 
     status: Literal["member"] = "member"
     user: User
-    until_date: Optional[int] = Field(default=None)
+    until_date: Optional[int] = Field(default=None) 
 
 class ChatMemberRestricted(BaseModel):
     """
@@ -1448,7 +1448,7 @@ class ChatMemberRestricted(BaseModel):
     can_invite_users: bool
     can_pin_messages: bool
     can_manage_topics: bool
-    until_date: int
+    until_date: int 
 
 class ChatMemberLeft(BaseModel):
     """
@@ -1460,7 +1460,7 @@ class ChatMemberLeft(BaseModel):
     """
 
     status: Literal["left"] = "left"
-    user: User
+    user: User 
 
 class ChatMemberBanned(BaseModel):
     """
@@ -1473,7 +1473,7 @@ class ChatMemberBanned(BaseModel):
 
     status: Literal["kicked"] = "kicked"
     user: User
-    until_date: int
+    until_date: int 
 
 class ChatJoinRequest(BaseModel):
     """
@@ -1487,7 +1487,7 @@ class ChatJoinRequest(BaseModel):
     user_chat_id: int
     date: int
     bio: Optional[str] = Field(default=None)
-    invite_link: Optional[ChatInviteLink] = Field(default=None)
+    invite_link: Optional[ChatInviteLink] = Field(default=None) 
 
 class ChatPermissions(BaseModel):
     """
@@ -1510,7 +1510,7 @@ class ChatPermissions(BaseModel):
     can_change_info: Optional[bool] = Field(default=None)
     can_invite_users: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
-    can_manage_topics: Optional[bool] = Field(default=None)
+    can_manage_topics: Optional[bool] = Field(default=None) 
 
 class Birthdate(BaseModel):
     """
@@ -1521,7 +1521,7 @@ class Birthdate(BaseModel):
 
     day: int
     month: int
-    year: Optional[int] = Field(default=None)
+    year: Optional[int] = Field(default=None) 
 
 class BusinessIntro(BaseModel):
     """
@@ -1533,7 +1533,7 @@ class BusinessIntro(BaseModel):
 
     title: Optional[str] = Field(default=None)
     message: Optional[str] = Field(default=None)
-    sticker: Optional[Sticker] = Field(default=None)
+    sticker: Optional[Sticker] = Field(default=None) 
 
 class BusinessLocation(BaseModel):
     """
@@ -1544,7 +1544,7 @@ class BusinessLocation(BaseModel):
     """
 
     address: str
-    location: Optional[Location] = Field(default=None)
+    location: Optional[Location] = Field(default=None) 
 
 class BusinessOpeningHoursInterval(BaseModel):
     """
@@ -1555,7 +1555,7 @@ class BusinessOpeningHoursInterval(BaseModel):
     """
 
     opening_minute: int
-    closing_minute: int
+    closing_minute: int 
 
 class BusinessOpeningHours(BaseModel):
     """
@@ -1565,7 +1565,7 @@ class BusinessOpeningHours(BaseModel):
     """
 
     time_zone_name: str
-    opening_hours: List[BusinessOpeningHoursInterval]
+    opening_hours: List[BusinessOpeningHoursInterval] 
 
 class ChatLocation(BaseModel):
     """
@@ -1576,7 +1576,7 @@ class ChatLocation(BaseModel):
     """
 
     location: Location
-    address: str
+    address: str 
 
 class ReactionTypeEmoji(BaseModel):
     """
@@ -1586,7 +1586,7 @@ class ReactionTypeEmoji(BaseModel):
     """
 
     type: Literal["emoji"] = "emoji"
-    emoji: str
+    emoji: str 
 
 class ReactionTypeCustomEmoji(BaseModel):
     """
@@ -1596,7 +1596,7 @@ class ReactionTypeCustomEmoji(BaseModel):
     """
 
     type: Literal["custom_emoji"] = "custom_emoji"
-    custom_emoji_id: str
+    custom_emoji_id: str 
 
 class ReactionTypePaid(BaseModel):
     """
@@ -1605,7 +1605,7 @@ class ReactionTypePaid(BaseModel):
     Reference: https://core.telegram.org/bots/api#reactiontypepaid
     """
 
-    type: Literal["paid"] = "paid"
+    type: Literal["paid"] = "paid" 
 
 class ReactionCount(BaseModel):
     """
@@ -1616,7 +1616,7 @@ class ReactionCount(BaseModel):
     """
 
     type: ReactionType
-    total_count: int
+    total_count: int 
 
 class MessageReactionUpdated(BaseModel):
     """
@@ -1632,7 +1632,7 @@ class MessageReactionUpdated(BaseModel):
     old_reaction: List[ReactionType]
     new_reaction: List[ReactionType]
     user: Optional[User] = Field(default=None)
-    actor_chat: Optional[Chat] = Field(default=None)
+    actor_chat: Optional[Chat] = Field(default=None) 
 
 class MessageReactionCountUpdated(BaseModel):
     """
@@ -1645,7 +1645,7 @@ class MessageReactionCountUpdated(BaseModel):
     chat: Chat
     message_id: int
     date: int
-    reactions: List[ReactionCount]
+    reactions: List[ReactionCount] 
 
 class ForumTopic(BaseModel):
     """
@@ -1657,7 +1657,7 @@ class ForumTopic(BaseModel):
     message_thread_id: int
     name: str
     icon_color: int
-    icon_custom_emoji_id: Optional[str] = Field(default=None)
+    icon_custom_emoji_id: Optional[str] = Field(default=None) 
 
 class BotCommand(BaseModel):
     """
@@ -1667,7 +1667,7 @@ class BotCommand(BaseModel):
     """
 
     command: str
-    description: str
+    description: str 
 
 class BotCommandScopeDefault(BaseModel):
     """
@@ -1678,7 +1678,7 @@ class BotCommandScopeDefault(BaseModel):
     Reference: https://core.telegram.org/bots/api#botcommandscopedefault
     """
 
-    type: Literal["default"] = "default"
+    type: Literal["default"] = "default" 
 
 class BotCommandScopeAllPrivateChats(BaseModel):
     """
@@ -1688,7 +1688,7 @@ class BotCommandScopeAllPrivateChats(BaseModel):
     Reference: https://core.telegram.org/bots/api#botcommandscopeallprivatechats
     """
 
-    type: Literal["all_private_chats"] = "all_private_chats"
+    type: Literal["all_private_chats"] = "all_private_chats" 
 
 class BotCommandScopeAllGroupChats(BaseModel):
     """
@@ -1698,7 +1698,7 @@ class BotCommandScopeAllGroupChats(BaseModel):
     Reference: https://core.telegram.org/bots/api#botcommandscopeallgroupchats
     """
 
-    type: Literal["all_group_chats"] = "all_group_chats"
+    type: Literal["all_group_chats"] = "all_group_chats" 
 
 class BotCommandScopeAllChatAdministrators(BaseModel):
     """
@@ -1708,7 +1708,7 @@ class BotCommandScopeAllChatAdministrators(BaseModel):
     Reference: https://core.telegram.org/bots/api#botcommandscopeallchatadministrators
     """
 
-    type: Literal["all_chat_administrators"] = "all_chat_administrators"
+    type: Literal["all_chat_administrators"] = "all_chat_administrators" 
 
 class BotCommandScopeChat(BaseModel):
     """
@@ -1719,7 +1719,7 @@ class BotCommandScopeChat(BaseModel):
     """
 
     type: Literal["chat"] = "chat"
-    chat_id: Union[int, str]
+    chat_id: Union[int, str] 
 
 class BotCommandScopeChatAdministrators(BaseModel):
     """
@@ -1730,7 +1730,7 @@ class BotCommandScopeChatAdministrators(BaseModel):
     """
 
     type: Literal["chat_administrators"] = "chat_administrators"
-    chat_id: Union[int, str]
+    chat_id: Union[int, str] 
 
 class BotCommandScopeChatMember(BaseModel):
     """
@@ -1742,7 +1742,7 @@ class BotCommandScopeChatMember(BaseModel):
 
     type: Literal["chat_member"] = "chat_member"
     chat_id: Union[int, str]
-    user_id: int
+    user_id: int 
 
 class BotName(BaseModel):
     """
@@ -1751,7 +1751,7 @@ class BotName(BaseModel):
     Reference: https://core.telegram.org/bots/api#botname
     """
 
-    name: str
+    name: str 
 
 class BotDescription(BaseModel):
     """
@@ -1760,7 +1760,7 @@ class BotDescription(BaseModel):
     Reference: https://core.telegram.org/bots/api#botdescription
     """
 
-    description: str
+    description: str 
 
 class BotShortDescription(BaseModel):
     """
@@ -1769,7 +1769,7 @@ class BotShortDescription(BaseModel):
     Reference: https://core.telegram.org/bots/api#botshortdescription
     """
 
-    short_description: str
+    short_description: str 
 
 class MenuButtonCommands(BaseModel):
     """
@@ -1779,7 +1779,7 @@ class MenuButtonCommands(BaseModel):
     Reference: https://core.telegram.org/bots/api#menubuttoncommands
     """
 
-    type: Literal["commands"] = "commands"
+    type: Literal["commands"] = "commands" 
 
 class MenuButtonWebApp(BaseModel):
     """
@@ -1791,7 +1791,7 @@ class MenuButtonWebApp(BaseModel):
 
     type: Literal["web_app"] = "web_app"
     text: str
-    web_app: WebAppInfo
+    web_app: WebAppInfo 
 
 class MenuButtonDefault(BaseModel):
     """
@@ -1801,7 +1801,7 @@ class MenuButtonDefault(BaseModel):
     Reference: https://core.telegram.org/bots/api#menubuttondefault
     """
 
-    type: Literal["default"] = "default"
+    type: Literal["default"] = "default" 
 
 class ChatBoostSourcePremium(BaseModel):
     """
@@ -1813,7 +1813,7 @@ class ChatBoostSourcePremium(BaseModel):
     """
 
     source: Literal["premium"] = "premium"
-    user: User
+    user: User 
 
 class ChatBoostSourceGiftCode(BaseModel):
     """
@@ -1827,7 +1827,7 @@ class ChatBoostSourceGiftCode(BaseModel):
     """
 
     source: Literal["gift_code"] = "gift_code"
-    user: User
+    user: User 
 
 class ChatBoostSourceGiveaway(BaseModel):
     """
@@ -1845,7 +1845,7 @@ class ChatBoostSourceGiveaway(BaseModel):
     giveaway_message_id: int
     user: Optional[User] = Field(default=None)
     prize_star_count: Optional[int] = Field(default=None)
-    is_unclaimed: Optional[bool] = Field(default=None)
+    is_unclaimed: Optional[bool] = Field(default=None) 
 
 class ChatBoost(BaseModel):
     """
@@ -1857,7 +1857,7 @@ class ChatBoost(BaseModel):
     boost_id: str
     add_date: int
     expiration_date: int
-    source: ChatBoostSource
+    source: ChatBoostSource 
 
 class ChatBoostUpdated(BaseModel):
     """
@@ -1868,7 +1868,7 @@ class ChatBoostUpdated(BaseModel):
     """
 
     chat: Chat
-    boost: ChatBoost
+    boost: ChatBoost 
 
 class ChatBoostRemoved(BaseModel):
     """
@@ -1881,7 +1881,7 @@ class ChatBoostRemoved(BaseModel):
     chat: Chat
     boost_id: str
     remove_date: int
-    source: ChatBoostSource
+    source: ChatBoostSource 
 
 class UserChatBoosts(BaseModel):
     """
@@ -1891,7 +1891,7 @@ class UserChatBoosts(BaseModel):
     Reference: https://core.telegram.org/bots/api#userchatboosts
     """
 
-    boosts: List[ChatBoost]
+    boosts: List[ChatBoost] 
 
 class BusinessConnection(BaseModel):
     """
@@ -1906,7 +1906,7 @@ class BusinessConnection(BaseModel):
     user_chat_id: int
     date: int
     can_reply: bool
-    is_enabled: bool
+    is_enabled: bool 
 
 class BusinessMessagesDeleted(BaseModel):
     """
@@ -1918,7 +1918,7 @@ class BusinessMessagesDeleted(BaseModel):
 
     business_connection_id: str
     chat: Chat
-    message_ids: List[int]
+    message_ids: List[int] 
 
 class ResponseParameters(BaseModel):
     """
@@ -1928,7 +1928,7 @@ class ResponseParameters(BaseModel):
     """
 
     migrate_to_chat_id: Optional[int] = Field(default=None)
-    retry_after: Optional[int] = Field(default=None)
+    retry_after: Optional[int] = Field(default=None) 
 
 class InputMediaPhoto(BaseModel):
     """
@@ -1943,7 +1943,7 @@ class InputMediaPhoto(BaseModel):
     parse_mode: Optional[str] = Field(default=None)
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
-    has_spoiler: Optional[bool] = Field(default=None)
+    has_spoiler: Optional[bool] = Field(default=None) 
 
 class InputMediaVideo(BaseModel):
     """
@@ -1963,7 +1963,7 @@ class InputMediaVideo(BaseModel):
     height: Optional[int] = Field(default=None)
     duration: Optional[int] = Field(default=None)
     supports_streaming: Optional[bool] = Field(default=None)
-    has_spoiler: Optional[bool] = Field(default=None)
+    has_spoiler: Optional[bool] = Field(default=None) 
 
 class InputMediaAnimation(BaseModel):
     """
@@ -1983,7 +1983,7 @@ class InputMediaAnimation(BaseModel):
     width: Optional[int] = Field(default=None)
     height: Optional[int] = Field(default=None)
     duration: Optional[int] = Field(default=None)
-    has_spoiler: Optional[bool] = Field(default=None)
+    has_spoiler: Optional[bool] = Field(default=None) 
 
 class InputMediaAudio(BaseModel):
     """
@@ -2001,7 +2001,7 @@ class InputMediaAudio(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     duration: Optional[int] = Field(default=None)
     performer: Optional[str] = Field(default=None)
-    title: Optional[str] = Field(default=None)
+    title: Optional[str] = Field(default=None) 
 
 class InputMediaDocument(BaseModel):
     """
@@ -2016,7 +2016,7 @@ class InputMediaDocument(BaseModel):
     caption: Optional[str] = Field(default=None)
     parse_mode: Optional[str] = Field(default=None)
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
-    disable_content_type_detection: Optional[bool] = Field(default=None)
+    disable_content_type_detection: Optional[bool] = Field(default=None) 
 
 class InputFile(BaseModel):
     """
@@ -2029,7 +2029,7 @@ class InputFile(BaseModel):
     """
 
     pass
-
+ 
 
 class InputPaidMediaPhoto(BaseModel):
     """
@@ -2039,7 +2039,7 @@ class InputPaidMediaPhoto(BaseModel):
     """
 
     type: Literal["photo"] = "photo"
-    media: str
+    media: str 
 
 class InputPaidMediaVideo(BaseModel):
     """
@@ -2054,7 +2054,7 @@ class InputPaidMediaVideo(BaseModel):
     width: Optional[int] = Field(default=None)
     height: Optional[int] = Field(default=None)
     duration: Optional[int] = Field(default=None)
-    supports_streaming: Optional[bool] = Field(default=None)
+    supports_streaming: Optional[bool] = Field(default=None) 
 
 class Sticker(BaseModel):
     """
@@ -2077,7 +2077,7 @@ class Sticker(BaseModel):
     mask_position: Optional[MaskPosition] = Field(default=None)
     custom_emoji_id: Optional[str] = Field(default=None)
     needs_repainting: Optional[bool] = Field(default=None)
-    file_size: Optional[int] = Field(default=None)
+    file_size: Optional[int] = Field(default=None) 
 
 class StickerSet(BaseModel):
     """
@@ -2090,7 +2090,7 @@ class StickerSet(BaseModel):
     title: str
     sticker_type: str
     stickers: List[Sticker]
-    thumbnail: Optional[PhotoSize] = Field(default=None)
+    thumbnail: Optional[PhotoSize] = Field(default=None) 
 
 class MaskPosition(BaseModel):
     """
@@ -2103,7 +2103,7 @@ class MaskPosition(BaseModel):
     point: str
     x_shift: float
     y_shift: float
-    scale: float
+    scale: float 
 
 class InputSticker(BaseModel):
     """
@@ -2117,7 +2117,7 @@ class InputSticker(BaseModel):
     format: str
     emoji_list: List[str]
     mask_position: Optional[MaskPosition] = Field(default=None)
-    keywords: Optional[List[str]] = Field(default=None)
+    keywords: Optional[List[str]] = Field(default=None) 
 
 class InlineQuery(BaseModel):
     """
@@ -2133,7 +2133,7 @@ class InlineQuery(BaseModel):
     query: str
     offset: str
     chat_type: Optional[str] = Field(default=None)
-    location: Optional[Location] = Field(default=None)
+    location: Optional[Location] = Field(default=None) 
 
 class InlineQueryResultsButton(BaseModel):
     """
@@ -2146,7 +2146,7 @@ class InlineQueryResultsButton(BaseModel):
 
     text: str
     web_app: Optional[WebAppInfo] = Field(default=None)
-    start_parameter: Optional[str] = Field(default=None)
+    start_parameter: Optional[str] = Field(default=None) 
 
 class InlineQueryResultArticle(BaseModel):
     """
@@ -2166,7 +2166,7 @@ class InlineQueryResultArticle(BaseModel):
     description: Optional[str] = Field(default=None)
     thumbnail_url: Optional[str] = Field(default=None)
     thumbnail_width: Optional[int] = Field(default=None)
-    thumbnail_height: Optional[int] = Field(default=None)
+    thumbnail_height: Optional[int] = Field(default=None) 
 
 class InlineQueryResultPhoto(BaseModel):
     """
@@ -2192,7 +2192,7 @@ class InlineQueryResultPhoto(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultGif(BaseModel):
     """
@@ -2219,7 +2219,7 @@ class InlineQueryResultGif(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultMpeg4Gif(BaseModel):
     """
@@ -2247,7 +2247,7 @@ class InlineQueryResultMpeg4Gif(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultVideo(BaseModel):
     """
@@ -2276,7 +2276,7 @@ class InlineQueryResultVideo(BaseModel):
     video_duration: Optional[int] = Field(default=None)
     description: Optional[str] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultAudio(BaseModel):
     """
@@ -2299,7 +2299,7 @@ class InlineQueryResultAudio(BaseModel):
     performer: Optional[str] = Field(default=None)
     audio_duration: Optional[int] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultVoice(BaseModel):
     """
@@ -2322,7 +2322,7 @@ class InlineQueryResultVoice(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     voice_duration: Optional[int] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultDocument(BaseModel):
     """
@@ -2350,7 +2350,7 @@ class InlineQueryResultDocument(BaseModel):
     input_message_content: Optional[InputMessageContent] = Field(default=None)
     thumbnail_url: Optional[str] = Field(default=None)
     thumbnail_width: Optional[int] = Field(default=None)
-    thumbnail_height: Optional[int] = Field(default=None)
+    thumbnail_height: Optional[int] = Field(default=None) 
 
 class InlineQueryResultLocation(BaseModel):
     """
@@ -2376,7 +2376,7 @@ class InlineQueryResultLocation(BaseModel):
     input_message_content: Optional[InputMessageContent] = Field(default=None)
     thumbnail_url: Optional[str] = Field(default=None)
     thumbnail_width: Optional[int] = Field(default=None)
-    thumbnail_height: Optional[int] = Field(default=None)
+    thumbnail_height: Optional[int] = Field(default=None) 
 
 class InlineQueryResultVenue(BaseModel):
     """
@@ -2402,7 +2402,7 @@ class InlineQueryResultVenue(BaseModel):
     input_message_content: Optional[InputMessageContent] = Field(default=None)
     thumbnail_url: Optional[str] = Field(default=None)
     thumbnail_width: Optional[int] = Field(default=None)
-    thumbnail_height: Optional[int] = Field(default=None)
+    thumbnail_height: Optional[int] = Field(default=None) 
 
 class InlineQueryResultContact(BaseModel):
     """
@@ -2425,7 +2425,7 @@ class InlineQueryResultContact(BaseModel):
     input_message_content: Optional[InputMessageContent] = Field(default=None)
     thumbnail_url: Optional[str] = Field(default=None)
     thumbnail_width: Optional[int] = Field(default=None)
-    thumbnail_height: Optional[int] = Field(default=None)
+    thumbnail_height: Optional[int] = Field(default=None) 
 
 class InlineQueryResultGame(BaseModel):
     """
@@ -2437,7 +2437,7 @@ class InlineQueryResultGame(BaseModel):
     type: Literal["game"] = "game"
     id: str
     game_short_name: str
-    reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
+    reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None) 
 
 class InlineQueryResultCachedPhoto(BaseModel):
     """
@@ -2461,7 +2461,7 @@ class InlineQueryResultCachedPhoto(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultCachedGif(BaseModel):
     """
@@ -2484,7 +2484,7 @@ class InlineQueryResultCachedGif(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultCachedMpeg4Gif(BaseModel):
     """
@@ -2508,7 +2508,7 @@ class InlineQueryResultCachedMpeg4Gif(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultCachedSticker(BaseModel):
     """
@@ -2525,7 +2525,7 @@ class InlineQueryResultCachedSticker(BaseModel):
     id: str
     sticker_file_id: str
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultCachedDocument(BaseModel):
     """
@@ -2548,7 +2548,7 @@ class InlineQueryResultCachedDocument(BaseModel):
     parse_mode: Optional[str] = Field(default=None)
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultCachedVideo(BaseModel):
     """
@@ -2572,7 +2572,7 @@ class InlineQueryResultCachedVideo(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultCachedVoice(BaseModel):
     """
@@ -2594,7 +2594,7 @@ class InlineQueryResultCachedVoice(BaseModel):
     parse_mode: Optional[str] = Field(default=None)
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InlineQueryResultCachedAudio(BaseModel):
     """
@@ -2615,7 +2615,7 @@ class InlineQueryResultCachedAudio(BaseModel):
     parse_mode: Optional[str] = Field(default=None)
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
-    input_message_content: Optional[InputMessageContent] = Field(default=None)
+    input_message_content: Optional[InputMessageContent] = Field(default=None) 
 
 class InputTextMessageContent(BaseModel):
     """
@@ -2629,7 +2629,7 @@ class InputTextMessageContent(BaseModel):
     message_text: str
     parse_mode: Optional[str] = Field(default=None)
     entities: Optional[List[MessageEntity]] = Field(default=None)
-    link_preview_options: Optional[LinkPreviewOptions] = Field(default=None)
+    link_preview_options: Optional[LinkPreviewOptions] = Field(default=None) 
 
 class InputLocationMessageContent(BaseModel):
     """
@@ -2645,7 +2645,7 @@ class InputLocationMessageContent(BaseModel):
     horizontal_accuracy: Optional[float] = Field(default=None)
     live_period: Optional[int] = Field(default=None)
     heading: Optional[int] = Field(default=None)
-    proximity_alert_radius: Optional[int] = Field(default=None)
+    proximity_alert_radius: Optional[int] = Field(default=None) 
 
 class InputVenueMessageContent(BaseModel):
     """
@@ -2663,7 +2663,7 @@ class InputVenueMessageContent(BaseModel):
     foursquare_id: Optional[str] = Field(default=None)
     foursquare_type: Optional[str] = Field(default=None)
     google_place_id: Optional[str] = Field(default=None)
-    google_place_type: Optional[str] = Field(default=None)
+    google_place_type: Optional[str] = Field(default=None) 
 
 class InputContactMessageContent(BaseModel):
     """
@@ -2677,7 +2677,7 @@ class InputContactMessageContent(BaseModel):
     phone_number: str
     first_name: str
     last_name: Optional[str] = Field(default=None)
-    vcard: Optional[str] = Field(default=None)
+    vcard: Optional[str] = Field(default=None) 
 
 class InputInvoiceMessageContent(BaseModel):
     """
@@ -2707,7 +2707,7 @@ class InputInvoiceMessageContent(BaseModel):
     need_shipping_address: Optional[bool] = Field(default=None)
     send_phone_number_to_provider: Optional[bool] = Field(default=None)
     send_email_to_provider: Optional[bool] = Field(default=None)
-    is_flexible: Optional[bool] = Field(default=None)
+    is_flexible: Optional[bool] = Field(default=None) 
 
 class ChosenInlineResult(BaseModel):
     """
@@ -2722,7 +2722,7 @@ class ChosenInlineResult(BaseModel):
     from_user: User = Field(alias="from")
     query: str
     location: Optional[Location] = Field(default=None)
-    inline_message_id: Optional[str] = Field(default=None)
+    inline_message_id: Optional[str] = Field(default=None) 
 
 class SentWebAppMessage(BaseModel):
     """
@@ -2732,7 +2732,7 @@ class SentWebAppMessage(BaseModel):
     Reference: https://core.telegram.org/bots/api#sentwebappmessage
     """
 
-    inline_message_id: Optional[str] = Field(default=None)
+    inline_message_id: Optional[str] = Field(default=None) 
 
 class LabeledPrice(BaseModel):
     """
@@ -2743,7 +2743,7 @@ class LabeledPrice(BaseModel):
     """
 
     label: str
-    amount: int
+    amount: int 
 
 class Invoice(BaseModel):
     """
@@ -2756,7 +2756,7 @@ class Invoice(BaseModel):
     description: str
     start_parameter: str
     currency: str
-    total_amount: int
+    total_amount: int 
 
 class ShippingAddress(BaseModel):
     """
@@ -2770,7 +2770,7 @@ class ShippingAddress(BaseModel):
     city: str
     street_line1: str
     street_line2: str
-    post_code: str
+    post_code: str 
 
 class OrderInfo(BaseModel):
     """
@@ -2782,7 +2782,7 @@ class OrderInfo(BaseModel):
     name: Optional[str] = Field(default=None)
     phone_number: Optional[str] = Field(default=None)
     email: Optional[str] = Field(default=None)
-    shipping_address: Optional[ShippingAddress] = Field(default=None)
+    shipping_address: Optional[ShippingAddress] = Field(default=None) 
 
 class ShippingOption(BaseModel):
     """
@@ -2793,7 +2793,7 @@ class ShippingOption(BaseModel):
 
     id: str
     title: str
-    prices: List[LabeledPrice]
+    prices: List[LabeledPrice] 
 
 class SuccessfulPayment(BaseModel):
     """
@@ -2809,7 +2809,7 @@ class SuccessfulPayment(BaseModel):
     telegram_payment_charge_id: str
     provider_payment_charge_id: str
     shipping_option_id: Optional[str] = Field(default=None)
-    order_info: Optional[OrderInfo] = Field(default=None)
+    order_info: Optional[OrderInfo] = Field(default=None) 
 
 class RefundedPayment(BaseModel):
     """
@@ -2823,7 +2823,7 @@ class RefundedPayment(BaseModel):
     total_amount: int
     invoice_payload: str
     telegram_payment_charge_id: str
-    provider_payment_charge_id: Optional[str] = Field(default=None)
+    provider_payment_charge_id: Optional[str] = Field(default=None) 
 
 class ShippingQuery(BaseModel):
     """
@@ -2836,7 +2836,7 @@ class ShippingQuery(BaseModel):
     id: str
     from_user: User = Field(alias="from")
     invoice_payload: str
-    shipping_address: ShippingAddress
+    shipping_address: ShippingAddress 
 
 class PreCheckoutQuery(BaseModel):
     """
@@ -2852,7 +2852,7 @@ class PreCheckoutQuery(BaseModel):
     total_amount: int
     invoice_payload: str
     shipping_option_id: Optional[str] = Field(default=None)
-    order_info: Optional[OrderInfo] = Field(default=None)
+    order_info: Optional[OrderInfo] = Field(default=None) 
 
 class PaidMediaPurchased(BaseModel):
     """
@@ -2863,7 +2863,7 @@ class PaidMediaPurchased(BaseModel):
     """
 
     from_user: User = Field(alias="from")
-    paid_media_payload: str
+    paid_media_payload: str 
 
 class RevenueWithdrawalStatePending(BaseModel):
     """
@@ -2872,7 +2872,7 @@ class RevenueWithdrawalStatePending(BaseModel):
     Reference: https://core.telegram.org/bots/api#revenuewithdrawalstatepending
     """
 
-    type: Literal["pending"] = "pending"
+    type: Literal["pending"] = "pending" 
 
 class RevenueWithdrawalStateSucceeded(BaseModel):
     """
@@ -2883,7 +2883,7 @@ class RevenueWithdrawalStateSucceeded(BaseModel):
 
     type: Literal["succeeded"] = "succeeded"
     date: int
-    url: str
+    url: str 
 
 class RevenueWithdrawalStateFailed(BaseModel):
     """
@@ -2892,7 +2892,7 @@ class RevenueWithdrawalStateFailed(BaseModel):
     Reference: https://core.telegram.org/bots/api#revenuewithdrawalstatefailed
     """
 
-    type: Literal["failed"] = "failed"
+    type: Literal["failed"] = "failed" 
 
 class TransactionPartnerUser(BaseModel):
     """
@@ -2905,7 +2905,7 @@ class TransactionPartnerUser(BaseModel):
     user: User
     invoice_payload: Optional[str] = Field(default=None)
     paid_media: Optional[List[PaidMedia]] = Field(default=None)
-    paid_media_payload: Optional[str] = Field(default=None)
+    paid_media_payload: Optional[str] = Field(default=None) 
 
 class TransactionPartnerFragment(BaseModel):
     """
@@ -2915,7 +2915,7 @@ class TransactionPartnerFragment(BaseModel):
     """
 
     type: Literal["fragment"] = "fragment"
-    withdrawal_state: Optional[RevenueWithdrawalState] = Field(default=None)
+    withdrawal_state: Optional[RevenueWithdrawalState] = Field(default=None) 
 
 class TransactionPartnerTelegramAds(BaseModel):
     """
@@ -2925,7 +2925,7 @@ class TransactionPartnerTelegramAds(BaseModel):
     Reference: https://core.telegram.org/bots/api#transactionpartnertelegramads
     """
 
-    type: Literal["telegram_ads"] = "telegram_ads"
+    type: Literal["telegram_ads"] = "telegram_ads" 
 
 class TransactionPartnerTelegramApi(BaseModel):
     """
@@ -2935,7 +2935,7 @@ class TransactionPartnerTelegramApi(BaseModel):
     """
 
     type: Literal["telegram_api"] = "telegram_api"
-    request_count: int
+    request_count: int 
 
 class TransactionPartnerOther(BaseModel):
     """
@@ -2945,7 +2945,7 @@ class TransactionPartnerOther(BaseModel):
     Reference: https://core.telegram.org/bots/api#transactionpartnerother
     """
 
-    type: Literal["other"] = "other"
+    type: Literal["other"] = "other" 
 
 class StarTransaction(BaseModel):
     """
@@ -2958,7 +2958,7 @@ class StarTransaction(BaseModel):
     amount: int
     date: int
     source: Optional[TransactionPartner] = Field(default=None)
-    receiver: Optional[TransactionPartner] = Field(default=None)
+    receiver: Optional[TransactionPartner] = Field(default=None) 
 
 class StarTransactions(BaseModel):
     """
@@ -2967,7 +2967,7 @@ class StarTransactions(BaseModel):
     Reference: https://core.telegram.org/bots/api#startransactions
     """
 
-    transactions: List[StarTransaction]
+    transactions: List[StarTransaction] 
 
 class PassportData(BaseModel):
     """
@@ -2978,7 +2978,7 @@ class PassportData(BaseModel):
     """
 
     data: List[EncryptedPassportElement]
-    credentials: EncryptedCredentials
+    credentials: EncryptedCredentials 
 
 class PassportFile(BaseModel):
     """
@@ -2992,7 +2992,7 @@ class PassportFile(BaseModel):
     file_id: str
     file_unique_id: str
     file_size: int
-    file_date: int
+    file_date: int 
 
 class EncryptedPassportElement(BaseModel):
     """
@@ -3011,7 +3011,7 @@ class EncryptedPassportElement(BaseModel):
     front_side: Optional[PassportFile] = Field(default=None)
     reverse_side: Optional[PassportFile] = Field(default=None)
     selfie: Optional[PassportFile] = Field(default=None)
-    translation: Optional[List[PassportFile]] = Field(default=None)
+    translation: Optional[List[PassportFile]] = Field(default=None) 
 
 class EncryptedCredentials(BaseModel):
     """
@@ -3024,7 +3024,7 @@ class EncryptedCredentials(BaseModel):
 
     data: str
     hash: str
-    secret: str
+    secret: str 
 
 class PassportElementErrorDataField(BaseModel):
     """
@@ -3040,7 +3040,7 @@ class PassportElementErrorDataField(BaseModel):
     type: str
     field_name: str
     data_hash: str
-    message: str
+    message: str 
 
 class PassportElementErrorFrontSide(BaseModel):
     """
@@ -3055,7 +3055,7 @@ class PassportElementErrorFrontSide(BaseModel):
     source: Literal["front_side"] = "front_side"
     type: str
     file_hash: str
-    message: str
+    message: str 
 
 class PassportElementErrorReverseSide(BaseModel):
     """
@@ -3070,7 +3070,7 @@ class PassportElementErrorReverseSide(BaseModel):
     source: Literal["reverse_side"] = "reverse_side"
     type: str
     file_hash: str
-    message: str
+    message: str 
 
 class PassportElementErrorSelfie(BaseModel):
     """
@@ -3084,7 +3084,7 @@ class PassportElementErrorSelfie(BaseModel):
     source: Literal["selfie"] = "selfie"
     type: str
     file_hash: str
-    message: str
+    message: str 
 
 class PassportElementErrorFile(BaseModel):
     """
@@ -3098,7 +3098,7 @@ class PassportElementErrorFile(BaseModel):
     source: Literal["file"] = "file"
     type: str
     file_hash: str
-    message: str
+    message: str 
 
 class PassportElementErrorFiles(BaseModel):
     """
@@ -3112,7 +3112,7 @@ class PassportElementErrorFiles(BaseModel):
     source: Literal["files"] = "files"
     type: str
     file_hashes: List[str]
-    message: str
+    message: str 
 
 class PassportElementErrorTranslationFile(BaseModel):
     """
@@ -3126,7 +3126,7 @@ class PassportElementErrorTranslationFile(BaseModel):
     source: Literal["translation_file"] = "translation_file"
     type: str
     file_hash: str
-    message: str
+    message: str 
 
 class PassportElementErrorTranslationFiles(BaseModel):
     """
@@ -3140,7 +3140,7 @@ class PassportElementErrorTranslationFiles(BaseModel):
     source: Literal["translation_files"] = "translation_files"
     type: str
     file_hashes: List[str]
-    message: str
+    message: str 
 
 class PassportElementErrorUnspecified(BaseModel):
     """
@@ -3154,7 +3154,7 @@ class PassportElementErrorUnspecified(BaseModel):
     source: Literal["unspecified"] = "unspecified"
     type: str
     element_hash: str
-    message: str
+    message: str 
 
 class Game(BaseModel):
     """
@@ -3170,7 +3170,7 @@ class Game(BaseModel):
     photo: List[PhotoSize]
     text: Optional[str] = Field(default=None)
     text_entities: Optional[List[MessageEntity]] = Field(default=None)
-    animation: Optional[Animation] = Field(default=None)
+    animation: Optional[Animation] = Field(default=None) 
 
 class CallbackGame(BaseModel):
     """
@@ -3186,7 +3186,7 @@ class CallbackGame(BaseModel):
     disable_edit_message: Optional[bool] = Field(default=None)
     chat_id: Optional[int] = Field(default=None)
     message_id: Optional[int] = Field(default=None)
-    inline_message_id: Optional[str] = Field(default=None)
+    inline_message_id: Optional[str] = Field(default=None) 
 
 class GameHighScore(BaseModel):
     """
@@ -3198,33 +3198,33 @@ class GameHighScore(BaseModel):
 
     position: int
     user: User
-    score: int
+    score: int 
 
 MessageOrigin = Union[
     MessageOriginUser,
     MessageOriginHiddenUser,
     MessageOriginChat,
     MessageOriginChannel,
-]
+] 
 
 PaidMedia = Union[
     PaidMediaPreview,
     PaidMediaPhoto,
     PaidMediaVideo,
-]
+] 
 
 BackgroundFill = Union[
     BackgroundFillSolid,
     BackgroundFillGradient,
     BackgroundFillFreeformGradient,
-]
+] 
 
 BackgroundType = Union[
     BackgroundTypeFill,
     BackgroundTypeWallpaper,
     BackgroundTypePattern,
     BackgroundTypeChatTheme,
-]
+] 
 
 ChatMember = Union[
     ChatMemberOwner,
@@ -3233,13 +3233,13 @@ ChatMember = Union[
     ChatMemberRestricted,
     ChatMemberLeft,
     ChatMemberBanned,
-]
+] 
 
 ReactionType = Union[
     ReactionTypeEmoji,
     ReactionTypeCustomEmoji,
     ReactionTypePaid,
-]
+] 
 
 BotCommandScope = Union[
     BotCommandScopeDefault,
@@ -3249,19 +3249,19 @@ BotCommandScope = Union[
     BotCommandScopeChat,
     BotCommandScopeChatAdministrators,
     BotCommandScopeChatMember,
-]
+] 
 
 MenuButton = Union[
     MenuButtonCommands,
     MenuButtonWebApp,
     MenuButtonDefault,
-]
+] 
 
 ChatBoostSource = Union[
     ChatBoostSourcePremium,
     ChatBoostSourceGiftCode,
     ChatBoostSourceGiveaway,
-]
+] 
 
 InputMedia = Union[
     InputMediaAnimation,
@@ -3269,12 +3269,12 @@ InputMedia = Union[
     InputMediaAudio,
     InputMediaPhoto,
     InputMediaVideo,
-]
+] 
 
 InputPaidMedia = Union[
     InputPaidMediaPhoto,
     InputPaidMediaVideo,
-]
+] 
 
 InlineQueryResult = Union[
     InlineQueryResultCachedAudio,
@@ -3297,7 +3297,7 @@ InlineQueryResult = Union[
     InlineQueryResultVenue,
     InlineQueryResultVideo,
     InlineQueryResultVoice,
-]
+] 
 
 InputMessageContent = Union[
     InputTextMessageContent,
@@ -3305,13 +3305,13 @@ InputMessageContent = Union[
     InputVenueMessageContent,
     InputContactMessageContent,
     InputInvoiceMessageContent,
-]
+] 
 
 RevenueWithdrawalState = Union[
     RevenueWithdrawalStatePending,
     RevenueWithdrawalStateSucceeded,
     RevenueWithdrawalStateFailed,
-]
+] 
 
 TransactionPartner = Union[
     TransactionPartnerUser,
@@ -3319,7 +3319,7 @@ TransactionPartner = Union[
     TransactionPartnerTelegramAds,
     TransactionPartnerTelegramApi,
     TransactionPartnerOther,
-]
+] 
 
 PassportElementError = Union[
     PassportElementErrorDataField,
@@ -3331,7 +3331,7 @@ PassportElementError = Union[
     PassportElementErrorTranslationFile,
     PassportElementErrorTranslationFiles,
     PassportElementErrorUnspecified,
-]
+] 
 
 Update.model_rebuild()
 WebhookInfo.model_rebuild()

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from pydantic import TypeAdapter
+from pydantic import TypeAdapter, ValidationError
 from typing import Union, Optional, List
 
 from botapi.types import (
