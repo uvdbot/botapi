@@ -41,6 +41,12 @@ class BotAPI(Methods):
         log.info(type(field))
         log.info(isinstance(field, BaseModel))
         if isinstance(field, BaseModel):
+            for key in dir(field):
+                if key.startswith("_"):
+                    continue
+                value = getattr(field, key)
+                if isinstance(value, BaseModel):
+                    setattr(field, key, self._convert_field(value))
             if hasattr(field, "parse_mode"):
                 field.parse_mode = self.parse_mode
             return field.model_dump(
