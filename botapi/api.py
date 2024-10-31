@@ -36,10 +36,7 @@ class BotAPI(Methods):
         url += method
         return url
 
-    def _convert_field(self, field: Any) -> str:
-        log.info(f"Converting field: {field}")
-        log.info(type(field))
-        log.info(isinstance(field, BaseModel))
+    def _convert_field(self, field: Any, serialize: bool = True) -> str:
         if isinstance(field, BaseModel):
             for key in field.model_fields.keys():
                 log.info(f"Converting key: {key}")
@@ -48,14 +45,18 @@ class BotAPI(Methods):
                 if isinstance(value, BaseModel):
                     setattr(
                         field, key,
-                        self._convert_field(value)
+                        self._convert_field(
+                            value, serialize=False
+                        )
                     )
                 if key == "parse_mode":
                     setattr(field, key, self.parse_mode)
-            return field.model_dump(
-                mode="json",
-                exclude_none=True
-            )
+            if serialize:
+                return field.model_dump(
+                    mode="json",
+                    exclude_none=True
+                )
+            return field
         return field
 
     def _convert_data(self, data: Dict) -> Dict:
