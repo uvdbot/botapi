@@ -37,9 +37,6 @@ class BotAPI(Methods):
         return url
 
     def _convert_field(self, field: Any) -> str:
-        log.info(f"Converting field: {field}")
-        log.info(type(field))
-        log.info(isinstance(field, BaseModel))
         if isinstance(field, BaseModel):
             for key in dir(field):
                 if key.startswith("_"):
