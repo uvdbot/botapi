@@ -202,12 +202,16 @@ def generate_type_string(type: TelegramType):
                 if parameter_name == "from":
                     parameter_name = f"from_{parameter.type.lower()}"
                     string += "\n" + tab(1, f"{parameter_name}: Optional[{string_type}] = Field(default=None, alias=\"from\")")
+                elif parameter_name == "parse_mode":
+                    string += "\n" + tab(1, f"{parameter_name}: Optional[str] = Field(default=\"HTML\")")
                 else:
                     string += "\n" + tab(1, f"{parameter_name}: Optional[{string_type}] = Field(default=None)")
             else:
                 if parameter_name == "from":
                     parameter_name = f"from_{parameter.type.lower()}"
                     string += "\n" + tab(1, f"{parameter_name}: {string_type} = Field(alias=\"from\")")
+                elif parameter_name == "parse_mode":
+                    string += "\n" + tab(1, f"{parameter_name}: str = Field(default=\"HTML\")")
                 else:
                     string += "\n" + tab(1, f"{parameter_name}: {string_type}")
     return string
@@ -233,9 +237,15 @@ def generate_method_string(method: TelegramMethod):
         string += "\n" + tab(2)
         parameter_type_string = type_to_string(parameter.type)
         if parameter.is_required:
-            string += f"{parameter.name}: {parameter_type_string},"
+            if parameter.name == "parse_mode":
+                string += f"{parameter.name}: str = \"HTML\","
+            else:
+                string += f"{parameter.name}: {parameter_type_string},"
         else:
-            string += f"{parameter.name}: Optional[{parameter_type_string}] = None,"
+            if parameter.name == "parse_mode":
+                string += f"{parameter.name}: Optional[str] = \"HTML\","
+            else:
+                string += f"{parameter.name}: Optional[{parameter_type_string}] = None,"
     string += "\n" + tab(1) + ")"
     return_type_string = type_to_string(method.return_type)
     string += f" -> Optional[{return_type_string}]:"
@@ -250,10 +260,7 @@ def generate_method_string(method: TelegramMethod):
         string += "})"
     else:
         for parameter in method.parameters:
-            if parameter.name == "parse_mode":
-                string += "\n" + tab(3, f"\"{parameter.name}\": parse_mode or self.parse_mode,")
-            else:
-                string += "\n" + tab(3, f"\"{parameter.name}\": {parameter.name},")
+            string += "\n" + tab(3, f"\"{parameter.name}\": {parameter.name},")
         string += "\n" + tab(2) + "})"
     string += "\n" + tab(2, return_type_to_string(method.return_type))
     return string

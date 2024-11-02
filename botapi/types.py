@@ -1940,7 +1940,7 @@ class InputMediaPhoto(BaseModel):
     type: Literal["photo"] = "photo"
     media: str
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     has_spoiler: Optional[bool] = Field(default=None) 
@@ -1956,7 +1956,7 @@ class InputMediaVideo(BaseModel):
     media: str
     thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     width: Optional[int] = Field(default=None)
@@ -1977,7 +1977,7 @@ class InputMediaAnimation(BaseModel):
     media: str
     thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     width: Optional[int] = Field(default=None)
@@ -1997,7 +1997,7 @@ class InputMediaAudio(BaseModel):
     media: str
     thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     duration: Optional[int] = Field(default=None)
     performer: Optional[str] = Field(default=None)
@@ -2014,7 +2014,7 @@ class InputMediaDocument(BaseModel):
     media: str
     thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     disable_content_type_detection: Optional[bool] = Field(default=None) 
 
@@ -2188,7 +2188,7 @@ class InlineQueryResultPhoto(BaseModel):
     title: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2215,7 +2215,7 @@ class InlineQueryResultGif(BaseModel):
     thumbnail_mime_type: Optional[str] = Field(default=None)
     title: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2243,7 +2243,7 @@ class InlineQueryResultMpeg4Gif(BaseModel):
     thumbnail_mime_type: Optional[str] = Field(default=None)
     title: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2268,7 +2268,7 @@ class InlineQueryResultVideo(BaseModel):
     thumbnail_url: str
     title: str
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     video_width: Optional[int] = Field(default=None)
@@ -2294,7 +2294,7 @@ class InlineQueryResultAudio(BaseModel):
     audio_url: str
     title: str
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     performer: Optional[str] = Field(default=None)
     audio_duration: Optional[int] = Field(default=None)
@@ -2318,7 +2318,7 @@ class InlineQueryResultVoice(BaseModel):
     voice_url: str
     title: str
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     voice_duration: Optional[int] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2343,7 +2343,7 @@ class InlineQueryResultDocument(BaseModel):
     document_url: str
     mime_type: str
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     description: Optional[str] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2457,7 +2457,7 @@ class InlineQueryResultCachedPhoto(BaseModel):
     title: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2480,7 +2480,7 @@ class InlineQueryResultCachedGif(BaseModel):
     gif_file_id: str
     title: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2504,7 +2504,7 @@ class InlineQueryResultCachedMpeg4Gif(BaseModel):
     mpeg4_file_id: str
     title: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2545,7 +2545,7 @@ class InlineQueryResultCachedDocument(BaseModel):
     document_file_id: str
     description: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
     input_message_content: Optional[InputMessageContent] = Field(default=None) 
@@ -2568,7 +2568,7 @@ class InlineQueryResultCachedVideo(BaseModel):
     title: str
     description: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
@@ -2591,7 +2591,7 @@ class InlineQueryResultCachedVoice(BaseModel):
     voice_file_id: str
     title: str
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
     input_message_content: Optional[InputMessageContent] = Field(default=None) 
@@ -2612,7 +2612,7 @@ class InlineQueryResultCachedAudio(BaseModel):
     id: str
     audio_file_id: str
     caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
     input_message_content: Optional[InputMessageContent] = Field(default=None) 
@@ -2627,7 +2627,7 @@ class InputTextMessageContent(BaseModel):
     """
 
     message_text: str
-    parse_mode: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
     entities: Optional[List[MessageEntity]] = Field(default=None)
     link_preview_options: Optional[LinkPreviewOptions] = Field(default=None) 
 

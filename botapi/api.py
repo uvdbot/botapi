@@ -17,14 +17,12 @@ class BotAPI(Methods):
         self,
         token: str,
         api_url: str = "https://api.telegram.org",
-        parse_mode: Optional[str] = None,
         session: Optional[httpx.AsyncClient] = None,
         sudoers: Optional[List[int]] = None,
         test_server: Optional[bool] = False,
     ):
         self.token: str = token
         self.api_url: str = api_url
-        self.parse_mode: Optional[str] = parse_mode or "HTML"
         self.session: httpx.AsyncClient = session or httpx.AsyncClient(timeout=120)
         self.sudoers: List[int] = sudoers or []
         self.test_server: bool = test_server
@@ -36,38 +34,24 @@ class BotAPI(Methods):
         url += method
         return url
 
-    def _convert_field(self, field: Any, serialize: bool = True) -> str:
-        if isinstance(field, BaseModel):
-            for key in field.model_fields.keys():
-                value = getattr(field, key)
-                if isinstance(value, BaseModel):
-                    setattr(
-                        field, key,
-                        self._convert_field(
-                            value, serialize=False
-                        )
-                    )
-                if key == "parse_mode":
-                    setattr(field, key, self.parse_mode)
-            if serialize:
-                return field.model_dump(
-                    mode="json",
-                    exclude_none=True
-                )
-            return field
-        return field
-
     def _convert_data(self, data: Dict) -> Dict:
         for key, value in data.items():
-            if isinstance(value, list):
-                data[key] = orjson.dumps([
-                    self._convert_field(item)
-                    for item in value
-                ]).decode("utf-8")
-            elif isinstance(value, BaseModel):
+            if isinstance(value, BaseModel):
                 data[key] = orjson.dumps(
-                    self._convert_field(value)
-                ).decode("utf-8")
+                    value.model_dump(
+                        mode="json",
+                        exclude_none=True,
+                    )   
+                ).decode()
+            elif isinstance(value, list):
+                data[key] = orjson.dumps([
+                    item.model_dump(
+                        mode="json",
+                        exclude_none=True,
+                    )
+                    if isinstance(item, BaseModel)
+                    else item for item in value
+                ]).decode()
         return data
     
     async def _send_request(self, method: str, data: Dict) -> Any:
