@@ -43,7 +43,7 @@ def parse_type(soup: BeautifulSoup, item: str) -> TelegramType | None:
         return None
     prev_title = table.find_previous("h4")
     prev_title_text = prev_title.text.strip()
-    is_parent = is_type(prev_title_text) and prev_title_text != title
+    is_parent = prev_title_text != title
     if is_parent:
         children = obj.find_next("ul")
         prev_chilren_title = children.find_previous("h4")

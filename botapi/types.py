@@ -3180,13 +3180,8 @@ class CallbackGame(BaseModel):
     Reference: https://core.telegram.org/bots/api#callbackgame
     """
 
-    user_id: int
-    score: int
-    force: Optional[bool] = Field(default=None)
-    disable_edit_message: Optional[bool] = Field(default=None)
-    chat_id: Optional[int] = Field(default=None)
-    message_id: Optional[int] = Field(default=None)
-    inline_message_id: Optional[str] = Field(default=None) 
+    pass
+ 
 
 class GameHighScore(BaseModel):
     """
