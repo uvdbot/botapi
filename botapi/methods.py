@@ -217,21 +217,37 @@ from botapi.types import (
     CallbackGame,
     GameHighScore,
     MessageOrigin,
+    _MessageOriginAdapter,
     PaidMedia,
+    _PaidMediaAdapter,
     BackgroundFill,
+    _BackgroundFillAdapter,
     BackgroundType,
+    _BackgroundTypeAdapter,
     ChatMember,
+    _ChatMemberAdapter,
     ReactionType,
+    _ReactionTypeAdapter,
     BotCommandScope,
+    _BotCommandScopeAdapter,
     MenuButton,
+    _MenuButtonAdapter,
     ChatBoostSource,
+    _ChatBoostSourceAdapter,
     InputMedia,
+    _InputMediaAdapter,
     InputPaidMedia,
+    _InputPaidMediaAdapter,
     InlineQueryResult,
+    _InlineQueryResultAdapter,
     InputMessageContent,
+    _InputMessageContentAdapter,
     RevenueWithdrawalState,
+    _RevenueWithdrawalStateAdapter,
     TransactionPartner,
+    _TransactionPartnerAdapter,
     PassportElementError,
+    _PassportElementErrorAdapter,
 )
 
 import botapi
@@ -1950,7 +1966,7 @@ class Methods:
         response = await self._send_request("getChatAdministrators", {
             "chat_id": chat_id,
         })
-        return [TypeAdapter(ChatMember).validate_python(x) for x in response]
+        return [_ChatMemberAdapter.validate_python(x) for x in response]
 
     async def get_chat_member_count(
         self: botapi.BotAPI,

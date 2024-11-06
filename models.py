@@ -15,6 +15,10 @@ class TelegramType(BaseModel):
     children: List[str] = Field(default_factory=list)
     is_empty: bool = Field(default=False)
 
+    @property
+    def adapter_name(self):
+        return f"_{self.name}Adapter"
+
 class TelegramMethod(BaseModel):
     name: str
     description: str

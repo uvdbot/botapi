@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, TypeAdapter
 from typing import Union, Optional, Literal, List
 
 class Update(BaseModel):
@@ -3200,26 +3200,30 @@ MessageOrigin = Union[
     MessageOriginHiddenUser,
     MessageOriginChat,
     MessageOriginChannel,
-] 
+]
+_MessageOriginAdapter = TypeAdapter(MessageOrigin) 
 
 PaidMedia = Union[
     PaidMediaPreview,
     PaidMediaPhoto,
     PaidMediaVideo,
-] 
+]
+_PaidMediaAdapter = TypeAdapter(PaidMedia) 
 
 BackgroundFill = Union[
     BackgroundFillSolid,
     BackgroundFillGradient,
     BackgroundFillFreeformGradient,
-] 
+]
+_BackgroundFillAdapter = TypeAdapter(BackgroundFill) 
 
 BackgroundType = Union[
     BackgroundTypeFill,
     BackgroundTypeWallpaper,
     BackgroundTypePattern,
     BackgroundTypeChatTheme,
-] 
+]
+_BackgroundTypeAdapter = TypeAdapter(BackgroundType) 
 
 ChatMember = Union[
     ChatMemberOwner,
@@ -3228,13 +3232,15 @@ ChatMember = Union[
     ChatMemberRestricted,
     ChatMemberLeft,
     ChatMemberBanned,
-] 
+]
+_ChatMemberAdapter = TypeAdapter(ChatMember) 
 
 ReactionType = Union[
     ReactionTypeEmoji,
     ReactionTypeCustomEmoji,
     ReactionTypePaid,
-] 
+]
+_ReactionTypeAdapter = TypeAdapter(ReactionType) 
 
 BotCommandScope = Union[
     BotCommandScopeDefault,
@@ -3244,19 +3250,22 @@ BotCommandScope = Union[
     BotCommandScopeChat,
     BotCommandScopeChatAdministrators,
     BotCommandScopeChatMember,
-] 
+]
+_BotCommandScopeAdapter = TypeAdapter(BotCommandScope) 
 
 MenuButton = Union[
     MenuButtonCommands,
     MenuButtonWebApp,
     MenuButtonDefault,
-] 
+]
+_MenuButtonAdapter = TypeAdapter(MenuButton) 
 
 ChatBoostSource = Union[
     ChatBoostSourcePremium,
     ChatBoostSourceGiftCode,
     ChatBoostSourceGiveaway,
-] 
+]
+_ChatBoostSourceAdapter = TypeAdapter(ChatBoostSource) 
 
 InputMedia = Union[
     InputMediaAnimation,
@@ -3264,12 +3273,14 @@ InputMedia = Union[
     InputMediaAudio,
     InputMediaPhoto,
     InputMediaVideo,
-] 
+]
+_InputMediaAdapter = TypeAdapter(InputMedia) 
 
 InputPaidMedia = Union[
     InputPaidMediaPhoto,
     InputPaidMediaVideo,
-] 
+]
+_InputPaidMediaAdapter = TypeAdapter(InputPaidMedia) 
 
 InlineQueryResult = Union[
     InlineQueryResultCachedAudio,
@@ -3292,7 +3303,8 @@ InlineQueryResult = Union[
     InlineQueryResultVenue,
     InlineQueryResultVideo,
     InlineQueryResultVoice,
-] 
+]
+_InlineQueryResultAdapter = TypeAdapter(InlineQueryResult) 
 
 InputMessageContent = Union[
     InputTextMessageContent,
@@ -3300,13 +3312,15 @@ InputMessageContent = Union[
     InputVenueMessageContent,
     InputContactMessageContent,
     InputInvoiceMessageContent,
-] 
+]
+_InputMessageContentAdapter = TypeAdapter(InputMessageContent) 
 
 RevenueWithdrawalState = Union[
     RevenueWithdrawalStatePending,
     RevenueWithdrawalStateSucceeded,
     RevenueWithdrawalStateFailed,
-] 
+]
+_RevenueWithdrawalStateAdapter = TypeAdapter(RevenueWithdrawalState) 
 
 TransactionPartner = Union[
     TransactionPartnerUser,
@@ -3314,7 +3328,8 @@ TransactionPartner = Union[
     TransactionPartnerTelegramAds,
     TransactionPartnerTelegramApi,
     TransactionPartnerOther,
-] 
+]
+_TransactionPartnerAdapter = TypeAdapter(TransactionPartner) 
 
 PassportElementError = Union[
     PassportElementErrorDataField,
@@ -3326,7 +3341,8 @@ PassportElementError = Union[
     PassportElementErrorTranslationFile,
     PassportElementErrorTranslationFiles,
     PassportElementErrorUnspecified,
-] 
+]
+_PassportElementErrorAdapter = TypeAdapter(PassportElementError) 
 
 Update.model_rebuild()
 WebhookInfo.model_rebuild()

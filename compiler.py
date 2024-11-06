@@ -13,6 +13,7 @@ from helpers import (
     generate_type_string,
     generate_method_string,
     generate_parent_type_string,
+    tab,
     API_URL
 )
 
@@ -37,7 +38,7 @@ def get_items(soup: BeautifulSoup) -> List[str]:
 
 def generate_types():
     final_file = "from __future__ import annotations\n\n"
-    final_file += "from pydantic import BaseModel, Field, ConfigDict\n"
+    final_file += "from pydantic import BaseModel, Field, TypeAdapter\n"
     final_file += "from typing import Union, Optional, Literal, List\n\n"
 
     for type in copy.deepcopy(types).values():
@@ -66,8 +67,10 @@ def generate_methods():
     final_file += "from pydantic import TypeAdapter, ValidationError\n"
     final_file += "from typing import Union, Optional, List\n\n"
     final_file += "from botapi.types import ("
-    for type in types:
-        final_file += "\n" + f"    {type},"
+    for name, type in types.items():
+        final_file += "\n" + tab(1, f"{name},")
+        if type.children:
+            final_file += f"\n" + tab(1, f"{type.adapter_name},")
     final_file += "\n)\n\n"
     final_file += "import botapi\n\n"
     final_file += "class Methods:\n"

@@ -105,7 +105,7 @@ def return_type_to_string(type: Any) -> Optional[str]:
         if value in RAW_TYPES:
             return "return response"
         if value in TYPE_VALIDATORS:
-            return f"return [TypeAdapter({value}).validate_python(x) for x in response]"
+            return f"return [_{value}Adapter.validate_python(x) for x in response]"
         else:
             return f"return [{value}.model_validate(x) for x in response]"
     if isinstance(type, tuple):
@@ -114,7 +114,7 @@ def return_type_to_string(type: Any) -> Optional[str]:
         for x in filter(lambda x: x not in RAW_TYPES, type):
             string = "try:\n"
             if x in TYPE_VALIDATORS:
-                string += tab(3, f"return TypeAdapter({x}).validate_python(response)\n")
+                string += tab(3, f"return _{x}Adapter.validate_python(response)\n")
             else:
                 string += tab(3, f"return {x}.model_validate(response)\n")
             string += tab(2, "except ValidationError:\n")
@@ -222,6 +222,8 @@ def generate_parent_type_string(type: TelegramType):
     for child in type.children:
         string += "\n" + tab(1, f"{child},")
     string += "\n]"
+
+    string += f"\n{type.adapter_name} = TypeAdapter({type.name})"
 
     return string
 
