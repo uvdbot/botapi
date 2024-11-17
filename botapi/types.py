@@ -759,7 +759,7 @@ class BackgroundTypeWallpaper(BaseModel):
 class BackgroundTypePattern(BaseModel):
     """
     The background is a PNG or TGV (gzipped
-    subset of SVG with MIME type ìapplication/x-tgwallpatternî) pattern
+    subset of SVG with MIME type ‚Äúapplication/x-tgwallpattern‚Äù) pattern
     to be combined with the background fill chosen
     by the user.
 
@@ -1117,7 +1117,7 @@ class KeyboardButtonRequestUsers(BaseModel):
     This object defines the criteria used to request
     suitable users. Information about the selected users will
     be shared with the bot when the corresponding
-    button is pressed. More about requesting users ª
+    button is pressed. More about requesting users ¬ª
 
     Reference: https://core.telegram.org/bots/api#keyboardbuttonrequestusers
     """
@@ -1137,7 +1137,7 @@ class KeyboardButtonRequestChat(BaseModel):
     will be shared with the bot when the
     corresponding button is pressed. The bot will be
     granted requested rights in the chat if appropriate.
-    More about requesting chats ª.
+    More about requesting chats ¬ª.
 
     Reference: https://core.telegram.org/bots/api#keyboardbuttonrequestchat
     """
