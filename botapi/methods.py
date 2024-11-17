@@ -151,6 +151,8 @@ from botapi.types import (
     StickerSet,
     MaskPosition,
     InputSticker,
+    Gift,
+    Gifts,
     InlineQuery,
     InlineQueryResultsButton,
     InlineQueryResultArticle,
@@ -180,6 +182,7 @@ from botapi.types import (
     InputInvoiceMessageContent,
     ChosenInlineResult,
     SentWebAppMessage,
+    PreparedInlineMessage,
     LabeledPrice,
     Invoice,
     ShippingAddress,
@@ -1311,6 +1314,28 @@ class Methods:
             "limit": limit,
         })
         return UserProfilePhotos.model_validate(response)
+
+    async def set_user_emoji_status(
+        self: botapi.BotAPI,
+        user_id: int,
+        emoji_status_custom_emoji_id: Optional[str] = None,
+        emoji_status_expiration_date: Optional[int] = None,
+    ) -> Optional[bool]:
+        """
+        Changes the emoji status for a given user
+        that previously allowed the bot to manage their
+        emoji status via the Mini App method requestEmojiStatusAccess.
+        Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#setuseremojistatus
+        """
+
+        response = await self._send_request("setUserEmojiStatus", {
+            "user_id": user_id,
+            "emoji_status_custom_emoji_id": emoji_status_custom_emoji_id,
+            "emoji_status_expiration_date": emoji_status_expiration_date,
+        })
+        return response
 
     async def get_file(
         self: botapi.BotAPI,
@@ -3291,6 +3316,45 @@ class Methods:
         })
         return response
 
+    async def get_available_gifts(
+        self: botapi.BotAPI,
+    ) -> Optional[Gifts]:
+        """
+        Returns the list of gifts that can be
+        sent by the bot to users. Requires no
+        parameters. Returns a Gifts object.
+
+        Reference: https://core.telegram.org/bots/api#getavailablegifts
+        """
+
+        response = await self._send_request("getAvailableGifts", {})
+        return Gifts.model_validate(response)
+
+    async def send_gift(
+        self: botapi.BotAPI,
+        user_id: int,
+        gift_id: str,
+        text: Optional[str] = None,
+        text_parse_mode: Optional[str] = None,
+        text_entities: Optional[List[MessageEntity]] = None,
+    ) -> Optional[bool]:
+        """
+        Sends a gift to the given user. The
+        gift can't be converted to Telegram Stars by
+        the user. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#sendgift
+        """
+
+        response = await self._send_request("sendGift", {
+            "user_id": user_id,
+            "gift_id": gift_id,
+            "text": text,
+            "text_parse_mode": text_parse_mode,
+            "text_entities": text_entities,
+        })
+        return response
+
     async def answer_inline_query(
         self: botapi.BotAPI,
         inline_query_id: str,
@@ -3338,6 +3402,33 @@ class Methods:
             "result": result,
         })
         return SentWebAppMessage.model_validate(response)
+
+    async def save_prepared_inline_message(
+        self: botapi.BotAPI,
+        user_id: int,
+        result: InlineQueryResult,
+        allow_user_chats: Optional[bool] = None,
+        allow_bot_chats: Optional[bool] = None,
+        allow_group_chats: Optional[bool] = None,
+        allow_channel_chats: Optional[bool] = None,
+    ) -> Optional[PreparedInlineMessage]:
+        """
+        Stores a message that can be sent by
+        a user of a Mini App. Returns a
+        PreparedInlineMessage object.
+
+        Reference: https://core.telegram.org/bots/api#savepreparedinlinemessage
+        """
+
+        response = await self._send_request("savePreparedInlineMessage", {
+            "user_id": user_id,
+            "result": result,
+            "allow_user_chats": allow_user_chats,
+            "allow_bot_chats": allow_bot_chats,
+            "allow_group_chats": allow_group_chats,
+            "allow_channel_chats": allow_channel_chats,
+        })
+        return PreparedInlineMessage.model_validate(response)
 
     async def send_invoice(
         self: botapi.BotAPI,
@@ -3418,7 +3509,9 @@ class Methods:
         payload: str,
         currency: str,
         prices: List[LabeledPrice],
+        business_connection_id: Optional[str] = None,
         provider_token: Optional[str] = None,
+        subscription_period: Optional[int] = None,
         max_tip_amount: Optional[int] = None,
         suggested_tip_amounts: Optional[List[int]] = None,
         provider_data: Optional[str] = None,
@@ -3443,12 +3536,14 @@ class Methods:
         """
 
         response = await self._send_request("createInvoiceLink", {
+            "business_connection_id": business_connection_id,
             "title": title,
             "description": description,
             "payload": payload,
             "provider_token": provider_token,
             "currency": currency,
             "prices": prices,
+            "subscription_period": subscription_period,
             "max_tip_amount": max_tip_amount,
             "suggested_tip_amounts": suggested_tip_amounts,
             "provider_data": provider_data,
@@ -3551,6 +3646,27 @@ class Methods:
         response = await self._send_request("refundStarPayment", {
             "user_id": user_id,
             "telegram_payment_charge_id": telegram_payment_charge_id,
+        })
+        return response
+
+    async def edit_user_star_subscription(
+        self: botapi.BotAPI,
+        user_id: int,
+        telegram_payment_charge_id: str,
+        is_canceled: bool,
+    ) -> Optional[bool]:
+        """
+        Allows the bot to cancel or re-enable extension
+        of a subscription paid in Telegram Stars. Returns
+        True on success.
+
+        Reference: https://core.telegram.org/bots/api#edituserstarsubscription
+        """
+
+        response = await self._send_request("editUserStarSubscription", {
+            "user_id": user_id,
+            "telegram_payment_charge_id": telegram_payment_charge_id,
+            "is_canceled": is_canceled,
         })
         return response
 

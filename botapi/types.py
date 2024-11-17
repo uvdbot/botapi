@@ -759,7 +759,7 @@ class BackgroundTypeWallpaper(BaseModel):
 class BackgroundTypePattern(BaseModel):
     """
     The background is a PNG or TGV (gzipped
-    subset of SVG with MIME type ‚Äúapplication/x-tgwallpattern‚Äù) pattern
+    subset of SVG with MIME type ìapplication/x-tgwallpatternî) pattern
     to be combined with the background fill chosen
     by the user.
 
@@ -1117,7 +1117,7 @@ class KeyboardButtonRequestUsers(BaseModel):
     This object defines the criteria used to request
     suitable users. Information about the selected users will
     be shared with the bot when the corresponding
-    button is pressed. More about requesting users ¬ª
+    button is pressed. More about requesting users ª
 
     Reference: https://core.telegram.org/bots/api#keyboardbuttonrequestusers
     """
@@ -1137,7 +1137,7 @@ class KeyboardButtonRequestChat(BaseModel):
     will be shared with the bot when the
     corresponding button is pressed. The bot will be
     granted requested rights in the chat if appropriate.
-    More about requesting chats ¬ª.
+    More about requesting chats ª.
 
     Reference: https://core.telegram.org/bots/api#keyboardbuttonrequestchat
     """
@@ -2119,6 +2119,29 @@ class InputSticker(BaseModel):
     mask_position: Optional[MaskPosition] = Field(default=None)
     keywords: Optional[List[str]] = Field(default=None) 
 
+class Gift(BaseModel):
+    """
+    This object represents a gift that can be
+    sent by the bot.
+
+    Reference: https://core.telegram.org/bots/api#gift
+    """
+
+    id: str
+    sticker: Sticker
+    star_count: int
+    total_count: Optional[int] = Field(default=None)
+    remaining_count: Optional[int] = Field(default=None) 
+
+class Gifts(BaseModel):
+    """
+    This object represent a list of gifts.
+
+    Reference: https://core.telegram.org/bots/api#gifts
+    """
+
+    gifts: List[Gift] 
+
 class InlineQuery(BaseModel):
     """
     This object represents an incoming inline query. When
@@ -2734,6 +2757,17 @@ class SentWebAppMessage(BaseModel):
 
     inline_message_id: Optional[str] = Field(default=None) 
 
+class PreparedInlineMessage(BaseModel):
+    """
+    Describes an inline message to be sent by
+    a user of a Mini App.
+
+    Reference: https://core.telegram.org/bots/api#preparedinlinemessage
+    """
+
+    id: str
+    expiration_date: int 
+
 class LabeledPrice(BaseModel):
     """
     This object represents a portion of the price
@@ -2808,6 +2842,9 @@ class SuccessfulPayment(BaseModel):
     invoice_payload: str
     telegram_payment_charge_id: str
     provider_payment_charge_id: str
+    subscription_expiration_date: Optional[int] = Field(default=None)
+    is_recurring: Optional[bool] = Field(default=None)
+    is_first_recurring: Optional[bool] = Field(default=None)
     shipping_option_id: Optional[str] = Field(default=None)
     order_info: Optional[OrderInfo] = Field(default=None) 
 
@@ -2904,8 +2941,10 @@ class TransactionPartnerUser(BaseModel):
     type: Literal["user"] = "user"
     user: User
     invoice_payload: Optional[str] = Field(default=None)
+    subscription_period: Optional[int] = Field(default=None)
     paid_media: Optional[List[PaidMedia]] = Field(default=None)
-    paid_media_payload: Optional[str] = Field(default=None) 
+    paid_media_payload: Optional[str] = Field(default=None)
+    gift: Optional[str] = Field(default=None) 
 
 class TransactionPartnerFragment(BaseModel):
     """
@@ -3487,6 +3526,8 @@ Sticker.model_rebuild()
 StickerSet.model_rebuild()
 MaskPosition.model_rebuild()
 InputSticker.model_rebuild()
+Gift.model_rebuild()
+Gifts.model_rebuild()
 InlineQuery.model_rebuild()
 InlineQueryResultsButton.model_rebuild()
 InlineQueryResultArticle.model_rebuild()
@@ -3516,6 +3557,7 @@ InputContactMessageContent.model_rebuild()
 InputInvoiceMessageContent.model_rebuild()
 ChosenInlineResult.model_rebuild()
 SentWebAppMessage.model_rebuild()
+PreparedInlineMessage.model_rebuild()
 LabeledPrice.model_rebuild()
 Invoice.model_rebuild()
 ShippingAddress.model_rebuild()
