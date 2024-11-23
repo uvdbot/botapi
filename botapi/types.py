@@ -2944,7 +2944,7 @@ class TransactionPartnerUser(BaseModel):
     subscription_period: Optional[int] = Field(default=None)
     paid_media: Optional[List[PaidMedia]] = Field(default=None)
     paid_media_payload: Optional[str] = Field(default=None)
-    gift: Optional[str] = Field(default=None) 
+    gift: Optional[Gift] = Field(default=None) 
 
 class TransactionPartnerFragment(BaseModel):
     """
