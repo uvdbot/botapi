@@ -2931,6 +2931,20 @@ class RevenueWithdrawalStateFailed(BaseModel):
 
     type: Literal["failed"] = "failed" 
 
+class AffiliateInfo(BaseModel):
+    """
+    Contains information about the affiliate that received a
+    commission via this transaction.
+
+    Reference: https://core.telegram.org/bots/api#affiliateinfo
+    """
+
+    commission_per_mille: int
+    amount: int
+    affiliate_user: Optional[User] = Field(default=None)
+    affiliate_chat: Optional[Chat] = Field(default=None)
+    nanostar_amount: Optional[int] = Field(default=None) 
+
 class TransactionPartnerUser(BaseModel):
     """
     Describes a transaction with a user.
@@ -2940,11 +2954,24 @@ class TransactionPartnerUser(BaseModel):
 
     type: Literal["user"] = "user"
     user: User
+    affiliate: Optional[AffiliateInfo] = Field(default=None)
     invoice_payload: Optional[str] = Field(default=None)
     subscription_period: Optional[int] = Field(default=None)
     paid_media: Optional[List[PaidMedia]] = Field(default=None)
     paid_media_payload: Optional[str] = Field(default=None)
     gift: Optional[Gift] = Field(default=None) 
+
+class TransactionPartnerAffiliateProgram(BaseModel):
+    """
+    Describes the affiliate program that issued the affiliate
+    commission received via this transaction.
+
+    Reference: https://core.telegram.org/bots/api#transactionpartneraffiliateprogram
+    """
+
+    type: Literal["affiliate_program"] = "affiliate_program"
+    commission_per_mille: int
+    sponsor_user: Optional[User] = Field(default=None) 
 
 class TransactionPartnerFragment(BaseModel):
     """
@@ -2996,6 +3023,7 @@ class StarTransaction(BaseModel):
     id: str
     amount: int
     date: int
+    nanostar_amount: Optional[int] = Field(default=None)
     source: Optional[TransactionPartner] = Field(default=None)
     receiver: Optional[TransactionPartner] = Field(default=None) 
 
@@ -3363,6 +3391,7 @@ _RevenueWithdrawalStateAdapter = TypeAdapter(RevenueWithdrawalState)
 
 TransactionPartner = Union[
     TransactionPartnerUser,
+    TransactionPartnerAffiliateProgram,
     TransactionPartnerFragment,
     TransactionPartnerTelegramAds,
     TransactionPartnerTelegramApi,
@@ -3571,7 +3600,9 @@ PaidMediaPurchased.model_rebuild()
 RevenueWithdrawalStatePending.model_rebuild()
 RevenueWithdrawalStateSucceeded.model_rebuild()
 RevenueWithdrawalStateFailed.model_rebuild()
+AffiliateInfo.model_rebuild()
 TransactionPartnerUser.model_rebuild()
+TransactionPartnerAffiliateProgram.model_rebuild()
 TransactionPartnerFragment.model_rebuild()
 TransactionPartnerTelegramAds.model_rebuild()
 TransactionPartnerTelegramApi.model_rebuild()
