@@ -297,9 +297,10 @@ class Methods:
         there is an update for the bot, we
         will send an HTTPS POST request to the
         specified URL, containing a JSON-serialized Update. In case
-        of an unsuccessful request, we will give up
-        after a reasonable amount of attempts. Returns True
-        on success.
+        of an unsuccessful request (a request with response
+        HTTP status code different from 2XY), we will
+        repeat the request and give up after a
+        reasonable amount of attempts. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#setwebhook
         """
@@ -3336,6 +3337,7 @@ class Methods:
         self: botapi.BotAPI,
         user_id: int,
         gift_id: str,
+        pay_for_upgrade: Optional[bool] = None,
         text: Optional[str] = None,
         text_parse_mode: Optional[str] = None,
         text_entities: Optional[List[MessageEntity]] = None,
@@ -3351,9 +3353,82 @@ class Methods:
         response = await self._send_request("sendGift", {
             "user_id": user_id,
             "gift_id": gift_id,
+            "pay_for_upgrade": pay_for_upgrade,
             "text": text,
             "text_parse_mode": text_parse_mode,
             "text_entities": text_entities,
+        })
+        return response
+
+    async def verify_user(
+        self: botapi.BotAPI,
+        user_id: int,
+        custom_description: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Verifies a user on behalf of the organization
+        which is represented by the bot. Returns True
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#verifyuser
+        """
+
+        response = await self._send_request("verifyUser", {
+            "user_id": user_id,
+            "custom_description": custom_description,
+        })
+        return response
+
+    async def verify_chat(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        custom_description: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Verifies a chat on behalf of the organization
+        which is represented by the bot. Returns True
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#verifychat
+        """
+
+        response = await self._send_request("verifyChat", {
+            "chat_id": chat_id,
+            "custom_description": custom_description,
+        })
+        return response
+
+    async def remove_user_verification(
+        self: botapi.BotAPI,
+        user_id: int,
+    ) -> Optional[bool]:
+        """
+        Removes verification from a user who is currently
+        verified on behalf of the organization represented by
+        the bot. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#removeuserverification
+        """
+
+        response = await self._send_request("removeUserVerification", {
+            "user_id": user_id,
+        })
+        return response
+
+    async def remove_chat_verification(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+    ) -> Optional[bool]:
+        """
+        Removes verification from a chat that is currently
+        verified on behalf of the organization represented by
+        the bot. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#removechatverification
+        """
+
+        response = await self._send_request("removeChatVerification", {
+            "chat_id": chat_id,
         })
         return response
 

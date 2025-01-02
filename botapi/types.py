@@ -758,7 +758,7 @@ class BackgroundTypeWallpaper(BaseModel):
 
 class BackgroundTypePattern(BaseModel):
     """
-    The background is a PNG or TGV (gzipped
+    The background is a .PNG or .TGV (gzipped
     subset of SVG with MIME type “application/x-tgwallpattern”) pattern
     to be combined with the background fill chosen
     by the user.
@@ -2130,6 +2130,7 @@ class Gift(BaseModel):
     id: str
     sticker: Sticker
     star_count: int
+    upgrade_star_count: Optional[int] = Field(default=None)
     total_count: Optional[int] = Field(default=None)
     remaining_count: Optional[int] = Field(default=None) 
 
@@ -2185,7 +2186,6 @@ class InlineQueryResultArticle(BaseModel):
     input_message_content: InputMessageContent
     reply_markup: Optional[InlineKeyboardMarkup] = Field(default=None)
     url: Optional[str] = Field(default=None)
-    hide_url: Optional[bool] = Field(default=None)
     description: Optional[str] = Field(default=None)
     thumbnail_url: Optional[str] = Field(default=None)
     thumbnail_width: Optional[int] = Field(default=None)
