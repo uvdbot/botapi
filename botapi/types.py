@@ -2832,7 +2832,10 @@ class ShippingOption(BaseModel):
 class SuccessfulPayment(BaseModel):
     """
     This object contains basic information about a successful
-    payment.
+    payment. Note that if the buyer initiates a
+    chargeback with the relevant payment provider following this
+    transaction, the funds may be debited from your
+    balance. This is outside of Telegram's control.
 
     Reference: https://core.telegram.org/bots/api#successfulpayment
     """
@@ -3015,7 +3018,12 @@ class TransactionPartnerOther(BaseModel):
 
 class StarTransaction(BaseModel):
     """
-    Describes a Telegram Star transaction.
+    Describes a Telegram Star transaction. Note that if
+    the buyer initiates a chargeback with the payment
+    provider from whom they acquired Stars (e.g., Apple,
+    Google) following this transaction, the refunded Stars will
+    be deducted from the bot's balance. This is
+    outside of Telegram's control.
 
     Reference: https://core.telegram.org/bots/api#startransaction
     """
