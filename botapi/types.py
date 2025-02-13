@@ -132,6 +132,7 @@ class ChatFullInfo(BaseModel):
     invite_link: Optional[str] = Field(default=None)
     pinned_message: Optional[Message] = Field(default=None)
     permissions: Optional[ChatPermissions] = Field(default=None)
+    can_send_gift: Optional[bool] = Field(default=None)
     can_send_paid_media: Optional[bool] = Field(default=None)
     slow_mode_delay: Optional[int] = Field(default=None)
     unrestrict_boost_count: Optional[int] = Field(default=None)
@@ -467,6 +468,8 @@ class Video(BaseModel):
     height: int
     duration: int
     thumbnail: Optional[PhotoSize] = Field(default=None)
+    cover: Optional[List[PhotoSize]] = Field(default=None)
+    start_timestamp: Optional[int] = Field(default=None)
     file_name: Optional[str] = Field(default=None)
     mime_type: Optional[str] = Field(default=None)
     file_size: Optional[int] = Field(default=None) 
@@ -1954,7 +1957,9 @@ class InputMediaVideo(BaseModel):
 
     type: Literal["video"] = "video"
     media: str
-    thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
+    thumbnail: Optional[str] = Field(default=None)
+    cover: Optional[str] = Field(default=None)
+    start_timestamp: Optional[int] = Field(default=None)
     caption: Optional[str] = Field(default=None)
     parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
@@ -1975,7 +1980,7 @@ class InputMediaAnimation(BaseModel):
 
     type: Literal["animation"] = "animation"
     media: str
-    thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
+    thumbnail: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
     parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
@@ -1995,7 +2000,7 @@ class InputMediaAudio(BaseModel):
 
     type: Literal["audio"] = "audio"
     media: str
-    thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
+    thumbnail: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
     parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
@@ -2012,7 +2017,7 @@ class InputMediaDocument(BaseModel):
 
     type: Literal["document"] = "document"
     media: str
-    thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
+    thumbnail: Optional[str] = Field(default=None)
     caption: Optional[str] = Field(default=None)
     parse_mode: Optional[str] = Field(default="HTML")
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
@@ -2050,7 +2055,9 @@ class InputPaidMediaVideo(BaseModel):
 
     type: Literal["video"] = "video"
     media: str
-    thumbnail: Optional[Union[InputFile, str]] = Field(default=None)
+    thumbnail: Optional[str] = Field(default=None)
+    cover: Optional[str] = Field(default=None)
+    start_timestamp: Optional[int] = Field(default=None)
     width: Optional[int] = Field(default=None)
     height: Optional[int] = Field(default=None)
     duration: Optional[int] = Field(default=None)
@@ -2964,6 +2971,17 @@ class TransactionPartnerUser(BaseModel):
     paid_media_payload: Optional[str] = Field(default=None)
     gift: Optional[Gift] = Field(default=None) 
 
+class TransactionPartnerChat(BaseModel):
+    """
+    Describes a transaction with a chat.
+
+    Reference: https://core.telegram.org/bots/api#transactionpartnerchat
+    """
+
+    type: Literal["chat"] = "chat"
+    chat: Chat
+    gift: Optional[Gift] = Field(default=None) 
+
 class TransactionPartnerAffiliateProgram(BaseModel):
     """
     Describes the affiliate program that issued the affiliate
@@ -3399,6 +3417,7 @@ _RevenueWithdrawalStateAdapter = TypeAdapter(RevenueWithdrawalState)
 
 TransactionPartner = Union[
     TransactionPartnerUser,
+    TransactionPartnerChat,
     TransactionPartnerAffiliateProgram,
     TransactionPartnerFragment,
     TransactionPartnerTelegramAds,
@@ -3610,6 +3629,7 @@ RevenueWithdrawalStateSucceeded.model_rebuild()
 RevenueWithdrawalStateFailed.model_rebuild()
 AffiliateInfo.model_rebuild()
 TransactionPartnerUser.model_rebuild()
+TransactionPartnerChat.model_rebuild()
 TransactionPartnerAffiliateProgram.model_rebuild()
 TransactionPartnerFragment.model_rebuild()
 TransactionPartnerTelegramAds.model_rebuild()

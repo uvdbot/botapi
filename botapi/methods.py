@@ -198,6 +198,7 @@ from botapi.types import (
     RevenueWithdrawalStateFailed,
     AffiliateInfo,
     TransactionPartnerUser,
+    TransactionPartnerChat,
     TransactionPartnerAffiliateProgram,
     TransactionPartnerFragment,
     TransactionPartnerTelegramAds,
@@ -448,6 +449,7 @@ class Methods:
         from_chat_id: Union[int, str],
         message_id: int,
         message_thread_id: Optional[int] = None,
+        video_start_timestamp: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
     ) -> Optional[Message]:
@@ -464,6 +466,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "from_chat_id": from_chat_id,
+            "video_start_timestamp": video_start_timestamp,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "message_id": message_id,
@@ -507,6 +510,7 @@ class Methods:
         from_chat_id: Union[int, str],
         message_id: int,
         message_thread_id: Optional[int] = None,
+        video_start_timestamp: Optional[int] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -537,6 +541,7 @@ class Methods:
             "message_thread_id": message_thread_id,
             "from_chat_id": from_chat_id,
             "message_id": message_id,
+            "video_start_timestamp": video_start_timestamp,
             "caption": caption,
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
@@ -743,6 +748,8 @@ class Methods:
         width: Optional[int] = None,
         height: Optional[int] = None,
         thumbnail: Optional[Union[InputFile, str]] = None,
+        cover: Optional[Union[InputFile, str]] = None,
+        start_timestamp: Optional[int] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -776,6 +783,8 @@ class Methods:
             "width": width,
             "height": height,
             "thumbnail": thumbnail,
+            "cover": cover,
+            "start_timestamp": start_timestamp,
             "caption": caption,
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
@@ -1280,11 +1289,12 @@ class Methods:
     ) -> Optional[bool]:
         """
         Use this method to change the chosen reactions
-        on a message. Service messages can't be reacted
-        to. Automatically forwarded messages from a channel to
-        its discussion group have the same available reactions
-        as messages in the channel. Bots can't use
-        paid reactions. Returns True on success.
+        on a message. Service messages of some types
+        can't be reacted to. Automatically forwarded messages from
+        a channel to its discussion group have the
+        same available reactions as messages in the channel.
+        Bots can't use paid reactions. Returns True on
+        success.
 
         Reference: https://core.telegram.org/bots/api#setmessagereaction
         """
@@ -3324,8 +3334,8 @@ class Methods:
     ) -> Optional[Gifts]:
         """
         Returns the list of gifts that can be
-        sent by the bot to users. Requires no
-        parameters. Returns a Gifts object.
+        sent by the bot to users and channel
+        chats. Requires no parameters. Returns a Gifts object.
 
         Reference: https://core.telegram.org/bots/api#getavailablegifts
         """
@@ -3335,23 +3345,26 @@ class Methods:
 
     async def send_gift(
         self: botapi.BotAPI,
-        user_id: int,
         gift_id: str,
+        user_id: Optional[int] = None,
+        chat_id: Optional[Union[int, str]] = None,
         pay_for_upgrade: Optional[bool] = None,
         text: Optional[str] = None,
         text_parse_mode: Optional[str] = None,
         text_entities: Optional[List[MessageEntity]] = None,
     ) -> Optional[bool]:
         """
-        Sends a gift to the given user. The
-        gift can't be converted to Telegram Stars by
-        the user. Returns True on success.
+        Sends a gift to the given user or
+        channel chat. The gift can't be converted to
+        Telegram Stars by the receiver. Returns True on
+        success.
 
         Reference: https://core.telegram.org/bots/api#sendgift
         """
 
         response = await self._send_request("sendGift", {
             "user_id": user_id,
+            "chat_id": chat_id,
             "gift_id": gift_id,
             "pay_for_upgrade": pay_for_upgrade,
             "text": text,
