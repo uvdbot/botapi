@@ -69,6 +69,7 @@ from botapi.types import (
     VideoChatStarted,
     VideoChatEnded,
     VideoChatParticipantsInvited,
+    PaidMessagePriceChanged,
     GiveawayCreated,
     Giveaway,
     GiveawayWinners,
@@ -107,6 +108,14 @@ from botapi.types import (
     BusinessLocation,
     BusinessOpeningHoursInterval,
     BusinessOpeningHours,
+    StoryAreaPosition,
+    LocationAddress,
+    StoryAreaTypeLocation,
+    StoryAreaTypeSuggestedReaction,
+    StoryAreaTypeLink,
+    StoryAreaTypeWeather,
+    StoryAreaTypeUniqueGift,
+    StoryArea,
     ChatLocation,
     ReactionTypeEmoji,
     ReactionTypeCustomEmoji,
@@ -115,6 +124,20 @@ from botapi.types import (
     MessageReactionUpdated,
     MessageReactionCountUpdated,
     ForumTopic,
+    Gift,
+    Gifts,
+    UniqueGiftModel,
+    UniqueGiftSymbol,
+    UniqueGiftBackdropColors,
+    UniqueGiftBackdrop,
+    UniqueGift,
+    GiftInfo,
+    UniqueGiftInfo,
+    OwnedGiftRegular,
+    OwnedGiftUnique,
+    OwnedGifts,
+    AcceptedGiftTypes,
+    StarAmount,
     BotCommand,
     BotCommandScopeDefault,
     BotCommandScopeAllPrivateChats,
@@ -136,6 +159,7 @@ from botapi.types import (
     ChatBoostUpdated,
     ChatBoostRemoved,
     UserChatBoosts,
+    BusinessBotRights,
     BusinessConnection,
     BusinessMessagesDeleted,
     ResponseParameters,
@@ -147,12 +171,14 @@ from botapi.types import (
     InputFile,
     InputPaidMediaPhoto,
     InputPaidMediaVideo,
+    InputProfilePhotoStatic,
+    InputProfilePhotoAnimated,
+    InputStoryContentPhoto,
+    InputStoryContentVideo,
     Sticker,
     StickerSet,
     MaskPosition,
     InputSticker,
-    Gift,
-    Gifts,
     InlineQuery,
     InlineQueryResultsButton,
     InlineQueryResultArticle,
@@ -232,8 +258,12 @@ from botapi.types import (
     _BackgroundTypeAdapter,
     ChatMember,
     _ChatMemberAdapter,
+    StoryAreaType,
+    _StoryAreaTypeAdapter,
     ReactionType,
     _ReactionTypeAdapter,
+    OwnedGift,
+    _OwnedGiftAdapter,
     BotCommandScope,
     _BotCommandScopeAdapter,
     MenuButton,
@@ -244,6 +274,10 @@ from botapi.types import (
     _InputMediaAdapter,
     InputPaidMedia,
     _InputPaidMediaAdapter,
+    InputProfilePhoto,
+    _InputProfilePhotoAdapter,
+    InputStoryContent,
+    _InputStoryContentAdapter,
     InlineQueryResult,
     _InlineQueryResultAdapter,
     InputMessageContent,
@@ -2985,6 +3019,529 @@ class Methods:
         })
         return response
 
+    async def get_available_gifts(
+        self: botapi.BotAPI,
+    ) -> Optional[Gifts]:
+        """
+        Returns the list of gifts that can be
+        sent by the bot to users and channel
+        chats. Requires no parameters. Returns a Gifts object.
+
+        Reference: https://core.telegram.org/bots/api#getavailablegifts
+        """
+
+        response = await self._send_request("getAvailableGifts", {})
+        return Gifts.model_validate(response)
+
+    async def send_gift(
+        self: botapi.BotAPI,
+        gift_id: str,
+        user_id: Optional[int] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        pay_for_upgrade: Optional[bool] = None,
+        text: Optional[str] = None,
+        text_parse_mode: Optional[str] = None,
+        text_entities: Optional[List[MessageEntity]] = None,
+    ) -> Optional[bool]:
+        """
+        Sends a gift to the given user or
+        channel chat. The gift can't be converted to
+        Telegram Stars by the receiver. Returns True on
+        success.
+
+        Reference: https://core.telegram.org/bots/api#sendgift
+        """
+
+        response = await self._send_request("sendGift", {
+            "user_id": user_id,
+            "chat_id": chat_id,
+            "gift_id": gift_id,
+            "pay_for_upgrade": pay_for_upgrade,
+            "text": text,
+            "text_parse_mode": text_parse_mode,
+            "text_entities": text_entities,
+        })
+        return response
+
+    async def gift_premium_subscription(
+        self: botapi.BotAPI,
+        user_id: int,
+        month_count: int,
+        star_count: int,
+        text: Optional[str] = None,
+        text_parse_mode: Optional[str] = None,
+        text_entities: Optional[List[MessageEntity]] = None,
+    ) -> Optional[bool]:
+        """
+        Gifts a Telegram Premium subscription to the given
+        user. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#giftpremiumsubscription
+        """
+
+        response = await self._send_request("giftPremiumSubscription", {
+            "user_id": user_id,
+            "month_count": month_count,
+            "star_count": star_count,
+            "text": text,
+            "text_parse_mode": text_parse_mode,
+            "text_entities": text_entities,
+        })
+        return response
+
+    async def verify_user(
+        self: botapi.BotAPI,
+        user_id: int,
+        custom_description: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Verifies a user on behalf of the organization
+        which is represented by the bot. Returns True
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#verifyuser
+        """
+
+        response = await self._send_request("verifyUser", {
+            "user_id": user_id,
+            "custom_description": custom_description,
+        })
+        return response
+
+    async def verify_chat(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        custom_description: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Verifies a chat on behalf of the organization
+        which is represented by the bot. Returns True
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#verifychat
+        """
+
+        response = await self._send_request("verifyChat", {
+            "chat_id": chat_id,
+            "custom_description": custom_description,
+        })
+        return response
+
+    async def remove_user_verification(
+        self: botapi.BotAPI,
+        user_id: int,
+    ) -> Optional[bool]:
+        """
+        Removes verification from a user who is currently
+        verified on behalf of the organization represented by
+        the bot. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#removeuserverification
+        """
+
+        response = await self._send_request("removeUserVerification", {
+            "user_id": user_id,
+        })
+        return response
+
+    async def remove_chat_verification(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+    ) -> Optional[bool]:
+        """
+        Removes verification from a chat that is currently
+        verified on behalf of the organization represented by
+        the bot. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#removechatverification
+        """
+
+        response = await self._send_request("removeChatVerification", {
+            "chat_id": chat_id,
+        })
+        return response
+
+    async def read_business_message(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        chat_id: int,
+        message_id: int,
+    ) -> Optional[bool]:
+        """
+        Marks incoming message as read on behalf of
+        a business account. Requires the can_read_messages business bot
+        right. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#readbusinessmessage
+        """
+
+        response = await self._send_request("readBusinessMessage", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+        })
+        return response
+
+    async def delete_business_messages(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        message_ids: List[int],
+    ) -> Optional[bool]:
+        """
+        Delete messages on behalf of a business account.
+        Requires the can_delete_outgoing_messages business bot right to delete
+        messages sent by the bot itself, or the
+        can_delete_all_messages business bot right to delete any message.
+        Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#deletebusinessmessages
+        """
+
+        response = await self._send_request("deleteBusinessMessages", {
+            "business_connection_id": business_connection_id,
+            "message_ids": message_ids,
+        })
+        return response
+
+    async def set_business_account_name(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        first_name: str,
+        last_name: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Changes the first and last name of a
+        managed business account. Requires the can_change_name business bot
+        right. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#setbusinessaccountname
+        """
+
+        response = await self._send_request("setBusinessAccountName", {
+            "business_connection_id": business_connection_id,
+            "first_name": first_name,
+            "last_name": last_name,
+        })
+        return response
+
+    async def set_business_account_username(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        username: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Changes the username of a managed business account.
+        Requires the can_change_username business bot right. Returns True
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#setbusinessaccountusername
+        """
+
+        response = await self._send_request("setBusinessAccountUsername", {
+            "business_connection_id": business_connection_id,
+            "username": username,
+        })
+        return response
+
+    async def set_business_account_bio(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        bio: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Changes the bio of a managed business account.
+        Requires the can_change_bio business bot right. Returns True
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#setbusinessaccountbio
+        """
+
+        response = await self._send_request("setBusinessAccountBio", {
+            "business_connection_id": business_connection_id,
+            "bio": bio,
+        })
+        return response
+
+    async def set_business_account_profile_photo(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        photo: InputProfilePhoto,
+        is_public: Optional[bool] = None,
+    ) -> Optional[bool]:
+        """
+        Changes the profile photo of a managed business
+        account. Requires the can_edit_profile_photo business bot right. Returns
+        True on success.
+
+        Reference: https://core.telegram.org/bots/api#setbusinessaccountprofilephoto
+        """
+
+        response = await self._send_request("setBusinessAccountProfilePhoto", {
+            "business_connection_id": business_connection_id,
+            "photo": photo,
+            "is_public": is_public,
+        })
+        return response
+
+    async def remove_business_account_profile_photo(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        is_public: Optional[bool] = None,
+    ) -> Optional[bool]:
+        """
+        Removes the current profile photo of a managed
+        business account. Requires the can_edit_profile_photo business bot right.
+        Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#removebusinessaccountprofilephoto
+        """
+
+        response = await self._send_request("removeBusinessAccountProfilePhoto", {
+            "business_connection_id": business_connection_id,
+            "is_public": is_public,
+        })
+        return response
+
+    async def set_business_account_gift_settings(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        show_gift_button: bool,
+        accepted_gift_types: AcceptedGiftTypes,
+    ) -> Optional[bool]:
+        """
+        Changes the privacy settings pertaining to incoming gifts
+        in a managed business account. Requires the can_change_gift_settings
+        business bot right. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#setbusinessaccountgiftsettings
+        """
+
+        response = await self._send_request("setBusinessAccountGiftSettings", {
+            "business_connection_id": business_connection_id,
+            "show_gift_button": show_gift_button,
+            "accepted_gift_types": accepted_gift_types,
+        })
+        return response
+
+    async def get_business_account_star_balance(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+    ) -> Optional[StarAmount]:
+        """
+        Returns the amount of Telegram Stars owned by
+        a managed business account. Requires the can_view_gifts_and_stars business
+        bot right. Returns StarAmount on success.
+
+        Reference: https://core.telegram.org/bots/api#getbusinessaccountstarbalance
+        """
+
+        response = await self._send_request("getBusinessAccountStarBalance", {
+            "business_connection_id": business_connection_id,
+        })
+        return StarAmount.model_validate(response)
+
+    async def transfer_business_account_stars(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        star_count: int,
+    ) -> Optional[bool]:
+        """
+        Transfers Telegram Stars from the business account balance
+        to the bot's balance. Requires the can_transfer_stars business
+        bot right. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#transferbusinessaccountstars
+        """
+
+        response = await self._send_request("transferBusinessAccountStars", {
+            "business_connection_id": business_connection_id,
+            "star_count": star_count,
+        })
+        return response
+
+    async def get_business_account_gifts(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        exclude_unsaved: Optional[bool] = None,
+        exclude_saved: Optional[bool] = None,
+        exclude_unlimited: Optional[bool] = None,
+        exclude_limited: Optional[bool] = None,
+        exclude_unique: Optional[bool] = None,
+        sort_by_price: Optional[bool] = None,
+        offset: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> Optional[OwnedGifts]:
+        """
+        Returns the gifts received and owned by a
+        managed business account. Requires the can_view_gifts_and_stars business bot
+        right. Returns OwnedGifts on success.
+
+        Reference: https://core.telegram.org/bots/api#getbusinessaccountgifts
+        """
+
+        response = await self._send_request("getBusinessAccountGifts", {
+            "business_connection_id": business_connection_id,
+            "exclude_unsaved": exclude_unsaved,
+            "exclude_saved": exclude_saved,
+            "exclude_unlimited": exclude_unlimited,
+            "exclude_limited": exclude_limited,
+            "exclude_unique": exclude_unique,
+            "sort_by_price": sort_by_price,
+            "offset": offset,
+            "limit": limit,
+        })
+        return OwnedGifts.model_validate(response)
+
+    async def convert_gift_to_stars(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        owned_gift_id: str,
+    ) -> Optional[bool]:
+        """
+        Converts a given regular gift to Telegram Stars.
+        Requires the can_convert_gifts_to_stars business bot right. Returns True
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#convertgifttostars
+        """
+
+        response = await self._send_request("convertGiftToStars", {
+            "business_connection_id": business_connection_id,
+            "owned_gift_id": owned_gift_id,
+        })
+        return response
+
+    async def upgrade_gift(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        owned_gift_id: str,
+        keep_original_details: Optional[bool] = None,
+        star_count: Optional[int] = None,
+    ) -> Optional[bool]:
+        """
+        Upgrades a given regular gift to a unique
+        gift. Requires the can_transfer_and_upgrade_gifts business bot right. Additionally
+        requires the can_transfer_stars business bot right if the
+        upgrade is paid. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#upgradegift
+        """
+
+        response = await self._send_request("upgradeGift", {
+            "business_connection_id": business_connection_id,
+            "owned_gift_id": owned_gift_id,
+            "keep_original_details": keep_original_details,
+            "star_count": star_count,
+        })
+        return response
+
+    async def transfer_gift(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        owned_gift_id: str,
+        new_owner_chat_id: int,
+        star_count: Optional[int] = None,
+    ) -> Optional[bool]:
+        """
+        Transfers an owned unique gift to another user.
+        Requires the can_transfer_and_upgrade_gifts business bot right. Requires can_transfer_stars
+        business bot right if the transfer is paid.
+        Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#transfergift
+        """
+
+        response = await self._send_request("transferGift", {
+            "business_connection_id": business_connection_id,
+            "owned_gift_id": owned_gift_id,
+            "new_owner_chat_id": new_owner_chat_id,
+            "star_count": star_count,
+        })
+        return response
+
+    async def post_story(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        content: InputStoryContent,
+        active_period: int,
+        caption: Optional[str] = None,
+        parse_mode: Optional[str] = "HTML",
+        caption_entities: Optional[List[MessageEntity]] = None,
+        areas: Optional[List[StoryArea]] = None,
+        post_to_chat_page: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+    ) -> Optional[Story]:
+        """
+        Posts a story on behalf of a managed
+        business account. Requires the can_manage_stories business bot right.
+        Returns Story on success.
+
+        Reference: https://core.telegram.org/bots/api#poststory
+        """
+
+        response = await self._send_request("postStory", {
+            "business_connection_id": business_connection_id,
+            "content": content,
+            "active_period": active_period,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "caption_entities": caption_entities,
+            "areas": areas,
+            "post_to_chat_page": post_to_chat_page,
+            "protect_content": protect_content,
+        })
+        return Story.model_validate(response)
+
+    async def edit_story(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        story_id: int,
+        content: InputStoryContent,
+        caption: Optional[str] = None,
+        parse_mode: Optional[str] = "HTML",
+        caption_entities: Optional[List[MessageEntity]] = None,
+        areas: Optional[List[StoryArea]] = None,
+    ) -> Optional[Story]:
+        """
+        Edits a story previously posted by the bot
+        on behalf of a managed business account. Requires
+        the can_manage_stories business bot right. Returns Story on
+        success.
+
+        Reference: https://core.telegram.org/bots/api#editstory
+        """
+
+        response = await self._send_request("editStory", {
+            "business_connection_id": business_connection_id,
+            "story_id": story_id,
+            "content": content,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "caption_entities": caption_entities,
+            "areas": areas,
+        })
+        return Story.model_validate(response)
+
+    async def delete_story(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        story_id: int,
+    ) -> Optional[bool]:
+        """
+        Deletes a story previously posted by the bot
+        on behalf of a managed business account. Requires
+        the can_manage_stories business bot right. Returns True on
+        success.
+
+        Reference: https://core.telegram.org/bots/api#deletestory
+        """
+
+        response = await self._send_request("deleteStory", {
+            "business_connection_id": business_connection_id,
+            "story_id": story_id,
+        })
+        return response
+
     async def send_sticker(
         self: botapi.BotAPI,
         chat_id: Union[int, str],
@@ -3326,122 +3883,6 @@ class Methods:
 
         response = await self._send_request("deleteStickerSet", {
             "name": name,
-        })
-        return response
-
-    async def get_available_gifts(
-        self: botapi.BotAPI,
-    ) -> Optional[Gifts]:
-        """
-        Returns the list of gifts that can be
-        sent by the bot to users and channel
-        chats. Requires no parameters. Returns a Gifts object.
-
-        Reference: https://core.telegram.org/bots/api#getavailablegifts
-        """
-
-        response = await self._send_request("getAvailableGifts", {})
-        return Gifts.model_validate(response)
-
-    async def send_gift(
-        self: botapi.BotAPI,
-        gift_id: str,
-        user_id: Optional[int] = None,
-        chat_id: Optional[Union[int, str]] = None,
-        pay_for_upgrade: Optional[bool] = None,
-        text: Optional[str] = None,
-        text_parse_mode: Optional[str] = None,
-        text_entities: Optional[List[MessageEntity]] = None,
-    ) -> Optional[bool]:
-        """
-        Sends a gift to the given user or
-        channel chat. The gift can't be converted to
-        Telegram Stars by the receiver. Returns True on
-        success.
-
-        Reference: https://core.telegram.org/bots/api#sendgift
-        """
-
-        response = await self._send_request("sendGift", {
-            "user_id": user_id,
-            "chat_id": chat_id,
-            "gift_id": gift_id,
-            "pay_for_upgrade": pay_for_upgrade,
-            "text": text,
-            "text_parse_mode": text_parse_mode,
-            "text_entities": text_entities,
-        })
-        return response
-
-    async def verify_user(
-        self: botapi.BotAPI,
-        user_id: int,
-        custom_description: Optional[str] = None,
-    ) -> Optional[bool]:
-        """
-        Verifies a user on behalf of the organization
-        which is represented by the bot. Returns True
-        on success.
-
-        Reference: https://core.telegram.org/bots/api#verifyuser
-        """
-
-        response = await self._send_request("verifyUser", {
-            "user_id": user_id,
-            "custom_description": custom_description,
-        })
-        return response
-
-    async def verify_chat(
-        self: botapi.BotAPI,
-        chat_id: Union[int, str],
-        custom_description: Optional[str] = None,
-    ) -> Optional[bool]:
-        """
-        Verifies a chat on behalf of the organization
-        which is represented by the bot. Returns True
-        on success.
-
-        Reference: https://core.telegram.org/bots/api#verifychat
-        """
-
-        response = await self._send_request("verifyChat", {
-            "chat_id": chat_id,
-            "custom_description": custom_description,
-        })
-        return response
-
-    async def remove_user_verification(
-        self: botapi.BotAPI,
-        user_id: int,
-    ) -> Optional[bool]:
-        """
-        Removes verification from a user who is currently
-        verified on behalf of the organization represented by
-        the bot. Returns True on success.
-
-        Reference: https://core.telegram.org/bots/api#removeuserverification
-        """
-
-        response = await self._send_request("removeUserVerification", {
-            "user_id": user_id,
-        })
-        return response
-
-    async def remove_chat_verification(
-        self: botapi.BotAPI,
-        chat_id: Union[int, str],
-    ) -> Optional[bool]:
-        """
-        Removes verification from a chat that is currently
-        verified on behalf of the organization represented by
-        the bot. Returns True on success.
-
-        Reference: https://core.telegram.org/bots/api#removechatverification
-        """
-
-        response = await self._send_request("removeChatVerification", {
-            "chat_id": chat_id,
         })
         return response
 

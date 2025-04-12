@@ -105,6 +105,7 @@ class ChatFullInfo(BaseModel):
     type: str
     accent_color_id: int
     max_reaction_count: int
+    accepted_gift_types: AcceptedGiftTypes
     title: Optional[str] = Field(default=None)
     username: Optional[str] = Field(default=None)
     first_name: Optional[str] = Field(default=None)
@@ -132,7 +133,6 @@ class ChatFullInfo(BaseModel):
     invite_link: Optional[str] = Field(default=None)
     pinned_message: Optional[Message] = Field(default=None)
     permissions: Optional[ChatPermissions] = Field(default=None)
-    can_send_gift: Optional[bool] = Field(default=None)
     can_send_paid_media: Optional[bool] = Field(default=None)
     slow_mode_delay: Optional[int] = Field(default=None)
     unrestrict_boost_count: Optional[int] = Field(default=None)
@@ -176,6 +176,7 @@ class Message(BaseModel):
     is_from_offline: Optional[bool] = Field(default=None)
     media_group_id: Optional[str] = Field(default=None)
     author_signature: Optional[str] = Field(default=None)
+    paid_star_count: Optional[int] = Field(default=None)
     text: Optional[str] = Field(default=None)
     entities: Optional[List[MessageEntity]] = Field(default=None)
     link_preview_options: Optional[LinkPreviewOptions] = Field(default=None)
@@ -217,6 +218,8 @@ class Message(BaseModel):
     refunded_payment: Optional[RefundedPayment] = Field(default=None)
     users_shared: Optional[UsersShared] = Field(default=None)
     chat_shared: Optional[ChatShared] = Field(default=None)
+    gift: Optional[GiftInfo] = Field(default=None)
+    unique_gift: Optional[UniqueGiftInfo] = Field(default=None)
     connected_website: Optional[str] = Field(default=None)
     write_access_allowed: Optional[WriteAccessAllowed] = Field(default=None)
     passport_data: Optional[PassportData] = Field(default=None)
@@ -233,6 +236,7 @@ class Message(BaseModel):
     giveaway: Optional[Giveaway] = Field(default=None)
     giveaway_winners: Optional[GiveawayWinners] = Field(default=None)
     giveaway_completed: Optional[GiveawayCompleted] = Field(default=None)
+    paid_message_price_changed: Optional[PaidMessagePriceChanged] = Field(default=None)
     video_chat_scheduled: Optional[VideoChatScheduled] = Field(default=None)
     video_chat_started: Optional[VideoChatStarted] = Field(default=None)
     video_chat_ended: Optional[VideoChatEnded] = Field(default=None)
@@ -967,6 +971,16 @@ class VideoChatParticipantsInvited(BaseModel):
 
     users: List[User] 
 
+class PaidMessagePriceChanged(BaseModel):
+    """
+    Describes a service message about a change in
+    the price of paid messages within a chat.
+
+    Reference: https://core.telegram.org/bots/api#paidmessagepricechanged
+    """
+
+    paid_message_star_count: int 
+
 class GiveawayCreated(BaseModel):
     """
     This object represents a service message about the
@@ -1570,6 +1584,109 @@ class BusinessOpeningHours(BaseModel):
     time_zone_name: str
     opening_hours: List[BusinessOpeningHoursInterval] 
 
+class StoryAreaPosition(BaseModel):
+    """
+    Describes the position of a clickable area within
+    a story.
+
+    Reference: https://core.telegram.org/bots/api#storyareaposition
+    """
+
+    x_percentage: float
+    y_percentage: float
+    width_percentage: float
+    height_percentage: float
+    rotation_angle: float
+    corner_radius_percentage: float 
+
+class LocationAddress(BaseModel):
+    """
+    Describes the physical address of a location.
+
+    Reference: https://core.telegram.org/bots/api#locationaddress
+    """
+
+    country_code: str
+    state: Optional[str] = Field(default=None)
+    city: Optional[str] = Field(default=None)
+    street: Optional[str] = Field(default=None) 
+
+class StoryAreaTypeLocation(BaseModel):
+    """
+    Describes a story area pointing to a location.
+    Currently, a story can have up to 10
+    location areas.
+
+    Reference: https://core.telegram.org/bots/api#storyareatypelocation
+    """
+
+    type: Literal["location"] = "location"
+    latitude: float
+    longitude: float
+    address: Optional[LocationAddress] = Field(default=None) 
+
+class StoryAreaTypeSuggestedReaction(BaseModel):
+    """
+    Describes a story area pointing to a suggested
+    reaction. Currently, a story can have up to
+    5 suggested reaction areas.
+
+    Reference: https://core.telegram.org/bots/api#storyareatypesuggestedreaction
+    """
+
+    type: Literal["suggested_reaction"] = "suggested_reaction"
+    reaction_type: ReactionType
+    is_dark: Optional[bool] = Field(default=None)
+    is_flipped: Optional[bool] = Field(default=None) 
+
+class StoryAreaTypeLink(BaseModel):
+    """
+    Describes a story area pointing to an HTTP
+    or tg:// link. Currently, a story can have
+    up to 3 link areas.
+
+    Reference: https://core.telegram.org/bots/api#storyareatypelink
+    """
+
+    type: Literal["link"] = "link"
+    url: str 
+
+class StoryAreaTypeWeather(BaseModel):
+    """
+    Describes a story area containing weather information. Currently,
+    a story can have up to 3 weather
+    areas.
+
+    Reference: https://core.telegram.org/bots/api#storyareatypeweather
+    """
+
+    type: Literal["weather"] = "weather"
+    temperature: float
+    emoji: str
+    background_color: int 
+
+class StoryAreaTypeUniqueGift(BaseModel):
+    """
+    Describes a story area pointing to a unique
+    gift. Currently, a story can have at most
+    1 unique gift area.
+
+    Reference: https://core.telegram.org/bots/api#storyareatypeuniquegift
+    """
+
+    type: Literal["unique_gift"] = "unique_gift"
+    name: str 
+
+class StoryArea(BaseModel):
+    """
+    Describes a clickable area on a story media.
+
+    Reference: https://core.telegram.org/bots/api#storyarea
+    """
+
+    position: StoryAreaPosition
+    type: StoryAreaType 
+
 class ChatLocation(BaseModel):
     """
     Represents a location to which a chat is
@@ -1661,6 +1778,199 @@ class ForumTopic(BaseModel):
     name: str
     icon_color: int
     icon_custom_emoji_id: Optional[str] = Field(default=None) 
+
+class Gift(BaseModel):
+    """
+    This object represents a gift that can be
+    sent by the bot.
+
+    Reference: https://core.telegram.org/bots/api#gift
+    """
+
+    id: str
+    sticker: Sticker
+    star_count: int
+    upgrade_star_count: Optional[int] = Field(default=None)
+    total_count: Optional[int] = Field(default=None)
+    remaining_count: Optional[int] = Field(default=None) 
+
+class Gifts(BaseModel):
+    """
+    This object represent a list of gifts.
+
+    Reference: https://core.telegram.org/bots/api#gifts
+    """
+
+    gifts: List[Gift] 
+
+class UniqueGiftModel(BaseModel):
+    """
+    This object describes the model of a unique
+    gift.
+
+    Reference: https://core.telegram.org/bots/api#uniquegiftmodel
+    """
+
+    name: str
+    sticker: Sticker
+    rarity_per_mille: int 
+
+class UniqueGiftSymbol(BaseModel):
+    """
+    This object describes the symbol shown on the
+    pattern of a unique gift.
+
+    Reference: https://core.telegram.org/bots/api#uniquegiftsymbol
+    """
+
+    name: str
+    sticker: Sticker
+    rarity_per_mille: int 
+
+class UniqueGiftBackdropColors(BaseModel):
+    """
+    This object describes the colors of the backdrop
+    of a unique gift.
+
+    Reference: https://core.telegram.org/bots/api#uniquegiftbackdropcolors
+    """
+
+    center_color: int
+    edge_color: int
+    symbol_color: int
+    text_color: int 
+
+class UniqueGiftBackdrop(BaseModel):
+    """
+    This object describes the backdrop of a unique
+    gift.
+
+    Reference: https://core.telegram.org/bots/api#uniquegiftbackdrop
+    """
+
+    name: str
+    colors: UniqueGiftBackdropColors
+    rarity_per_mille: int 
+
+class UniqueGift(BaseModel):
+    """
+    This object describes a unique gift that was
+    upgraded from a regular gift.
+
+    Reference: https://core.telegram.org/bots/api#uniquegift
+    """
+
+    base_name: str
+    name: str
+    number: int
+    model: UniqueGiftModel
+    symbol: UniqueGiftSymbol
+    backdrop: UniqueGiftBackdrop 
+
+class GiftInfo(BaseModel):
+    """
+    Describes a service message about a regular gift
+    that was sent or received.
+
+    Reference: https://core.telegram.org/bots/api#giftinfo
+    """
+
+    gift: Gift
+    owned_gift_id: Optional[str] = Field(default=None)
+    convert_star_count: Optional[int] = Field(default=None)
+    prepaid_upgrade_star_count: Optional[int] = Field(default=None)
+    can_be_upgraded: Optional[bool] = Field(default=None)
+    text: Optional[str] = Field(default=None)
+    entities: Optional[List[MessageEntity]] = Field(default=None)
+    is_private: Optional[bool] = Field(default=None) 
+
+class UniqueGiftInfo(BaseModel):
+    """
+    Describes a service message about a unique gift
+    that was sent or received.
+
+    Reference: https://core.telegram.org/bots/api#uniquegiftinfo
+    """
+
+    gift: UniqueGift
+    origin: str
+    owned_gift_id: Optional[str] = Field(default=None)
+    transfer_star_count: Optional[int] = Field(default=None) 
+
+class OwnedGiftRegular(BaseModel):
+    """
+    Describes a regular gift owned by a user
+    or a chat.
+
+    Reference: https://core.telegram.org/bots/api#ownedgiftregular
+    """
+
+    type: Literal["regular"] = "regular"
+    gift: Gift
+    send_date: int
+    owned_gift_id: Optional[str] = Field(default=None)
+    sender_user: Optional[User] = Field(default=None)
+    text: Optional[str] = Field(default=None)
+    entities: Optional[List[MessageEntity]] = Field(default=None)
+    is_private: Optional[bool] = Field(default=None)
+    is_saved: Optional[bool] = Field(default=None)
+    can_be_upgraded: Optional[bool] = Field(default=None)
+    was_refunded: Optional[bool] = Field(default=None)
+    convert_star_count: Optional[int] = Field(default=None)
+    prepaid_upgrade_star_count: Optional[int] = Field(default=None) 
+
+class OwnedGiftUnique(BaseModel):
+    """
+    Describes a unique gift received and owned by
+    a user or a chat.
+
+    Reference: https://core.telegram.org/bots/api#ownedgiftunique
+    """
+
+    type: Literal["unique"] = "unique"
+    gift: UniqueGift
+    send_date: int
+    owned_gift_id: Optional[str] = Field(default=None)
+    sender_user: Optional[User] = Field(default=None)
+    is_saved: Optional[bool] = Field(default=None)
+    can_be_transferred: Optional[bool] = Field(default=None)
+    transfer_star_count: Optional[int] = Field(default=None) 
+
+class OwnedGifts(BaseModel):
+    """
+    Contains the list of gifts received and owned
+    by a user or a chat.
+
+    Reference: https://core.telegram.org/bots/api#ownedgifts
+    """
+
+    total_count: int
+    gifts: List[OwnedGift]
+    next_offset: Optional[str] = Field(default=None) 
+
+class AcceptedGiftTypes(BaseModel):
+    """
+    This object describes the types of gifts that
+    can be gifted to a user or a
+    chat.
+
+    Reference: https://core.telegram.org/bots/api#acceptedgifttypes
+    """
+
+    unlimited_gifts: bool
+    limited_gifts: bool
+    unique_gifts: bool
+    premium_subscription: bool 
+
+class StarAmount(BaseModel):
+    """
+    Describes an amount of Telegram Stars.
+
+    Reference: https://core.telegram.org/bots/api#staramount
+    """
+
+    amount: int
+    nanostar_amount: Optional[int] = Field(default=None) 
 
 class BotCommand(BaseModel):
     """
@@ -1896,6 +2206,28 @@ class UserChatBoosts(BaseModel):
 
     boosts: List[ChatBoost] 
 
+class BusinessBotRights(BaseModel):
+    """
+    Represents the rights of a business bot.
+
+    Reference: https://core.telegram.org/bots/api#businessbotrights
+    """
+
+    can_reply: Optional[bool] = Field(default=None)
+    can_read_messages: Optional[bool] = Field(default=None)
+    can_delete_outgoing_messages: Optional[bool] = Field(default=None)
+    can_delete_all_messages: Optional[bool] = Field(default=None)
+    can_edit_name: Optional[bool] = Field(default=None)
+    can_edit_bio: Optional[bool] = Field(default=None)
+    can_edit_profile_photo: Optional[bool] = Field(default=None)
+    can_edit_username: Optional[bool] = Field(default=None)
+    can_change_gift_settings: Optional[bool] = Field(default=None)
+    can_view_gifts_and_stars: Optional[bool] = Field(default=None)
+    can_convert_gifts_to_stars: Optional[bool] = Field(default=None)
+    can_transfer_and_upgrade_gifts: Optional[bool] = Field(default=None)
+    can_transfer_stars: Optional[bool] = Field(default=None)
+    can_manage_stories: Optional[bool] = Field(default=None) 
+
 class BusinessConnection(BaseModel):
     """
     Describes the connection of the bot with a
@@ -1908,8 +2240,8 @@ class BusinessConnection(BaseModel):
     user: User
     user_chat_id: int
     date: int
-    can_reply: bool
-    is_enabled: bool 
+    is_enabled: bool
+    rights: Optional[BusinessBotRights] = Field(default=None) 
 
 class BusinessMessagesDeleted(BaseModel):
     """
@@ -2063,6 +2395,50 @@ class InputPaidMediaVideo(BaseModel):
     duration: Optional[int] = Field(default=None)
     supports_streaming: Optional[bool] = Field(default=None) 
 
+class InputProfilePhotoStatic(BaseModel):
+    """
+    A static profile photo in the .JPG format.
+
+    Reference: https://core.telegram.org/bots/api#inputprofilephotostatic
+    """
+
+    type: str
+    photo: str 
+
+class InputProfilePhotoAnimated(BaseModel):
+    """
+    An animated profile photo in the MPEG4 format.
+
+    Reference: https://core.telegram.org/bots/api#inputprofilephotoanimated
+    """
+
+    type: str
+    animation: str
+    main_frame_timestamp: Optional[float] = Field(default=None) 
+
+class InputStoryContentPhoto(BaseModel):
+    """
+    Describes a photo to post as a story.
+
+    Reference: https://core.telegram.org/bots/api#inputstorycontentphoto
+    """
+
+    type: str
+    photo: str 
+
+class InputStoryContentVideo(BaseModel):
+    """
+    Describes a video to post as a story.
+
+    Reference: https://core.telegram.org/bots/api#inputstorycontentvideo
+    """
+
+    type: str
+    video: str
+    duration: Optional[float] = Field(default=None)
+    cover_frame_timestamp: Optional[float] = Field(default=None)
+    is_animation: Optional[bool] = Field(default=None) 
+
 class Sticker(BaseModel):
     """
     This object represents a sticker.
@@ -2120,35 +2496,11 @@ class InputSticker(BaseModel):
     Reference: https://core.telegram.org/bots/api#inputsticker
     """
 
-    sticker: Union[InputFile, str]
+    sticker: str
     format: str
     emoji_list: List[str]
     mask_position: Optional[MaskPosition] = Field(default=None)
     keywords: Optional[List[str]] = Field(default=None) 
-
-class Gift(BaseModel):
-    """
-    This object represents a gift that can be
-    sent by the bot.
-
-    Reference: https://core.telegram.org/bots/api#gift
-    """
-
-    id: str
-    sticker: Sticker
-    star_count: int
-    upgrade_star_count: Optional[int] = Field(default=None)
-    total_count: Optional[int] = Field(default=None)
-    remaining_count: Optional[int] = Field(default=None) 
-
-class Gifts(BaseModel):
-    """
-    This object represent a list of gifts.
-
-    Reference: https://core.telegram.org/bots/api#gifts
-    """
-
-    gifts: List[Gift] 
 
 class InlineQuery(BaseModel):
     """
@@ -2963,13 +3315,15 @@ class TransactionPartnerUser(BaseModel):
     """
 
     type: Literal["user"] = "user"
+    transaction_type: str
     user: User
     affiliate: Optional[AffiliateInfo] = Field(default=None)
     invoice_payload: Optional[str] = Field(default=None)
     subscription_period: Optional[int] = Field(default=None)
     paid_media: Optional[List[PaidMedia]] = Field(default=None)
     paid_media_payload: Optional[str] = Field(default=None)
-    gift: Optional[Gift] = Field(default=None) 
+    gift: Optional[Gift] = Field(default=None)
+    premium_subscription_duration: Optional[int] = Field(default=None) 
 
 class TransactionPartnerChat(BaseModel):
     """
@@ -3328,12 +3682,27 @@ ChatMember = Union[
 ]
 _ChatMemberAdapter = TypeAdapter(ChatMember) 
 
+StoryAreaType = Union[
+    StoryAreaTypeLocation,
+    StoryAreaTypeSuggestedReaction,
+    StoryAreaTypeLink,
+    StoryAreaTypeWeather,
+    StoryAreaTypeUniqueGift,
+]
+_StoryAreaTypeAdapter = TypeAdapter(StoryAreaType) 
+
 ReactionType = Union[
     ReactionTypeEmoji,
     ReactionTypeCustomEmoji,
     ReactionTypePaid,
 ]
 _ReactionTypeAdapter = TypeAdapter(ReactionType) 
+
+OwnedGift = Union[
+    OwnedGiftRegular,
+    OwnedGiftUnique,
+]
+_OwnedGiftAdapter = TypeAdapter(OwnedGift) 
 
 BotCommandScope = Union[
     BotCommandScopeDefault,
@@ -3374,6 +3743,18 @@ InputPaidMedia = Union[
     InputPaidMediaVideo,
 ]
 _InputPaidMediaAdapter = TypeAdapter(InputPaidMedia) 
+
+InputProfilePhoto = Union[
+    InputProfilePhotoStatic,
+    InputProfilePhotoAnimated,
+]
+_InputProfilePhotoAdapter = TypeAdapter(InputProfilePhoto) 
+
+InputStoryContent = Union[
+    InputStoryContentPhoto,
+    InputStoryContentVideo,
+]
+_InputStoryContentAdapter = TypeAdapter(InputStoryContent) 
 
 InlineQueryResult = Union[
     InlineQueryResultCachedAudio,
@@ -3500,6 +3881,7 @@ VideoChatScheduled.model_rebuild()
 VideoChatStarted.model_rebuild()
 VideoChatEnded.model_rebuild()
 VideoChatParticipantsInvited.model_rebuild()
+PaidMessagePriceChanged.model_rebuild()
 GiveawayCreated.model_rebuild()
 Giveaway.model_rebuild()
 GiveawayWinners.model_rebuild()
@@ -3538,6 +3920,14 @@ BusinessIntro.model_rebuild()
 BusinessLocation.model_rebuild()
 BusinessOpeningHoursInterval.model_rebuild()
 BusinessOpeningHours.model_rebuild()
+StoryAreaPosition.model_rebuild()
+LocationAddress.model_rebuild()
+StoryAreaTypeLocation.model_rebuild()
+StoryAreaTypeSuggestedReaction.model_rebuild()
+StoryAreaTypeLink.model_rebuild()
+StoryAreaTypeWeather.model_rebuild()
+StoryAreaTypeUniqueGift.model_rebuild()
+StoryArea.model_rebuild()
 ChatLocation.model_rebuild()
 ReactionTypeEmoji.model_rebuild()
 ReactionTypeCustomEmoji.model_rebuild()
@@ -3546,6 +3936,20 @@ ReactionCount.model_rebuild()
 MessageReactionUpdated.model_rebuild()
 MessageReactionCountUpdated.model_rebuild()
 ForumTopic.model_rebuild()
+Gift.model_rebuild()
+Gifts.model_rebuild()
+UniqueGiftModel.model_rebuild()
+UniqueGiftSymbol.model_rebuild()
+UniqueGiftBackdropColors.model_rebuild()
+UniqueGiftBackdrop.model_rebuild()
+UniqueGift.model_rebuild()
+GiftInfo.model_rebuild()
+UniqueGiftInfo.model_rebuild()
+OwnedGiftRegular.model_rebuild()
+OwnedGiftUnique.model_rebuild()
+OwnedGifts.model_rebuild()
+AcceptedGiftTypes.model_rebuild()
+StarAmount.model_rebuild()
 BotCommand.model_rebuild()
 BotCommandScopeDefault.model_rebuild()
 BotCommandScopeAllPrivateChats.model_rebuild()
@@ -3567,6 +3971,7 @@ ChatBoost.model_rebuild()
 ChatBoostUpdated.model_rebuild()
 ChatBoostRemoved.model_rebuild()
 UserChatBoosts.model_rebuild()
+BusinessBotRights.model_rebuild()
 BusinessConnection.model_rebuild()
 BusinessMessagesDeleted.model_rebuild()
 ResponseParameters.model_rebuild()
@@ -3578,12 +3983,14 @@ InputMediaDocument.model_rebuild()
 InputFile.model_rebuild()
 InputPaidMediaPhoto.model_rebuild()
 InputPaidMediaVideo.model_rebuild()
+InputProfilePhotoStatic.model_rebuild()
+InputProfilePhotoAnimated.model_rebuild()
+InputStoryContentPhoto.model_rebuild()
+InputStoryContentVideo.model_rebuild()
 Sticker.model_rebuild()
 StickerSet.model_rebuild()
 MaskPosition.model_rebuild()
 InputSticker.model_rebuild()
-Gift.model_rebuild()
-Gifts.model_rebuild()
 InlineQuery.model_rebuild()
 InlineQueryResultsButton.model_rebuild()
 InlineQueryResultArticle.model_rebuild()
