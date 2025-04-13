@@ -2402,7 +2402,7 @@ class InputProfilePhotoStatic(BaseModel):
     Reference: https://core.telegram.org/bots/api#inputprofilephotostatic
     """
 
-    type: str
+    type: Literal["static"] = "static"
     photo: str 
 
 class InputProfilePhotoAnimated(BaseModel):
@@ -2412,7 +2412,7 @@ class InputProfilePhotoAnimated(BaseModel):
     Reference: https://core.telegram.org/bots/api#inputprofilephotoanimated
     """
 
-    type: str
+    type: Literal["animated"] = "animated"
     animation: str
     main_frame_timestamp: Optional[float] = Field(default=None) 
 
@@ -2423,7 +2423,7 @@ class InputStoryContentPhoto(BaseModel):
     Reference: https://core.telegram.org/bots/api#inputstorycontentphoto
     """
 
-    type: str
+    type: Literal["photo"] = "photo"
     photo: str 
 
 class InputStoryContentVideo(BaseModel):
@@ -2433,7 +2433,7 @@ class InputStoryContentVideo(BaseModel):
     Reference: https://core.telegram.org/bots/api#inputstorycontentvideo
     """
 
-    type: str
+    type: Literal["video"] = "video"
     video: str
     duration: Optional[float] = Field(default=None)
     cover_frame_timestamp: Optional[float] = Field(default=None)
