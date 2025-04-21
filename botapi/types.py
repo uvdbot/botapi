@@ -2215,7 +2215,7 @@ class BusinessBotRights(BaseModel):
 
     can_reply: Optional[bool] = Field(default=None)
     can_read_messages: Optional[bool] = Field(default=None)
-    can_delete_outgoing_messages: Optional[bool] = Field(default=None)
+    can_delete_sent_messages: Optional[bool] = Field(default=None)
     can_delete_all_messages: Optional[bool] = Field(default=None)
     can_edit_name: Optional[bool] = Field(default=None)
     can_edit_bio: Optional[bool] = Field(default=None)
