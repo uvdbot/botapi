@@ -195,6 +195,7 @@ class Message(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
     has_media_spoiler: Optional[bool] = Field(default=None)
+    checklist: Optional[Checklist] = Field(default=None)
     contact: Optional[Contact] = Field(default=None)
     dice: Optional[Dice] = Field(default=None)
     game: Optional[Game] = Field(default=None)
@@ -226,6 +227,9 @@ class Message(BaseModel):
     proximity_alert_triggered: Optional[ProximityAlertTriggered] = Field(default=None)
     boost_added: Optional[ChatBoostAdded] = Field(default=None)
     chat_background_set: Optional[ChatBackground] = Field(default=None)
+    checklist_tasks_done: Optional[ChecklistTasksDone] = Field(default=None)
+    checklist_tasks_added: Optional[ChecklistTasksAdded] = Field(default=None)
+    direct_message_price_changed: Optional[DirectMessagePriceChanged] = Field(default=None)
     forum_topic_created: Optional[ForumTopicCreated] = Field(default=None)
     forum_topic_edited: Optional[ForumTopicEdited] = Field(default=None)
     forum_topic_closed: Optional[ForumTopicClosed] = Field(default=None)
@@ -307,6 +311,7 @@ class ExternalReplyInfo(BaseModel):
     video_note: Optional[VideoNote] = Field(default=None)
     voice: Optional[Voice] = Field(default=None)
     has_media_spoiler: Optional[bool] = Field(default=None)
+    checklist: Optional[Checklist] = Field(default=None)
     contact: Optional[Contact] = Field(default=None)
     dice: Optional[Dice] = Field(default=None)
     game: Optional[Game] = Field(default=None)
@@ -630,6 +635,81 @@ class Poll(BaseModel):
     explanation_entities: Optional[List[MessageEntity]] = Field(default=None)
     open_period: Optional[int] = Field(default=None)
     close_date: Optional[int] = Field(default=None) 
+
+class ChecklistTask(BaseModel):
+    """
+    Describes a task in a checklist.
+
+    Reference: https://core.telegram.org/bots/api#checklisttask
+    """
+
+    id: int
+    text: str
+    text_entities: Optional[List[MessageEntity]] = Field(default=None)
+    completed_by_user: Optional[User] = Field(default=None)
+    completion_date: Optional[int] = Field(default=None) 
+
+class Checklist(BaseModel):
+    """
+    Describes a checklist.
+
+    Reference: https://core.telegram.org/bots/api#checklist
+    """
+
+    title: str
+    tasks: List[ChecklistTask]
+    title_entities: Optional[List[MessageEntity]] = Field(default=None)
+    others_can_add_tasks: Optional[bool] = Field(default=None)
+    others_can_mark_tasks_as_done: Optional[bool] = Field(default=None) 
+
+class InputChecklistTask(BaseModel):
+    """
+    Describes a task to add to a checklist.
+
+    Reference: https://core.telegram.org/bots/api#inputchecklisttask
+    """
+
+    id: int
+    text: str
+    parse_mode: Optional[str] = Field(default="HTML")
+    text_entities: Optional[List[MessageEntity]] = Field(default=None) 
+
+class InputChecklist(BaseModel):
+    """
+    Describes a checklist to create.
+
+    Reference: https://core.telegram.org/bots/api#inputchecklist
+    """
+
+    title: str
+    tasks: List[InputChecklistTask]
+    parse_mode: Optional[str] = Field(default="HTML")
+    title_entities: Optional[List[MessageEntity]] = Field(default=None)
+    others_can_add_tasks: Optional[bool] = Field(default=None)
+    others_can_mark_tasks_as_done: Optional[bool] = Field(default=None) 
+
+class ChecklistTasksDone(BaseModel):
+    """
+    Describes a service message about checklist tasks marked
+    as done or not done.
+
+    Reference: https://core.telegram.org/bots/api#checklisttasksdone
+    """
+
+    checklist_message: Optional[Message] = Field(default=None)
+    marked_as_done_task_ids: Optional[List[int]] = Field(default=None)
+    marked_as_not_done_task_ids: Optional[List[int]] = Field(default=None) 
+
+class ChecklistTasksAdded(BaseModel):
+    """
+    Describes a service message about tasks added to
+    a checklist.
+
+    Reference: https://core.telegram.org/bots/api#checklisttasksadded
+    """
+
+    tasks: List[ChecklistTask]
+    checklist_message: Optional[Message] = Field(default=None) 
 
 class Location(BaseModel):
     """
@@ -980,6 +1060,18 @@ class PaidMessagePriceChanged(BaseModel):
     """
 
     paid_message_star_count: int 
+
+class DirectMessagePriceChanged(BaseModel):
+    """
+    Describes a service message about a change in
+    the price of direct messages sent to a
+    channel chat.
+
+    Reference: https://core.telegram.org/bots/api#directmessagepricechanged
+    """
+
+    are_direct_messages_enabled: bool
+    direct_message_star_count: Optional[int] = Field(default=None) 
 
 class GiveawayCreated(BaseModel):
     """
@@ -1894,8 +1986,10 @@ class UniqueGiftInfo(BaseModel):
 
     gift: UniqueGift
     origin: str
+    last_resale_star_count: Optional[int] = Field(default=None)
     owned_gift_id: Optional[str] = Field(default=None)
-    transfer_star_count: Optional[int] = Field(default=None) 
+    transfer_star_count: Optional[int] = Field(default=None)
+    next_transfer_date: Optional[int] = Field(default=None) 
 
 class OwnedGiftRegular(BaseModel):
     """
@@ -1934,7 +2028,8 @@ class OwnedGiftUnique(BaseModel):
     sender_user: Optional[User] = Field(default=None)
     is_saved: Optional[bool] = Field(default=None)
     can_be_transferred: Optional[bool] = Field(default=None)
-    transfer_star_count: Optional[int] = Field(default=None) 
+    transfer_star_count: Optional[int] = Field(default=None)
+    next_transfer_date: Optional[int] = Field(default=None) 
 
 class OwnedGifts(BaseModel):
     """
@@ -3853,6 +3948,12 @@ PollOption.model_rebuild()
 InputPollOption.model_rebuild()
 PollAnswer.model_rebuild()
 Poll.model_rebuild()
+ChecklistTask.model_rebuild()
+Checklist.model_rebuild()
+InputChecklistTask.model_rebuild()
+InputChecklist.model_rebuild()
+ChecklistTasksDone.model_rebuild()
+ChecklistTasksAdded.model_rebuild()
 Location.model_rebuild()
 Venue.model_rebuild()
 WebAppData.model_rebuild()
@@ -3882,6 +3983,7 @@ VideoChatStarted.model_rebuild()
 VideoChatEnded.model_rebuild()
 VideoChatParticipantsInvited.model_rebuild()
 PaidMessagePriceChanged.model_rebuild()
+DirectMessagePriceChanged.model_rebuild()
 GiveawayCreated.model_rebuild()
 Giveaway.model_rebuild()
 GiveawayWinners.model_rebuild()

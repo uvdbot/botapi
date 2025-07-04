@@ -41,6 +41,12 @@ from botapi.types import (
     InputPollOption,
     PollAnswer,
     Poll,
+    ChecklistTask,
+    Checklist,
+    InputChecklistTask,
+    InputChecklist,
+    ChecklistTasksDone,
+    ChecklistTasksAdded,
     Location,
     Venue,
     WebAppData,
@@ -70,6 +76,7 @@ from botapi.types import (
     VideoChatEnded,
     VideoChatParticipantsInvited,
     PaidMessagePriceChanged,
+    DirectMessagePriceChanged,
     GiveawayCreated,
     Giveaway,
     GiveawayWinners,
@@ -1247,6 +1254,37 @@ class Methods:
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
+            "message_effect_id": message_effect_id,
+            "reply_parameters": reply_parameters,
+            "reply_markup": reply_markup,
+        })
+        return Message.model_validate(response)
+
+    async def send_checklist(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        chat_id: int,
+        checklist: InputChecklist,
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        message_effect_id: Optional[str] = None,
+        reply_parameters: Optional[ReplyParameters] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Message]:
+        """
+        Use this method to send a checklist on
+        behalf of a connected business account. On success,
+        the sent Message is returned.
+
+        Reference: https://core.telegram.org/bots/api#sendchecklist
+        """
+
+        response = await self._send_request("sendChecklist", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "checklist": checklist,
+            "disable_notification": disable_notification,
+            "protect_content": protect_content,
             "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -2911,6 +2949,31 @@ class Methods:
             pass
         return response
 
+    async def edit_message_checklist(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        chat_id: int,
+        message_id: int,
+        checklist: InputChecklist,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Message]:
+        """
+        Use this method to edit a checklist on
+        behalf of a connected business account. On success,
+        the edited Message is returned.
+
+        Reference: https://core.telegram.org/bots/api#editmessagechecklist
+        """
+
+        response = await self._send_request("editMessageChecklist", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "checklist": checklist,
+            "reply_markup": reply_markup,
+        })
+        return Message.model_validate(response)
+
     async def edit_message_reply_markup(
         self: botapi.BotAPI,
         business_connection_id: Optional[str] = None,
@@ -4143,6 +4206,20 @@ class Methods:
             "error_message": error_message,
         })
         return response
+
+    async def get_my_star_balance(
+        self: botapi.BotAPI,
+    ) -> Optional[StarAmount]:
+        """
+        A method to get the current Telegram Stars
+        balance of the bot. Requires no parameters. On
+        success, returns a StarAmount object.
+
+        Reference: https://core.telegram.org/bots/api#getmystarbalance
+        """
+
+        response = await self._send_request("getMyStarBalance", {})
+        return StarAmount.model_validate(response)
 
     async def get_star_transactions(
         self: botapi.BotAPI,
