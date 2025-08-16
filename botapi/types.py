@@ -92,7 +92,8 @@ class Chat(BaseModel):
     username: Optional[str] = Field(default=None)
     first_name: Optional[str] = Field(default=None)
     last_name: Optional[str] = Field(default=None)
-    is_forum: Optional[bool] = Field(default=None) 
+    is_forum: Optional[bool] = Field(default=None)
+    is_direct_messages: Optional[bool] = Field(default=None) 
 
 class ChatFullInfo(BaseModel):
     """
@@ -111,6 +112,7 @@ class ChatFullInfo(BaseModel):
     first_name: Optional[str] = Field(default=None)
     last_name: Optional[str] = Field(default=None)
     is_forum: Optional[bool] = Field(default=None)
+    is_direct_messages: Optional[bool] = Field(default=None)
     photo: Optional[ChatPhoto] = Field(default=None)
     active_usernames: Optional[List[str]] = Field(default=None)
     birthdate: Optional[Birthdate] = Field(default=None)
@@ -118,6 +120,7 @@ class ChatFullInfo(BaseModel):
     business_location: Optional[BusinessLocation] = Field(default=None)
     business_opening_hours: Optional[BusinessOpeningHours] = Field(default=None)
     personal_chat: Optional[Chat] = Field(default=None)
+    parent_chat: Optional[Chat] = Field(default=None)
     available_reactions: Optional[List[ReactionType]] = Field(default=None)
     background_custom_emoji_id: Optional[str] = Field(default=None)
     profile_accent_color_id: Optional[int] = Field(default=None)
@@ -158,6 +161,7 @@ class Message(BaseModel):
     date: int
     chat: Chat
     message_thread_id: Optional[int] = Field(default=None)
+    direct_messages_topic: Optional[DirectMessagesTopic] = Field(default=None)
     from_user: Optional[User] = Field(default=None, alias="from")
     sender_chat: Optional[Chat] = Field(default=None)
     sender_boost_count: Optional[int] = Field(default=None)
@@ -170,16 +174,19 @@ class Message(BaseModel):
     external_reply: Optional[ExternalReplyInfo] = Field(default=None)
     quote: Optional[TextQuote] = Field(default=None)
     reply_to_story: Optional[Story] = Field(default=None)
+    reply_to_checklist_task_id: Optional[int] = Field(default=None)
     via_bot: Optional[User] = Field(default=None)
     edit_date: Optional[int] = Field(default=None)
     has_protected_content: Optional[bool] = Field(default=None)
     is_from_offline: Optional[bool] = Field(default=None)
+    is_paid_post: Optional[bool] = Field(default=None)
     media_group_id: Optional[str] = Field(default=None)
     author_signature: Optional[str] = Field(default=None)
     paid_star_count: Optional[int] = Field(default=None)
     text: Optional[str] = Field(default=None)
     entities: Optional[List[MessageEntity]] = Field(default=None)
     link_preview_options: Optional[LinkPreviewOptions] = Field(default=None)
+    suggested_post_info: Optional[SuggestedPostInfo] = Field(default=None)
     effect_id: Optional[str] = Field(default=None)
     animation: Optional[Animation] = Field(default=None)
     audio: Optional[Audio] = Field(default=None)
@@ -241,6 +248,11 @@ class Message(BaseModel):
     giveaway_winners: Optional[GiveawayWinners] = Field(default=None)
     giveaway_completed: Optional[GiveawayCompleted] = Field(default=None)
     paid_message_price_changed: Optional[PaidMessagePriceChanged] = Field(default=None)
+    suggested_post_approved: Optional[SuggestedPostApproved] = Field(default=None)
+    suggested_post_approval_failed: Optional[SuggestedPostApprovalFailed] = Field(default=None)
+    suggested_post_declined: Optional[SuggestedPostDeclined] = Field(default=None)
+    suggested_post_paid: Optional[SuggestedPostPaid] = Field(default=None)
+    suggested_post_refunded: Optional[SuggestedPostRefunded] = Field(default=None)
     video_chat_scheduled: Optional[VideoChatScheduled] = Field(default=None)
     video_chat_started: Optional[VideoChatStarted] = Field(default=None)
     video_chat_ended: Optional[VideoChatEnded] = Field(default=None)
@@ -336,7 +348,8 @@ class ReplyParameters(BaseModel):
     quote: Optional[str] = Field(default=None)
     quote_parse_mode: Optional[str] = Field(default=None)
     quote_entities: Optional[List[MessageEntity]] = Field(default=None)
-    quote_position: Optional[int] = Field(default=None) 
+    quote_position: Optional[int] = Field(default=None)
+    checklist_task_id: Optional[int] = Field(default=None) 
 
 class MessageOriginUser(BaseModel):
     """
@@ -1073,6 +1086,65 @@ class DirectMessagePriceChanged(BaseModel):
     are_direct_messages_enabled: bool
     direct_message_star_count: Optional[int] = Field(default=None) 
 
+class SuggestedPostApproved(BaseModel):
+    """
+    Describes a service message about the approval of
+    a suggested post.
+
+    Reference: https://core.telegram.org/bots/api#suggestedpostapproved
+    """
+
+    send_date: int
+    suggested_post_message: Optional[Message] = Field(default=None)
+    price: Optional[SuggestedPostPrice] = Field(default=None) 
+
+class SuggestedPostApprovalFailed(BaseModel):
+    """
+    Describes a service message about the failed approval
+    of a suggested post. Currently, only caused by
+    insufficient user funds at the time of approval.
+
+    Reference: https://core.telegram.org/bots/api#suggestedpostapprovalfailed
+    """
+
+    price: SuggestedPostPrice
+    suggested_post_message: Optional[Message] = Field(default=None) 
+
+class SuggestedPostDeclined(BaseModel):
+    """
+    Describes a service message about the rejection of
+    a suggested post.
+
+    Reference: https://core.telegram.org/bots/api#suggestedpostdeclined
+    """
+
+    suggested_post_message: Optional[Message] = Field(default=None)
+    comment: Optional[str] = Field(default=None) 
+
+class SuggestedPostPaid(BaseModel):
+    """
+    Describes a service message about a successful payment
+    for a suggested post.
+
+    Reference: https://core.telegram.org/bots/api#suggestedpostpaid
+    """
+
+    currency: str
+    suggested_post_message: Optional[Message] = Field(default=None)
+    amount: Optional[int] = Field(default=None)
+    star_amount: Optional[StarAmount] = Field(default=None) 
+
+class SuggestedPostRefunded(BaseModel):
+    """
+    Describes a service message about a payment refund
+    for a suggested post.
+
+    Reference: https://core.telegram.org/bots/api#suggestedpostrefunded
+    """
+
+    reason: str
+    suggested_post_message: Optional[Message] = Field(default=None) 
+
 class GiveawayCreated(BaseModel):
     """
     This object represents a service message about the
@@ -1147,6 +1219,48 @@ class LinkPreviewOptions(BaseModel):
     prefer_small_media: Optional[bool] = Field(default=None)
     prefer_large_media: Optional[bool] = Field(default=None)
     show_above_text: Optional[bool] = Field(default=None) 
+
+class SuggestedPostPrice(BaseModel):
+    """
+    Desribes price of a suggested post.
+
+    Reference: https://core.telegram.org/bots/api#suggestedpostprice
+    """
+
+    currency: str
+    amount: int 
+
+class SuggestedPostInfo(BaseModel):
+    """
+    Contains information about a suggested post.
+
+    Reference: https://core.telegram.org/bots/api#suggestedpostinfo
+    """
+
+    state: str
+    price: Optional[SuggestedPostPrice] = Field(default=None)
+    send_date: Optional[int] = Field(default=None) 
+
+class SuggestedPostParameters(BaseModel):
+    """
+    Contains parameters of a post that is being
+    suggested by the bot.
+
+    Reference: https://core.telegram.org/bots/api#suggestedpostparameters
+    """
+
+    price: Optional[SuggestedPostPrice] = Field(default=None)
+    send_date: Optional[int] = Field(default=None) 
+
+class DirectMessagesTopic(BaseModel):
+    """
+    Describes a topic of a direct messages chat.
+
+    Reference: https://core.telegram.org/bots/api#directmessagestopic
+    """
+
+    topic_id: int
+    user: Optional[User] = Field(default=None) 
 
 class UserProfilePhotos(BaseModel):
     """
@@ -1460,7 +1574,8 @@ class ChatAdministratorRights(BaseModel):
     can_post_messages: Optional[bool] = Field(default=None)
     can_edit_messages: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
-    can_manage_topics: Optional[bool] = Field(default=None) 
+    can_manage_topics: Optional[bool] = Field(default=None)
+    can_manage_direct_messages: Optional[bool] = Field(default=None) 
 
 class ChatMemberUpdated(BaseModel):
     """
@@ -1518,6 +1633,7 @@ class ChatMemberAdministrator(BaseModel):
     can_edit_messages: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
     can_manage_topics: Optional[bool] = Field(default=None)
+    can_manage_direct_messages: Optional[bool] = Field(default=None)
     custom_title: Optional[str] = Field(default=None) 
 
 class ChatMemberMember(BaseModel):
@@ -1884,7 +2000,8 @@ class Gift(BaseModel):
     star_count: int
     upgrade_star_count: Optional[int] = Field(default=None)
     total_count: Optional[int] = Field(default=None)
-    remaining_count: Optional[int] = Field(default=None) 
+    remaining_count: Optional[int] = Field(default=None)
+    publisher_chat: Optional[Chat] = Field(default=None) 
 
 class Gifts(BaseModel):
     """
@@ -1957,7 +2074,8 @@ class UniqueGift(BaseModel):
     number: int
     model: UniqueGiftModel
     symbol: UniqueGiftSymbol
-    backdrop: UniqueGiftBackdrop 
+    backdrop: UniqueGiftBackdrop
+    publisher_chat: Optional[Chat] = Field(default=None) 
 
 class GiftInfo(BaseModel):
     """
@@ -3984,11 +4102,20 @@ VideoChatEnded.model_rebuild()
 VideoChatParticipantsInvited.model_rebuild()
 PaidMessagePriceChanged.model_rebuild()
 DirectMessagePriceChanged.model_rebuild()
+SuggestedPostApproved.model_rebuild()
+SuggestedPostApprovalFailed.model_rebuild()
+SuggestedPostDeclined.model_rebuild()
+SuggestedPostPaid.model_rebuild()
+SuggestedPostRefunded.model_rebuild()
 GiveawayCreated.model_rebuild()
 Giveaway.model_rebuild()
 GiveawayWinners.model_rebuild()
 GiveawayCompleted.model_rebuild()
 LinkPreviewOptions.model_rebuild()
+SuggestedPostPrice.model_rebuild()
+SuggestedPostInfo.model_rebuild()
+SuggestedPostParameters.model_rebuild()
+DirectMessagesTopic.model_rebuild()
 UserProfilePhotos.model_rebuild()
 File.model_rebuild()
 WebAppInfo.model_rebuild()

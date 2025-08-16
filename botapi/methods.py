@@ -77,11 +77,20 @@ from botapi.types import (
     VideoChatParticipantsInvited,
     PaidMessagePriceChanged,
     DirectMessagePriceChanged,
+    SuggestedPostApproved,
+    SuggestedPostApprovalFailed,
+    SuggestedPostDeclined,
+    SuggestedPostPaid,
+    SuggestedPostRefunded,
     GiveawayCreated,
     Giveaway,
     GiveawayWinners,
     GiveawayCompleted,
     LinkPreviewOptions,
+    SuggestedPostPrice,
+    SuggestedPostInfo,
+    SuggestedPostParameters,
+    DirectMessagesTopic,
     UserProfilePhotos,
     File,
     WebAppInfo,
@@ -450,6 +459,7 @@ class Methods:
         text: str,
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         parse_mode: Optional[str] = "HTML",
         entities: Optional[List[MessageEntity]] = None,
         link_preview_options: Optional[LinkPreviewOptions] = None,
@@ -457,6 +467,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -471,6 +482,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "text": text,
             "parse_mode": parse_mode,
             "entities": entities,
@@ -479,6 +491,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -490,9 +503,11 @@ class Methods:
         from_chat_id: Union[int, str],
         message_id: int,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         video_start_timestamp: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
     ) -> Optional[Message]:
         """
         Use this method to forward messages of any
@@ -506,10 +521,12 @@ class Methods:
         response = await self._send_request("forwardMessage", {
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "from_chat_id": from_chat_id,
             "video_start_timestamp": video_start_timestamp,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "suggested_post_parameters": suggested_post_parameters,
             "message_id": message_id,
         })
         return Message.model_validate(response)
@@ -520,6 +537,7 @@ class Methods:
         from_chat_id: Union[int, str],
         message_ids: List[int],
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
     ) -> Optional[List[MessageId]]:
@@ -538,6 +556,7 @@ class Methods:
         response = await self._send_request("forwardMessages", {
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "from_chat_id": from_chat_id,
             "message_ids": message_ids,
             "disable_notification": disable_notification,
@@ -551,6 +570,7 @@ class Methods:
         from_chat_id: Union[int, str],
         message_id: int,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         video_start_timestamp: Optional[int] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
@@ -559,6 +579,7 @@ class Methods:
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[MessageId]:
@@ -580,6 +601,7 @@ class Methods:
         response = await self._send_request("copyMessage", {
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "from_chat_id": from_chat_id,
             "message_id": message_id,
             "video_start_timestamp": video_start_timestamp,
@@ -590,6 +612,7 @@ class Methods:
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -601,6 +624,7 @@ class Methods:
         from_chat_id: Union[int, str],
         message_ids: List[int],
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         remove_caption: Optional[bool] = None,
@@ -626,6 +650,7 @@ class Methods:
         response = await self._send_request("copyMessages", {
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "from_chat_id": from_chat_id,
             "message_ids": message_ids,
             "disable_notification": disable_notification,
@@ -640,6 +665,7 @@ class Methods:
         photo: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -649,6 +675,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -663,6 +690,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "photo": photo,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -673,6 +701,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -684,6 +713,7 @@ class Methods:
         audio: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -695,6 +725,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -715,6 +746,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "audio": audio,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -727,6 +759,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -738,6 +771,7 @@ class Methods:
         document: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         thumbnail: Optional[Union[InputFile, str]] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
@@ -747,6 +781,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -764,6 +799,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "document": document,
             "thumbnail": thumbnail,
             "caption": caption,
@@ -774,6 +810,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -785,6 +822,7 @@ class Methods:
         video: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         duration: Optional[int] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -801,6 +839,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -819,6 +858,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "video": video,
             "duration": duration,
             "width": width,
@@ -836,6 +876,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -847,6 +888,7 @@ class Methods:
         animation: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         duration: Optional[int] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -860,6 +902,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -878,6 +921,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "animation": animation,
             "duration": duration,
             "width": width,
@@ -892,6 +936,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -903,6 +948,7 @@ class Methods:
         voice: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -911,6 +957,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -934,6 +981,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "voice": voice,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -943,6 +991,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -954,6 +1003,7 @@ class Methods:
         video_note: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         duration: Optional[int] = None,
         length: Optional[int] = None,
         thumbnail: Optional[Union[InputFile, str]] = None,
@@ -961,6 +1011,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -977,6 +1028,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "video_note": video_note,
             "duration": duration,
             "length": length,
@@ -985,6 +1037,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -996,6 +1049,8 @@ class Methods:
         star_count: int,
         media: List[InputPaidMedia],
         business_connection_id: Optional[str] = None,
+        message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         payload: Optional[str] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
@@ -1004,6 +1059,7 @@ class Methods:
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -1017,6 +1073,8 @@ class Methods:
         response = await self._send_request("sendPaidMedia", {
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "star_count": star_count,
             "media": media,
             "payload": payload,
@@ -1027,6 +1085,7 @@ class Methods:
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -1038,6 +1097,7 @@ class Methods:
         media: List[Union[InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo]],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
@@ -1059,6 +1119,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "media": media,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
@@ -1075,6 +1136,7 @@ class Methods:
         longitude: float,
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         horizontal_accuracy: Optional[float] = None,
         live_period: Optional[int] = None,
         heading: Optional[int] = None,
@@ -1083,6 +1145,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -1097,6 +1160,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "latitude": latitude,
             "longitude": longitude,
             "horizontal_accuracy": horizontal_accuracy,
@@ -1107,6 +1171,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -1121,6 +1186,7 @@ class Methods:
         address: str,
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         foursquare_id: Optional[str] = None,
         foursquare_type: Optional[str] = None,
         google_place_id: Optional[str] = None,
@@ -1129,6 +1195,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -1143,6 +1210,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "latitude": latitude,
             "longitude": longitude,
             "title": title,
@@ -1155,6 +1223,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -1167,12 +1236,14 @@ class Methods:
         first_name: str,
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         last_name: Optional[str] = None,
         vcard: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -1187,6 +1258,7 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "phone_number": phone_number,
             "first_name": first_name,
             "last_name": last_name,
@@ -1195,6 +1267,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -1296,11 +1369,13 @@ class Methods:
         chat_id: Union[int, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         emoji: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -1316,11 +1391,13 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "emoji": emoji,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -1553,6 +1630,7 @@ class Methods:
         can_edit_messages: Optional[bool] = None,
         can_pin_messages: Optional[bool] = None,
         can_manage_topics: Optional[bool] = None,
+        can_manage_direct_messages: Optional[bool] = None,
     ) -> Optional[bool]:
         """
         Use this method to promote or demote a
@@ -1584,6 +1662,7 @@ class Methods:
             "can_edit_messages": can_edit_messages,
             "can_pin_messages": can_pin_messages,
             "can_manage_topics": can_manage_topics,
+            "can_manage_direct_messages": can_manage_direct_messages,
         })
         return response
 
@@ -1963,12 +2042,12 @@ class Methods:
         """
         Use this method to add a message to
         the list of pinned messages in a chat.
-        If the chat is not a private chat,
-        the bot must be an administrator in the
-        chat for this to work and must have
-        the 'can_pin_messages' administrator right in a supergroup or
-        'can_edit_messages' administrator right in a channel. Returns True
-        on success.
+        In private chats and channel direct messages chats,
+        all non-service messages can be pinned. Conversely, the
+        bot must be an administrator with the 'can_pin_messages'
+        right or the 'can_edit_messages' right to pin messages
+        in groups and channels respectively. Returns True on
+        success.
 
         Reference: https://core.telegram.org/bots/api#pinchatmessage
         """
@@ -1990,12 +2069,11 @@ class Methods:
         """
         Use this method to remove a message from
         the list of pinned messages in a chat.
-        If the chat is not a private chat,
-        the bot must be an administrator in the
-        chat for this to work and must have
-        the 'can_pin_messages' administrator right in a supergroup or
-        'can_edit_messages' administrator right in a channel. Returns True
-        on success.
+        In private chats and channel direct messages chats,
+        all messages can be unpinned. Conversely, the bot
+        must be an administrator with the 'can_pin_messages' right
+        or the 'can_edit_messages' right to unpin messages in
+        groups and channels respectively. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#unpinchatmessage
         """
@@ -2013,12 +2091,13 @@ class Methods:
     ) -> Optional[bool]:
         """
         Use this method to clear the list of
-        pinned messages in a chat. If the chat
-        is not a private chat, the bot must
-        be an administrator in the chat for this
-        to work and must have the 'can_pin_messages' administrator
-        right in a supergroup or 'can_edit_messages' administrator right
-        in a channel. Returns True on success.
+        pinned messages in a chat. In private chats
+        and channel direct messages chats, no additional rights
+        are required to unpin all pinned messages. Conversely,
+        the bot must be an administrator with the
+        'can_pin_messages' right or the 'can_edit_messages' right to unpin
+        all pinned messages in groups and channels respectively.
+        Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#unpinallchatmessages
         """
@@ -2746,342 +2825,6 @@ class Methods:
         })
         return ChatAdministratorRights.model_validate(response)
 
-    async def edit_message_text(
-        self: botapi.BotAPI,
-        text: str,
-        business_connection_id: Optional[str] = None,
-        chat_id: Optional[Union[int, str]] = None,
-        message_id: Optional[int] = None,
-        inline_message_id: Optional[str] = None,
-        parse_mode: Optional[str] = "HTML",
-        entities: Optional[List[MessageEntity]] = None,
-        link_preview_options: Optional[LinkPreviewOptions] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
-        """
-        Use this method to edit text and game
-        messages. On success, if the edited message is
-        not an inline message, the edited Message is
-        returned, otherwise True is returned. Note that business
-        messages that were not sent by the bot
-        and do not contain an inline keyboard can
-        only be edited within 48 hours from the
-        time they were sent.
-
-        Reference: https://core.telegram.org/bots/api#editmessagetext
-        """
-
-        response = await self._send_request("editMessageText", {
-            "business_connection_id": business_connection_id,
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "inline_message_id": inline_message_id,
-            "text": text,
-            "parse_mode": parse_mode,
-            "entities": entities,
-            "link_preview_options": link_preview_options,
-            "reply_markup": reply_markup,
-        })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
-
-    async def edit_message_caption(
-        self: botapi.BotAPI,
-        business_connection_id: Optional[str] = None,
-        chat_id: Optional[Union[int, str]] = None,
-        message_id: Optional[int] = None,
-        inline_message_id: Optional[str] = None,
-        caption: Optional[str] = None,
-        parse_mode: Optional[str] = "HTML",
-        caption_entities: Optional[List[MessageEntity]] = None,
-        show_caption_above_media: Optional[bool] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
-        """
-        Use this method to edit captions of messages.
-        On success, if the edited message is not
-        an inline message, the edited Message is returned,
-        otherwise True is returned. Note that business messages
-        that were not sent by the bot and
-        do not contain an inline keyboard can only
-        be edited within 48 hours from the time
-        they were sent.
-
-        Reference: https://core.telegram.org/bots/api#editmessagecaption
-        """
-
-        response = await self._send_request("editMessageCaption", {
-            "business_connection_id": business_connection_id,
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "inline_message_id": inline_message_id,
-            "caption": caption,
-            "parse_mode": parse_mode,
-            "caption_entities": caption_entities,
-            "show_caption_above_media": show_caption_above_media,
-            "reply_markup": reply_markup,
-        })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
-
-    async def edit_message_media(
-        self: botapi.BotAPI,
-        media: InputMedia,
-        business_connection_id: Optional[str] = None,
-        chat_id: Optional[Union[int, str]] = None,
-        message_id: Optional[int] = None,
-        inline_message_id: Optional[str] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
-        """
-        Use this method to edit animation, audio, document,
-        photo, or video messages, or to add media
-        to text messages. If a message is part
-        of a message album, then it can be
-        edited only to an audio for audio albums,
-        only to a document for document albums and
-        to a photo or a video otherwise. When
-        an inline message is edited, a new file
-        can't be uploaded; use a previously uploaded file
-        via its file_id or specify a URL. On
-        success, if the edited message is not an
-        inline message, the edited Message is returned, otherwise
-        True is returned. Note that business messages that
-        were not sent by the bot and do
-        not contain an inline keyboard can only be
-        edited within 48 hours from the time they
-        were sent.
-
-        Reference: https://core.telegram.org/bots/api#editmessagemedia
-        """
-
-        response = await self._send_request("editMessageMedia", {
-            "business_connection_id": business_connection_id,
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "inline_message_id": inline_message_id,
-            "media": media,
-            "reply_markup": reply_markup,
-        })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
-
-    async def edit_message_live_location(
-        self: botapi.BotAPI,
-        latitude: float,
-        longitude: float,
-        business_connection_id: Optional[str] = None,
-        chat_id: Optional[Union[int, str]] = None,
-        message_id: Optional[int] = None,
-        inline_message_id: Optional[str] = None,
-        live_period: Optional[int] = None,
-        horizontal_accuracy: Optional[float] = None,
-        heading: Optional[int] = None,
-        proximity_alert_radius: Optional[int] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
-        """
-        Use this method to edit live location messages.
-        A location can be edited until its live_period
-        expires or editing is explicitly disabled by a
-        call to stopMessageLiveLocation. On success, if the edited
-        message is not an inline message, the edited
-        Message is returned, otherwise True is returned.
-
-        Reference: https://core.telegram.org/bots/api#editmessagelivelocation
-        """
-
-        response = await self._send_request("editMessageLiveLocation", {
-            "business_connection_id": business_connection_id,
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "inline_message_id": inline_message_id,
-            "latitude": latitude,
-            "longitude": longitude,
-            "live_period": live_period,
-            "horizontal_accuracy": horizontal_accuracy,
-            "heading": heading,
-            "proximity_alert_radius": proximity_alert_radius,
-            "reply_markup": reply_markup,
-        })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
-
-    async def stop_message_live_location(
-        self: botapi.BotAPI,
-        business_connection_id: Optional[str] = None,
-        chat_id: Optional[Union[int, str]] = None,
-        message_id: Optional[int] = None,
-        inline_message_id: Optional[str] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
-        """
-        Use this method to stop updating a live
-        location message before live_period expires. On success, if
-        the message is not an inline message, the
-        edited Message is returned, otherwise True is returned.
-
-        Reference: https://core.telegram.org/bots/api#stopmessagelivelocation
-        """
-
-        response = await self._send_request("stopMessageLiveLocation", {
-            "business_connection_id": business_connection_id,
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "inline_message_id": inline_message_id,
-            "reply_markup": reply_markup,
-        })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
-
-    async def edit_message_checklist(
-        self: botapi.BotAPI,
-        business_connection_id: str,
-        chat_id: int,
-        message_id: int,
-        checklist: InputChecklist,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Message]:
-        """
-        Use this method to edit a checklist on
-        behalf of a connected business account. On success,
-        the edited Message is returned.
-
-        Reference: https://core.telegram.org/bots/api#editmessagechecklist
-        """
-
-        response = await self._send_request("editMessageChecklist", {
-            "business_connection_id": business_connection_id,
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "checklist": checklist,
-            "reply_markup": reply_markup,
-        })
-        return Message.model_validate(response)
-
-    async def edit_message_reply_markup(
-        self: botapi.BotAPI,
-        business_connection_id: Optional[str] = None,
-        chat_id: Optional[Union[int, str]] = None,
-        message_id: Optional[int] = None,
-        inline_message_id: Optional[str] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
-        """
-        Use this method to edit only the reply
-        markup of messages. On success, if the edited
-        message is not an inline message, the edited
-        Message is returned, otherwise True is returned. Note
-        that business messages that were not sent by
-        the bot and do not contain an inline
-        keyboard can only be edited within 48 hours
-        from the time they were sent.
-
-        Reference: https://core.telegram.org/bots/api#editmessagereplymarkup
-        """
-
-        response = await self._send_request("editMessageReplyMarkup", {
-            "business_connection_id": business_connection_id,
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "inline_message_id": inline_message_id,
-            "reply_markup": reply_markup,
-        })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
-
-    async def stop_poll(
-        self: botapi.BotAPI,
-        chat_id: Union[int, str],
-        message_id: int,
-        business_connection_id: Optional[str] = None,
-        reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Poll]:
-        """
-        Use this method to stop a poll which
-        was sent by the bot. On success, the
-        stopped Poll is returned.
-
-        Reference: https://core.telegram.org/bots/api#stoppoll
-        """
-
-        response = await self._send_request("stopPoll", {
-            "business_connection_id": business_connection_id,
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "reply_markup": reply_markup,
-        })
-        return Poll.model_validate(response)
-
-    async def delete_message(
-        self: botapi.BotAPI,
-        chat_id: Union[int, str],
-        message_id: int,
-    ) -> Optional[bool]:
-        """
-        Use this method to delete a message, including
-        service messages, with the following limitations:- A message
-        can only be deleted if it was sent
-        less than 48 hours ago.- Service messages about
-        a supergroup, channel, or forum topic creation can't
-        be deleted.- A dice message in a private
-        chat can only be deleted if it was
-        sent more than 24 hours ago.- Bots can
-        delete outgoing messages in private chats, groups, and
-        supergroups.- Bots can delete incoming messages in private
-        chats.- Bots granted can_post_messages permissions can delete outgoing
-        messages in channels.- If the bot is an
-        administrator of a group, it can delete any
-        message there.- If the bot has can_delete_messages permission
-        in a supergroup or a channel, it can
-        delete any message there.Returns True on success.
-
-        Reference: https://core.telegram.org/bots/api#deletemessage
-        """
-
-        response = await self._send_request("deleteMessage", {
-            "chat_id": chat_id,
-            "message_id": message_id,
-        })
-        return response
-
-    async def delete_messages(
-        self: botapi.BotAPI,
-        chat_id: Union[int, str],
-        message_ids: List[int],
-    ) -> Optional[bool]:
-        """
-        Use this method to delete multiple messages simultaneously.
-        If some of the specified messages can't be
-        found, they are skipped. Returns True on success.
-
-        Reference: https://core.telegram.org/bots/api#deletemessages
-        """
-
-        response = await self._send_request("deleteMessages", {
-            "chat_id": chat_id,
-            "message_ids": message_ids,
-        })
-        return response
-
     async def get_available_gifts(
         self: botapi.BotAPI,
     ) -> Optional[Gifts]:
@@ -3605,17 +3348,402 @@ class Methods:
         })
         return response
 
+    async def edit_message_text(
+        self: botapi.BotAPI,
+        text: str,
+        business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[str] = None,
+        parse_mode: Optional[str] = "HTML",
+        entities: Optional[List[MessageEntity]] = None,
+        link_preview_options: Optional[LinkPreviewOptions] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Union[Message, bool]]:
+        """
+        Use this method to edit text and game
+        messages. On success, if the edited message is
+        not an inline message, the edited Message is
+        returned, otherwise True is returned. Note that business
+        messages that were not sent by the bot
+        and do not contain an inline keyboard can
+        only be edited within 48 hours from the
+        time they were sent.
+
+        Reference: https://core.telegram.org/bots/api#editmessagetext
+        """
+
+        response = await self._send_request("editMessageText", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "text": text,
+            "parse_mode": parse_mode,
+            "entities": entities,
+            "link_preview_options": link_preview_options,
+            "reply_markup": reply_markup,
+        })
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+            pass
+        return response
+
+    async def edit_message_caption(
+        self: botapi.BotAPI,
+        business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[str] = None,
+        caption: Optional[str] = None,
+        parse_mode: Optional[str] = "HTML",
+        caption_entities: Optional[List[MessageEntity]] = None,
+        show_caption_above_media: Optional[bool] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Union[Message, bool]]:
+        """
+        Use this method to edit captions of messages.
+        On success, if the edited message is not
+        an inline message, the edited Message is returned,
+        otherwise True is returned. Note that business messages
+        that were not sent by the bot and
+        do not contain an inline keyboard can only
+        be edited within 48 hours from the time
+        they were sent.
+
+        Reference: https://core.telegram.org/bots/api#editmessagecaption
+        """
+
+        response = await self._send_request("editMessageCaption", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "caption_entities": caption_entities,
+            "show_caption_above_media": show_caption_above_media,
+            "reply_markup": reply_markup,
+        })
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+            pass
+        return response
+
+    async def edit_message_media(
+        self: botapi.BotAPI,
+        media: InputMedia,
+        business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Union[Message, bool]]:
+        """
+        Use this method to edit animation, audio, document,
+        photo, or video messages, or to add media
+        to text messages. If a message is part
+        of a message album, then it can be
+        edited only to an audio for audio albums,
+        only to a document for document albums and
+        to a photo or a video otherwise. When
+        an inline message is edited, a new file
+        can't be uploaded; use a previously uploaded file
+        via its file_id or specify a URL. On
+        success, if the edited message is not an
+        inline message, the edited Message is returned, otherwise
+        True is returned. Note that business messages that
+        were not sent by the bot and do
+        not contain an inline keyboard can only be
+        edited within 48 hours from the time they
+        were sent.
+
+        Reference: https://core.telegram.org/bots/api#editmessagemedia
+        """
+
+        response = await self._send_request("editMessageMedia", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "media": media,
+            "reply_markup": reply_markup,
+        })
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+            pass
+        return response
+
+    async def edit_message_live_location(
+        self: botapi.BotAPI,
+        latitude: float,
+        longitude: float,
+        business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[str] = None,
+        live_period: Optional[int] = None,
+        horizontal_accuracy: Optional[float] = None,
+        heading: Optional[int] = None,
+        proximity_alert_radius: Optional[int] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Union[Message, bool]]:
+        """
+        Use this method to edit live location messages.
+        A location can be edited until its live_period
+        expires or editing is explicitly disabled by a
+        call to stopMessageLiveLocation. On success, if the edited
+        message is not an inline message, the edited
+        Message is returned, otherwise True is returned.
+
+        Reference: https://core.telegram.org/bots/api#editmessagelivelocation
+        """
+
+        response = await self._send_request("editMessageLiveLocation", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "latitude": latitude,
+            "longitude": longitude,
+            "live_period": live_period,
+            "horizontal_accuracy": horizontal_accuracy,
+            "heading": heading,
+            "proximity_alert_radius": proximity_alert_radius,
+            "reply_markup": reply_markup,
+        })
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+            pass
+        return response
+
+    async def stop_message_live_location(
+        self: botapi.BotAPI,
+        business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Union[Message, bool]]:
+        """
+        Use this method to stop updating a live
+        location message before live_period expires. On success, if
+        the message is not an inline message, the
+        edited Message is returned, otherwise True is returned.
+
+        Reference: https://core.telegram.org/bots/api#stopmessagelivelocation
+        """
+
+        response = await self._send_request("stopMessageLiveLocation", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "reply_markup": reply_markup,
+        })
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+            pass
+        return response
+
+    async def edit_message_checklist(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        chat_id: int,
+        message_id: int,
+        checklist: InputChecklist,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Message]:
+        """
+        Use this method to edit a checklist on
+        behalf of a connected business account. On success,
+        the edited Message is returned.
+
+        Reference: https://core.telegram.org/bots/api#editmessagechecklist
+        """
+
+        response = await self._send_request("editMessageChecklist", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "checklist": checklist,
+            "reply_markup": reply_markup,
+        })
+        return Message.model_validate(response)
+
+    async def edit_message_reply_markup(
+        self: botapi.BotAPI,
+        business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Union[Message, bool]]:
+        """
+        Use this method to edit only the reply
+        markup of messages. On success, if the edited
+        message is not an inline message, the edited
+        Message is returned, otherwise True is returned. Note
+        that business messages that were not sent by
+        the bot and do not contain an inline
+        keyboard can only be edited within 48 hours
+        from the time they were sent.
+
+        Reference: https://core.telegram.org/bots/api#editmessagereplymarkup
+        """
+
+        response = await self._send_request("editMessageReplyMarkup", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "reply_markup": reply_markup,
+        })
+        try:
+            return Message.model_validate(response)
+        except ValidationError:
+            pass
+        return response
+
+    async def stop_poll(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        message_id: int,
+        business_connection_id: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[Poll]:
+        """
+        Use this method to stop a poll which
+        was sent by the bot. On success, the
+        stopped Poll is returned.
+
+        Reference: https://core.telegram.org/bots/api#stoppoll
+        """
+
+        response = await self._send_request("stopPoll", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "reply_markup": reply_markup,
+        })
+        return Poll.model_validate(response)
+
+    async def approve_suggested_post(
+        self: botapi.BotAPI,
+        chat_id: int,
+        message_id: int,
+        send_date: Optional[int] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to approve a suggested post
+        in a direct messages chat. The bot must
+        have the 'can_post_messages' administrator right in the corresponding
+        channel chat. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#approvesuggestedpost
+        """
+
+        response = await self._send_request("approveSuggestedPost", {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "send_date": send_date,
+        })
+        return response
+
+    async def decline_suggested_post(
+        self: botapi.BotAPI,
+        chat_id: int,
+        message_id: int,
+        comment: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to decline a suggested post
+        in a direct messages chat. The bot must
+        have the 'can_manage_direct_messages' administrator right in the corresponding
+        channel chat. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#declinesuggestedpost
+        """
+
+        response = await self._send_request("declineSuggestedPost", {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "comment": comment,
+        })
+        return response
+
+    async def delete_message(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        message_id: int,
+    ) -> Optional[bool]:
+        """
+        Use this method to delete a message, including
+        service messages, with the following limitations:- A message
+        can only be deleted if it was sent
+        less than 48 hours ago.- Service messages about
+        a supergroup, channel, or forum topic creation can't
+        be deleted.- A dice message in a private
+        chat can only be deleted if it was
+        sent more than 24 hours ago.- Bots can
+        delete outgoing messages in private chats, groups, and
+        supergroups.- Bots can delete incoming messages in private
+        chats.- Bots granted can_post_messages permissions can delete outgoing
+        messages in channels.- If the bot is an
+        administrator of a group, it can delete any
+        message there.- If the bot has can_delete_messages administrator
+        right in a supergroup or a channel, it
+        can delete any message there.- If the bot
+        has can_manage_direct_messages administrator right in a channel, it
+        can delete any message in the corresponding direct
+        messages chat.Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#deletemessage
+        """
+
+        response = await self._send_request("deleteMessage", {
+            "chat_id": chat_id,
+            "message_id": message_id,
+        })
+        return response
+
+    async def delete_messages(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        message_ids: List[int],
+    ) -> Optional[bool]:
+        """
+        Use this method to delete multiple messages simultaneously.
+        If some of the specified messages can't be
+        found, they are skipped. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#deletemessages
+        """
+
+        response = await self._send_request("deleteMessages", {
+            "chat_id": chat_id,
+            "message_ids": message_ids,
+        })
+        return response
+
     async def send_sticker(
         self: botapi.BotAPI,
         chat_id: Union[int, str],
         sticker: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         emoji: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
@@ -3631,12 +3759,14 @@ class Methods:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "sticker": sticker,
             "emoji": emoji,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -4033,6 +4163,7 @@ class Methods:
         currency: str,
         prices: List[LabeledPrice],
         message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         provider_token: Optional[str] = None,
         max_tip_amount: Optional[int] = None,
         suggested_tip_amounts: Optional[List[int]] = None,
@@ -4053,6 +4184,7 @@ class Methods:
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
     ) -> Optional[Message]:
@@ -4066,6 +4198,7 @@ class Methods:
         response = await self._send_request("sendInvoice", {
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
             "title": title,
             "description": description,
             "payload": payload,
@@ -4091,6 +4224,7 @@ class Methods:
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
