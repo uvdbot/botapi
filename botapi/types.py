@@ -1222,7 +1222,7 @@ class LinkPreviewOptions(BaseModel):
 
 class SuggestedPostPrice(BaseModel):
     """
-    Desribes price of a suggested post.
+    Describes the price of a suggested post.
 
     Reference: https://core.telegram.org/bots/api#suggestedpostprice
     """
