@@ -77,7 +77,8 @@ class User(BaseModel):
     can_read_all_group_messages: Optional[bool] = Field(default=None)
     supports_inline_queries: Optional[bool] = Field(default=None)
     can_connect_to_business: Optional[bool] = Field(default=None)
-    has_main_web_app: Optional[bool] = Field(default=None) 
+    has_main_web_app: Optional[bool] = Field(default=None)
+    has_topics_enabled: Optional[bool] = Field(default=None) 
 
 class Chat(BaseModel):
     """
@@ -148,7 +149,10 @@ class ChatFullInfo(BaseModel):
     can_set_sticker_set: Optional[bool] = Field(default=None)
     custom_emoji_sticker_set_name: Optional[str] = Field(default=None)
     linked_chat_id: Optional[int] = Field(default=None)
-    location: Optional[ChatLocation] = Field(default=None) 
+    location: Optional[ChatLocation] = Field(default=None)
+    rating: Optional[UserRating] = Field(default=None)
+    unique_gift_colors: Optional[UniqueGiftColors] = Field(default=None)
+    paid_message_star_count: Optional[int] = Field(default=None) 
 
 class Message(BaseModel):
     """
@@ -228,6 +232,7 @@ class Message(BaseModel):
     chat_shared: Optional[ChatShared] = Field(default=None)
     gift: Optional[GiftInfo] = Field(default=None)
     unique_gift: Optional[UniqueGiftInfo] = Field(default=None)
+    gift_upgrade_sent: Optional[GiftInfo] = Field(default=None)
     connected_website: Optional[str] = Field(default=None)
     write_access_allowed: Optional[WriteAccessAllowed] = Field(default=None)
     passport_data: Optional[PassportData] = Field(default=None)
@@ -660,6 +665,7 @@ class ChecklistTask(BaseModel):
     text: str
     text_entities: Optional[List[MessageEntity]] = Field(default=None)
     completed_by_user: Optional[User] = Field(default=None)
+    completed_by_chat: Optional[Chat] = Field(default=None)
     completion_date: Optional[int] = Field(default=None) 
 
 class Checklist(BaseModel):
@@ -903,7 +909,8 @@ class ForumTopicCreated(BaseModel):
 
     name: str
     icon_color: int
-    icon_custom_emoji_id: Optional[str] = Field(default=None) 
+    icon_custom_emoji_id: Optional[str] = Field(default=None)
+    is_name_implicit: Optional[bool] = Field(default=None) 
 
 class ForumTopicClosed(BaseModel):
     """
@@ -1792,6 +1799,19 @@ class BusinessOpeningHours(BaseModel):
     time_zone_name: str
     opening_hours: List[BusinessOpeningHoursInterval] 
 
+class UserRating(BaseModel):
+    """
+    This object describes the rating of a user
+    based on their Telegram Star spendings.
+
+    Reference: https://core.telegram.org/bots/api#userrating
+    """
+
+    level: int
+    rating: int
+    current_level_rating: int
+    next_level_rating: Optional[int] = Field(default=None) 
+
 class StoryAreaPosition(BaseModel):
     """
     Describes the position of a clickable area within
@@ -1985,7 +2005,19 @@ class ForumTopic(BaseModel):
     message_thread_id: int
     name: str
     icon_color: int
-    icon_custom_emoji_id: Optional[str] = Field(default=None) 
+    icon_custom_emoji_id: Optional[str] = Field(default=None)
+    is_name_implicit: Optional[bool] = Field(default=None) 
+
+class GiftBackground(BaseModel):
+    """
+    This object describes the background of a gift.
+
+    Reference: https://core.telegram.org/bots/api#giftbackground
+    """
+
+    center_color: int
+    edge_color: int
+    text_color: int 
 
 class Gift(BaseModel):
     """
@@ -1999,8 +2031,14 @@ class Gift(BaseModel):
     sticker: Sticker
     star_count: int
     upgrade_star_count: Optional[int] = Field(default=None)
+    is_premium: Optional[bool] = Field(default=None)
+    has_colors: Optional[bool] = Field(default=None)
     total_count: Optional[int] = Field(default=None)
     remaining_count: Optional[int] = Field(default=None)
+    personal_total_count: Optional[int] = Field(default=None)
+    personal_remaining_count: Optional[int] = Field(default=None)
+    background: Optional[GiftBackground] = Field(default=None)
+    unique_gift_variant_count: Optional[int] = Field(default=None)
     publisher_chat: Optional[Chat] = Field(default=None) 
 
 class Gifts(BaseModel):
@@ -2061,6 +2099,22 @@ class UniqueGiftBackdrop(BaseModel):
     colors: UniqueGiftBackdropColors
     rarity_per_mille: int 
 
+class UniqueGiftColors(BaseModel):
+    """
+    This object contains information about the color scheme
+    for a user's name, message replies and link
+    previews based on a unique gift.
+
+    Reference: https://core.telegram.org/bots/api#uniquegiftcolors
+    """
+
+    model_custom_emoji_id: str
+    symbol_custom_emoji_id: str
+    light_theme_main_color: int
+    light_theme_other_colors: List[int]
+    dark_theme_main_color: int
+    dark_theme_other_colors: List[int] 
+
 class UniqueGift(BaseModel):
     """
     This object describes a unique gift that was
@@ -2069,12 +2123,16 @@ class UniqueGift(BaseModel):
     Reference: https://core.telegram.org/bots/api#uniquegift
     """
 
+    gift_id: str
     base_name: str
     name: str
     number: int
     model: UniqueGiftModel
     symbol: UniqueGiftSymbol
     backdrop: UniqueGiftBackdrop
+    is_premium: Optional[bool] = Field(default=None)
+    is_from_blockchain: Optional[bool] = Field(default=None)
+    colors: Optional[UniqueGiftColors] = Field(default=None)
     publisher_chat: Optional[Chat] = Field(default=None) 
 
 class GiftInfo(BaseModel):
@@ -2089,10 +2147,12 @@ class GiftInfo(BaseModel):
     owned_gift_id: Optional[str] = Field(default=None)
     convert_star_count: Optional[int] = Field(default=None)
     prepaid_upgrade_star_count: Optional[int] = Field(default=None)
+    is_upgrade_separate: Optional[bool] = Field(default=None)
     can_be_upgraded: Optional[bool] = Field(default=None)
     text: Optional[str] = Field(default=None)
     entities: Optional[List[MessageEntity]] = Field(default=None)
-    is_private: Optional[bool] = Field(default=None) 
+    is_private: Optional[bool] = Field(default=None)
+    unique_gift_number: Optional[int] = Field(default=None) 
 
 class UniqueGiftInfo(BaseModel):
     """
@@ -2104,7 +2164,8 @@ class UniqueGiftInfo(BaseModel):
 
     gift: UniqueGift
     origin: str
-    last_resale_star_count: Optional[int] = Field(default=None)
+    last_resale_currency: Optional[str] = Field(default=None)
+    last_resale_amount: Optional[int] = Field(default=None)
     owned_gift_id: Optional[str] = Field(default=None)
     transfer_star_count: Optional[int] = Field(default=None)
     next_transfer_date: Optional[int] = Field(default=None) 
@@ -2129,7 +2190,9 @@ class OwnedGiftRegular(BaseModel):
     can_be_upgraded: Optional[bool] = Field(default=None)
     was_refunded: Optional[bool] = Field(default=None)
     convert_star_count: Optional[int] = Field(default=None)
-    prepaid_upgrade_star_count: Optional[int] = Field(default=None) 
+    prepaid_upgrade_star_count: Optional[int] = Field(default=None)
+    is_upgrade_separate: Optional[bool] = Field(default=None)
+    unique_gift_number: Optional[int] = Field(default=None) 
 
 class OwnedGiftUnique(BaseModel):
     """
@@ -2173,7 +2236,8 @@ class AcceptedGiftTypes(BaseModel):
     unlimited_gifts: bool
     limited_gifts: bool
     unique_gifts: bool
-    premium_subscription: bool 
+    premium_subscription: bool
+    gifts_from_channels: bool 
 
 class StarAmount(BaseModel):
     """
@@ -4149,6 +4213,7 @@ BusinessIntro.model_rebuild()
 BusinessLocation.model_rebuild()
 BusinessOpeningHoursInterval.model_rebuild()
 BusinessOpeningHours.model_rebuild()
+UserRating.model_rebuild()
 StoryAreaPosition.model_rebuild()
 LocationAddress.model_rebuild()
 StoryAreaTypeLocation.model_rebuild()
@@ -4165,12 +4230,14 @@ ReactionCount.model_rebuild()
 MessageReactionUpdated.model_rebuild()
 MessageReactionCountUpdated.model_rebuild()
 ForumTopic.model_rebuild()
+GiftBackground.model_rebuild()
 Gift.model_rebuild()
 Gifts.model_rebuild()
 UniqueGiftModel.model_rebuild()
 UniqueGiftSymbol.model_rebuild()
 UniqueGiftBackdropColors.model_rebuild()
 UniqueGiftBackdrop.model_rebuild()
+UniqueGiftColors.model_rebuild()
 UniqueGift.model_rebuild()
 GiftInfo.model_rebuild()
 UniqueGiftInfo.model_rebuild()

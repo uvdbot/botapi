@@ -124,6 +124,7 @@ from botapi.types import (
     BusinessLocation,
     BusinessOpeningHoursInterval,
     BusinessOpeningHours,
+    UserRating,
     StoryAreaPosition,
     LocationAddress,
     StoryAreaTypeLocation,
@@ -140,12 +141,14 @@ from botapi.types import (
     MessageReactionUpdated,
     MessageReactionCountUpdated,
     ForumTopic,
+    GiftBackground,
     Gift,
     Gifts,
     UniqueGiftModel,
     UniqueGiftSymbol,
     UniqueGiftBackdropColors,
     UniqueGiftBackdrop,
+    UniqueGiftColors,
     UniqueGift,
     GiftInfo,
     UniqueGiftInfo,
@@ -507,6 +510,7 @@ class Methods:
         video_start_timestamp: Optional[int] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
+        message_effect_id: Optional[str] = None,
         suggested_post_parameters: Optional[SuggestedPostParameters] = None,
     ) -> Optional[Message]:
         """
@@ -526,6 +530,7 @@ class Methods:
             "video_start_timestamp": video_start_timestamp,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
+            "message_effect_id": message_effect_id,
             "suggested_post_parameters": suggested_post_parameters,
             "message_id": message_id,
         })
@@ -579,6 +584,7 @@ class Methods:
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
+        message_effect_id: Optional[str] = None,
         suggested_post_parameters: Optional[SuggestedPostParameters] = None,
         reply_parameters: Optional[ReplyParameters] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
@@ -612,6 +618,7 @@ class Methods:
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
+            "message_effect_id": message_effect_id,
             "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -1402,6 +1409,34 @@ class Methods:
             "reply_markup": reply_markup,
         })
         return Message.model_validate(response)
+
+    async def send_message_draft(
+        self: botapi.BotAPI,
+        chat_id: int,
+        draft_id: int,
+        text: str,
+        message_thread_id: Optional[int] = None,
+        parse_mode: Optional[str] = "HTML",
+        entities: Optional[List[MessageEntity]] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to stream a partial message
+        to a user while the message is being
+        generated; supported only for bots with forum topic
+        mode enabled. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#sendmessagedraft
+        """
+
+        response = await self._send_request("sendMessageDraft", {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "draft_id": draft_id,
+            "text": text,
+            "parse_mode": parse_mode,
+            "entities": entities,
+        })
+        return response
 
     async def send_chat_action(
         self: botapi.BotAPI,
@@ -2288,11 +2323,13 @@ class Methods:
     ) -> Optional[bool]:
         """
         Use this method to edit name and icon
-        of a topic in a forum supergroup chat.
-        The bot must be an administrator in the
-        chat for this to work and must have
-        the can_manage_topics administrator rights, unless it is the
-        creator of the topic. Returns True on success.
+        of a topic in a forum supergroup chat
+        or a private chat with a user. In
+        the case of a supergroup chat the bot
+        must be an administrator in the chat for
+        this to work and must have the can_manage_topics
+        administrator rights, unless it is the creator of
+        the topic. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#editforumtopic
         """
@@ -2357,10 +2394,11 @@ class Methods:
         """
         Use this method to delete a forum topic
         along with all its messages in a forum
-        supergroup chat. The bot must be an administrator
-        in the chat for this to work and
-        must have the can_delete_messages administrator rights. Returns True
-        on success.
+        supergroup chat or a private chat with a
+        user. In the case of a supergroup chat
+        the bot must be an administrator in the
+        chat for this to work and must have
+        the can_delete_messages administrator rights. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#deleteforumtopic
         """
@@ -2378,11 +2416,13 @@ class Methods:
     ) -> Optional[bool]:
         """
         Use this method to clear the list of
-        pinned messages in a forum topic. The bot
-        must be an administrator in the chat for
-        this to work and must have the can_pin_messages
-        administrator right in the supergroup. Returns True on
-        success.
+        pinned messages in a forum topic in a
+        forum supergroup chat or a private chat with
+        a user. In the case of a supergroup
+        chat the bot must be an administrator in
+        the chat for this to work and must
+        have the can_pin_messages administrator right in the supergroup.
+        Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#unpinallforumtopicmessages
         """
@@ -3171,8 +3211,10 @@ class Methods:
         exclude_unsaved: Optional[bool] = None,
         exclude_saved: Optional[bool] = None,
         exclude_unlimited: Optional[bool] = None,
-        exclude_limited: Optional[bool] = None,
+        exclude_limited_upgradable: Optional[bool] = None,
+        exclude_limited_non_upgradable: Optional[bool] = None,
         exclude_unique: Optional[bool] = None,
+        exclude_from_blockchain: Optional[bool] = None,
         sort_by_price: Optional[bool] = None,
         offset: Optional[str] = None,
         limit: Optional[int] = None,
@@ -3190,7 +3232,77 @@ class Methods:
             "exclude_unsaved": exclude_unsaved,
             "exclude_saved": exclude_saved,
             "exclude_unlimited": exclude_unlimited,
-            "exclude_limited": exclude_limited,
+            "exclude_limited_upgradable": exclude_limited_upgradable,
+            "exclude_limited_non_upgradable": exclude_limited_non_upgradable,
+            "exclude_unique": exclude_unique,
+            "exclude_from_blockchain": exclude_from_blockchain,
+            "sort_by_price": sort_by_price,
+            "offset": offset,
+            "limit": limit,
+        })
+        return OwnedGifts.model_validate(response)
+
+    async def get_user_gifts(
+        self: botapi.BotAPI,
+        user_id: int,
+        exclude_unlimited: Optional[bool] = None,
+        exclude_limited_upgradable: Optional[bool] = None,
+        exclude_limited_non_upgradable: Optional[bool] = None,
+        exclude_from_blockchain: Optional[bool] = None,
+        exclude_unique: Optional[bool] = None,
+        sort_by_price: Optional[bool] = None,
+        offset: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> Optional[OwnedGifts]:
+        """
+        Returns the gifts owned and hosted by a
+        user. Returns OwnedGifts on success.
+
+        Reference: https://core.telegram.org/bots/api#getusergifts
+        """
+
+        response = await self._send_request("getUserGifts", {
+            "user_id": user_id,
+            "exclude_unlimited": exclude_unlimited,
+            "exclude_limited_upgradable": exclude_limited_upgradable,
+            "exclude_limited_non_upgradable": exclude_limited_non_upgradable,
+            "exclude_from_blockchain": exclude_from_blockchain,
+            "exclude_unique": exclude_unique,
+            "sort_by_price": sort_by_price,
+            "offset": offset,
+            "limit": limit,
+        })
+        return OwnedGifts.model_validate(response)
+
+    async def get_chat_gifts(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        exclude_unsaved: Optional[bool] = None,
+        exclude_saved: Optional[bool] = None,
+        exclude_unlimited: Optional[bool] = None,
+        exclude_limited_upgradable: Optional[bool] = None,
+        exclude_limited_non_upgradable: Optional[bool] = None,
+        exclude_from_blockchain: Optional[bool] = None,
+        exclude_unique: Optional[bool] = None,
+        sort_by_price: Optional[bool] = None,
+        offset: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> Optional[OwnedGifts]:
+        """
+        Returns the gifts owned by a chat. Returns
+        OwnedGifts on success.
+
+        Reference: https://core.telegram.org/bots/api#getchatgifts
+        """
+
+        response = await self._send_request("getChatGifts", {
+            "chat_id": chat_id,
+            "exclude_unsaved": exclude_unsaved,
+            "exclude_saved": exclude_saved,
+            "exclude_unlimited": exclude_unlimited,
+            "exclude_limited_upgradable": exclude_limited_upgradable,
+            "exclude_limited_non_upgradable": exclude_limited_non_upgradable,
+            "exclude_from_blockchain": exclude_from_blockchain,
             "exclude_unique": exclude_unique,
             "sort_by_price": sort_by_price,
             "offset": offset,
@@ -3293,6 +3405,37 @@ class Methods:
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
             "areas": areas,
+            "post_to_chat_page": post_to_chat_page,
+            "protect_content": protect_content,
+        })
+        return Story.model_validate(response)
+
+    async def repost_story(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        from_chat_id: int,
+        from_story_id: int,
+        active_period: int,
+        post_to_chat_page: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+    ) -> Optional[Story]:
+        """
+        Reposts a story on behalf of a business
+        account from another business account. Both business accounts
+        must be managed by the same bot, and
+        the story on the source account must have
+        been posted (or reposted) by the bot. Requires
+        the can_manage_stories business bot right for both business
+        accounts. Returns Story on success.
+
+        Reference: https://core.telegram.org/bots/api#repoststory
+        """
+
+        response = await self._send_request("repostStory", {
+            "business_connection_id": business_connection_id,
+            "from_chat_id": from_chat_id,
+            "from_story_id": from_story_id,
+            "active_period": active_period,
             "post_to_chat_page": post_to_chat_page,
             "protect_content": protect_content,
         })
