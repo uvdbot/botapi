@@ -78,7 +78,8 @@ class User(BaseModel):
     supports_inline_queries: Optional[bool] = Field(default=None)
     can_connect_to_business: Optional[bool] = Field(default=None)
     has_main_web_app: Optional[bool] = Field(default=None)
-    has_topics_enabled: Optional[bool] = Field(default=None) 
+    has_topics_enabled: Optional[bool] = Field(default=None)
+    allows_users_to_create_topics: Optional[bool] = Field(default=None) 
 
 class Chat(BaseModel):
     """
@@ -151,6 +152,7 @@ class ChatFullInfo(BaseModel):
     linked_chat_id: Optional[int] = Field(default=None)
     location: Optional[ChatLocation] = Field(default=None)
     rating: Optional[UserRating] = Field(default=None)
+    first_profile_audio: Optional[Audio] = Field(default=None)
     unique_gift_colors: Optional[UniqueGiftColors] = Field(default=None)
     paid_message_star_count: Optional[int] = Field(default=None) 
 
@@ -215,6 +217,8 @@ class Message(BaseModel):
     location: Optional[Location] = Field(default=None)
     new_chat_members: Optional[List[User]] = Field(default=None)
     left_chat_member: Optional[User] = Field(default=None)
+    chat_owner_left: Optional[ChatOwnerLeft] = Field(default=None)
+    chat_owner_changed: Optional[ChatOwnerChanged] = Field(default=None)
     new_chat_title: Optional[str] = Field(default=None)
     new_chat_photo: Optional[List[PhotoSize]] = Field(default=None)
     delete_chat_photo: Optional[bool] = Field(default=None)
@@ -482,6 +486,21 @@ class Story(BaseModel):
     chat: Chat
     id: int 
 
+class VideoQuality(BaseModel):
+    """
+    This object represents a video file of a
+    specific quality.
+
+    Reference: https://core.telegram.org/bots/api#videoquality
+    """
+
+    file_id: str
+    file_unique_id: str
+    width: int
+    height: int
+    codec: str
+    file_size: Optional[int] = Field(default=None) 
+
 class Video(BaseModel):
     """
     This object represents a video file.
@@ -497,6 +516,7 @@ class Video(BaseModel):
     thumbnail: Optional[PhotoSize] = Field(default=None)
     cover: Optional[List[PhotoSize]] = Field(default=None)
     start_timestamp: Optional[int] = Field(default=None)
+    qualities: Optional[List[VideoQuality]] = Field(default=None)
     file_name: Optional[str] = Field(default=None)
     mime_type: Optional[str] = Field(default=None)
     file_size: Optional[int] = Field(default=None) 
@@ -1279,6 +1299,17 @@ class UserProfilePhotos(BaseModel):
     total_count: int
     photos: List[List[PhotoSize]] 
 
+class UserProfileAudios(BaseModel):
+    """
+    This object represents the audios displayed on a
+    user's profile.
+
+    Reference: https://core.telegram.org/bots/api#userprofileaudios
+    """
+
+    total_count: int
+    audios: List[Audio] 
+
 class File(BaseModel):
     """
     This object represents a file ready to be
@@ -1325,16 +1356,18 @@ class ReplyKeyboardMarkup(BaseModel):
 class KeyboardButton(BaseModel):
     """
     This object represents one button of the reply
-    keyboard. At most one of the optional fields
-    must be used to specify type of the
-    button. For simple text buttons, String can be
-    used instead of this object to specify the
-    button text.
+    keyboard. At most one of the fields other
+    than text, icon_custom_emoji_id, and style must be used
+    to specify the type of the button. For
+    simple text buttons, String can be used instead
+    of this object to specify the button text.
 
     Reference: https://core.telegram.org/bots/api#keyboardbutton
     """
 
     text: str
+    icon_custom_emoji_id: Optional[str] = Field(default=None)
+    style: Optional[str] = Field(default=None)
     request_users: Optional[KeyboardButtonRequestUsers] = Field(default=None)
     request_chat: Optional[KeyboardButtonRequestChat] = Field(default=None)
     request_contact: Optional[bool] = Field(default=None)
@@ -1426,13 +1459,16 @@ class InlineKeyboardMarkup(BaseModel):
 class InlineKeyboardButton(BaseModel):
     """
     This object represents one button of an inline
-    keyboard. Exactly one of the optional fields must
-    be used to specify type of the button.
+    keyboard. Exactly one of the fields other than
+    text, icon_custom_emoji_id, and style must be used to
+    specify the type of the button.
 
     Reference: https://core.telegram.org/bots/api#inlinekeyboardbutton
     """
 
     text: str
+    icon_custom_emoji_id: Optional[str] = Field(default=None)
+    style: Optional[str] = Field(default=None)
     url: Optional[str] = Field(default=None)
     callback_data: Optional[str] = Field(default=None)
     web_app: Optional[WebAppInfo] = Field(default=None)
@@ -2060,7 +2096,8 @@ class UniqueGiftModel(BaseModel):
 
     name: str
     sticker: Sticker
-    rarity_per_mille: int 
+    rarity_per_mille: int
+    rarity: Optional[str] = Field(default=None) 
 
 class UniqueGiftSymbol(BaseModel):
     """
@@ -2131,6 +2168,7 @@ class UniqueGift(BaseModel):
     symbol: UniqueGiftSymbol
     backdrop: UniqueGiftBackdrop
     is_premium: Optional[bool] = Field(default=None)
+    is_burned: Optional[bool] = Field(default=None)
     is_from_blockchain: Optional[bool] = Field(default=None)
     colors: Optional[UniqueGiftColors] = Field(default=None)
     publisher_chat: Optional[Chat] = Field(default=None) 
@@ -2472,6 +2510,26 @@ class ChatBoostRemoved(BaseModel):
     boost_id: str
     remove_date: int
     source: ChatBoostSource 
+
+class ChatOwnerLeft(BaseModel):
+    """
+    Describes a service message about the chat owner
+    leaving the chat.
+
+    Reference: https://core.telegram.org/bots/api#chatownerleft
+    """
+
+    new_owner: Optional[User] = Field(default=None) 
+
+class ChatOwnerChanged(BaseModel):
+    """
+    Describes a service message about an ownership change
+    in the chat.
+
+    Reference: https://core.telegram.org/bots/api#chatownerchanged
+    """
+
+    new_owner: User 
 
 class UserChatBoosts(BaseModel):
     """
@@ -4117,6 +4175,7 @@ Animation.model_rebuild()
 Audio.model_rebuild()
 Document.model_rebuild()
 Story.model_rebuild()
+VideoQuality.model_rebuild()
 Video.model_rebuild()
 VideoNote.model_rebuild()
 Voice.model_rebuild()
@@ -4181,6 +4240,7 @@ SuggestedPostInfo.model_rebuild()
 SuggestedPostParameters.model_rebuild()
 DirectMessagesTopic.model_rebuild()
 UserProfilePhotos.model_rebuild()
+UserProfileAudios.model_rebuild()
 File.model_rebuild()
 WebAppInfo.model_rebuild()
 ReplyKeyboardMarkup.model_rebuild()
@@ -4266,6 +4326,8 @@ ChatBoostSourceGiveaway.model_rebuild()
 ChatBoost.model_rebuild()
 ChatBoostUpdated.model_rebuild()
 ChatBoostRemoved.model_rebuild()
+ChatOwnerLeft.model_rebuild()
+ChatOwnerChanged.model_rebuild()
 UserChatBoosts.model_rebuild()
 BusinessBotRights.model_rebuild()
 BusinessConnection.model_rebuild()

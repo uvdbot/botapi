@@ -28,6 +28,7 @@ from botapi.types import (
     Audio,
     Document,
     Story,
+    VideoQuality,
     Video,
     VideoNote,
     Voice,
@@ -92,6 +93,7 @@ from botapi.types import (
     SuggestedPostParameters,
     DirectMessagesTopic,
     UserProfilePhotos,
+    UserProfileAudios,
     File,
     WebAppInfo,
     ReplyKeyboardMarkup,
@@ -177,6 +179,8 @@ from botapi.types import (
     ChatBoost,
     ChatBoostUpdated,
     ChatBoostRemoved,
+    ChatOwnerLeft,
+    ChatOwnerChanged,
     UserChatBoosts,
     BusinessBotRights,
     BusinessConnection,
@@ -1512,6 +1516,27 @@ class Methods:
         })
         return UserProfilePhotos.model_validate(response)
 
+    async def get_user_profile_audios(
+        self: botapi.BotAPI,
+        user_id: int,
+        offset: Optional[int] = None,
+        limit: Optional[int] = None,
+    ) -> Optional[UserProfileAudios]:
+        """
+        Use this method to get a list of
+        profile audios for a user. Returns a UserProfileAudios
+        object.
+
+        Reference: https://core.telegram.org/bots/api#getuserprofileaudios
+        """
+
+        response = await self._send_request("getUserProfileAudios", {
+            "user_id": user_id,
+            "offset": offset,
+            "limit": limit,
+        })
+        return UserProfileAudios.model_validate(response)
+
     async def set_user_emoji_status(
         self: botapi.BotAPI,
         user_id: int,
@@ -2297,11 +2322,12 @@ class Methods:
     ) -> Optional[ForumTopic]:
         """
         Use this method to create a topic in
-        a forum supergroup chat. The bot must be
-        an administrator in the chat for this to
-        work and must have the can_manage_topics administrator rights.
-        Returns information about the created topic as a
-        ForumTopic object.
+        a forum supergroup chat or a private chat
+        with a user. In the case of a
+        supergroup chat the bot must be an administrator
+        in the chat for this to work and
+        must have the can_manage_topics administrator right. Returns information
+        about the created topic as a ForumTopic object.
 
         Reference: https://core.telegram.org/bots/api#createforumtopic
         """
@@ -2788,6 +2814,35 @@ class Methods:
             "language_code": language_code,
         })
         return BotShortDescription.model_validate(response)
+
+    async def set_my_profile_photo(
+        self: botapi.BotAPI,
+        photo: InputProfilePhoto,
+    ) -> Optional[bool]:
+        """
+        Changes the profile photo of the bot. Returns
+        True on success.
+
+        Reference: https://core.telegram.org/bots/api#setmyprofilephoto
+        """
+
+        response = await self._send_request("setMyProfilePhoto", {
+            "photo": photo,
+        })
+        return response
+
+    async def remove_my_profile_photo(
+        self: botapi.BotAPI,
+    ) -> Optional[bool]:
+        """
+        Removes the profile photo of the bot. Requires
+        no parameters. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#removemyprofilephoto
+        """
+
+        response = await self._send_request("removeMyProfilePhoto", {})
+        return response
 
     async def set_chat_menu_button(
         self: botapi.BotAPI,
