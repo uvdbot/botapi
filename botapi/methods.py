@@ -1426,8 +1426,7 @@ class Methods:
         """
         Use this method to stream a partial message
         to a user while the message is being
-        generated; supported only for bots with forum topic
-        mode enabled. Returns True on success.
+        generated. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#sendmessagedraft
         """
@@ -1691,6 +1690,7 @@ class Methods:
         can_pin_messages: Optional[bool] = None,
         can_manage_topics: Optional[bool] = None,
         can_manage_direct_messages: Optional[bool] = None,
+        can_manage_tags: Optional[bool] = None,
     ) -> Optional[bool]:
         """
         Use this method to promote or demote a
@@ -1723,6 +1723,7 @@ class Methods:
             "can_pin_messages": can_pin_messages,
             "can_manage_topics": can_manage_topics,
             "can_manage_direct_messages": can_manage_direct_messages,
+            "can_manage_tags": can_manage_tags,
         })
         return response
 
@@ -1744,6 +1745,30 @@ class Methods:
             "chat_id": chat_id,
             "user_id": user_id,
             "custom_title": custom_title,
+        })
+        return response
+
+    async def set_chat_member_tag(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        user_id: int,
+        tag: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to set a tag for
+        a regular member in a group or a
+        supergroup. The bot must be an administrator in
+        the chat for this to work and must
+        have the can_manage_tags administrator right. Returns True on
+        success.
+
+        Reference: https://core.telegram.org/bots/api#setchatmembertag
+        """
+
+        response = await self._send_request("setChatMemberTag", {
+            "chat_id": chat_id,
+            "user_id": user_id,
+            "tag": tag,
         })
         return response
 

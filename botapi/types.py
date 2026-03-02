@@ -172,6 +172,7 @@ class Message(BaseModel):
     sender_chat: Optional[Chat] = Field(default=None)
     sender_boost_count: Optional[int] = Field(default=None)
     sender_business_bot: Optional[User] = Field(default=None)
+    sender_tag: Optional[str] = Field(default=None)
     business_connection_id: Optional[str] = Field(default=None)
     forward_origin: Optional[MessageOrigin] = Field(default=None)
     is_topic_message: Optional[bool] = Field(default=None)
@@ -292,7 +293,9 @@ class MessageEntity(BaseModel):
     url: Optional[str] = Field(default=None)
     user: Optional[User] = Field(default=None)
     language: Optional[str] = Field(default=None)
-    custom_emoji_id: Optional[str] = Field(default=None) 
+    custom_emoji_id: Optional[str] = Field(default=None)
+    unix_time: Optional[int] = Field(default=None)
+    date_time_format: Optional[str] = Field(default=None) 
 
 class TextQuote(BaseModel):
     """
@@ -1618,7 +1621,8 @@ class ChatAdministratorRights(BaseModel):
     can_edit_messages: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
     can_manage_topics: Optional[bool] = Field(default=None)
-    can_manage_direct_messages: Optional[bool] = Field(default=None) 
+    can_manage_direct_messages: Optional[bool] = Field(default=None)
+    can_manage_tags: Optional[bool] = Field(default=None) 
 
 class ChatMemberUpdated(BaseModel):
     """
@@ -1677,6 +1681,7 @@ class ChatMemberAdministrator(BaseModel):
     can_pin_messages: Optional[bool] = Field(default=None)
     can_manage_topics: Optional[bool] = Field(default=None)
     can_manage_direct_messages: Optional[bool] = Field(default=None)
+    can_manage_tags: Optional[bool] = Field(default=None)
     custom_title: Optional[str] = Field(default=None) 
 
 class ChatMemberMember(BaseModel):
@@ -1689,6 +1694,7 @@ class ChatMemberMember(BaseModel):
 
     status: Literal["member"] = "member"
     user: User
+    tag: Optional[str] = Field(default=None)
     until_date: Optional[int] = Field(default=None) 
 
 class ChatMemberRestricted(BaseModel):
@@ -1712,11 +1718,13 @@ class ChatMemberRestricted(BaseModel):
     can_send_polls: bool
     can_send_other_messages: bool
     can_add_web_page_previews: bool
+    can_edit_tag: bool
     can_change_info: bool
     can_invite_users: bool
     can_pin_messages: bool
     can_manage_topics: bool
-    until_date: int 
+    until_date: int
+    tag: Optional[str] = Field(default=None) 
 
 class ChatMemberLeft(BaseModel):
     """
@@ -1775,6 +1783,7 @@ class ChatPermissions(BaseModel):
     can_send_polls: Optional[bool] = Field(default=None)
     can_send_other_messages: Optional[bool] = Field(default=None)
     can_add_web_page_previews: Optional[bool] = Field(default=None)
+    can_edit_tag: Optional[bool] = Field(default=None)
     can_change_info: Optional[bool] = Field(default=None)
     can_invite_users: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
