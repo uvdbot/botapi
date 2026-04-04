@@ -39,7 +39,8 @@ class Update(BaseModel):
     chat_member: Optional[ChatMemberUpdated] = Field(default=None)
     chat_join_request: Optional[ChatJoinRequest] = Field(default=None)
     chat_boost: Optional[ChatBoostUpdated] = Field(default=None)
-    removed_chat_boost: Optional[ChatBoostRemoved] = Field(default=None) 
+    removed_chat_boost: Optional[ChatBoostRemoved] = Field(default=None)
+    managed_bot: Optional[ManagedBotUpdated] = Field(default=None) 
 
 class WebhookInfo(BaseModel):
     """
@@ -79,7 +80,8 @@ class User(BaseModel):
     can_connect_to_business: Optional[bool] = Field(default=None)
     has_main_web_app: Optional[bool] = Field(default=None)
     has_topics_enabled: Optional[bool] = Field(default=None)
-    allows_users_to_create_topics: Optional[bool] = Field(default=None) 
+    allows_users_to_create_topics: Optional[bool] = Field(default=None)
+    can_manage_bots: Optional[bool] = Field(default=None) 
 
 class Chat(BaseModel):
     """
@@ -182,6 +184,7 @@ class Message(BaseModel):
     quote: Optional[TextQuote] = Field(default=None)
     reply_to_story: Optional[Story] = Field(default=None)
     reply_to_checklist_task_id: Optional[int] = Field(default=None)
+    reply_to_poll_option_id: Optional[str] = Field(default=None)
     via_bot: Optional[User] = Field(default=None)
     edit_date: Optional[int] = Field(default=None)
     has_protected_content: Optional[bool] = Field(default=None)
@@ -257,7 +260,10 @@ class Message(BaseModel):
     giveaway: Optional[Giveaway] = Field(default=None)
     giveaway_winners: Optional[GiveawayWinners] = Field(default=None)
     giveaway_completed: Optional[GiveawayCompleted] = Field(default=None)
+    managed_bot_created: Optional[ManagedBotCreated] = Field(default=None)
     paid_message_price_changed: Optional[PaidMessagePriceChanged] = Field(default=None)
+    poll_option_added: Optional[PollOptionAdded] = Field(default=None)
+    poll_option_deleted: Optional[PollOptionDeleted] = Field(default=None)
     suggested_post_approved: Optional[SuggestedPostApproved] = Field(default=None)
     suggested_post_approval_failed: Optional[SuggestedPostApprovalFailed] = Field(default=None)
     suggested_post_declined: Optional[SuggestedPostDeclined] = Field(default=None)
@@ -361,7 +367,8 @@ class ReplyParameters(BaseModel):
     quote_parse_mode: Optional[str] = Field(default=None)
     quote_entities: Optional[List[MessageEntity]] = Field(default=None)
     quote_position: Optional[int] = Field(default=None)
-    checklist_task_id: Optional[int] = Field(default=None) 
+    checklist_task_id: Optional[int] = Field(default=None)
+    poll_option_id: Optional[str] = Field(default=None) 
 
 class MessageOriginUser(BaseModel):
     """
@@ -626,9 +633,13 @@ class PollOption(BaseModel):
     Reference: https://core.telegram.org/bots/api#polloption
     """
 
+    persistent_id: str
     text: str
     voter_count: int
-    text_entities: Optional[List[MessageEntity]] = Field(default=None) 
+    text_entities: Optional[List[MessageEntity]] = Field(default=None)
+    added_by_user: Optional[User] = Field(default=None)
+    added_by_chat: Optional[Chat] = Field(default=None)
+    addition_date: Optional[int] = Field(default=None) 
 
 class InputPollOption(BaseModel):
     """
@@ -652,6 +663,7 @@ class PollAnswer(BaseModel):
 
     poll_id: str
     option_ids: List[int]
+    option_persistent_ids: List[str]
     voter_chat: Optional[Chat] = Field(default=None)
     user: Optional[User] = Field(default=None) 
 
@@ -670,12 +682,15 @@ class Poll(BaseModel):
     is_anonymous: bool
     type: str
     allows_multiple_answers: bool
+    allows_revoting: bool
     question_entities: Optional[List[MessageEntity]] = Field(default=None)
-    correct_option_id: Optional[int] = Field(default=None)
+    correct_option_ids: Optional[List[int]] = Field(default=None)
     explanation: Optional[str] = Field(default=None)
     explanation_entities: Optional[List[MessageEntity]] = Field(default=None)
     open_period: Optional[int] = Field(default=None)
-    close_date: Optional[int] = Field(default=None) 
+    close_date: Optional[int] = Field(default=None)
+    description: Optional[str] = Field(default=None)
+    description_entities: Optional[List[MessageEntity]] = Field(default=None) 
 
 class ChecklistTask(BaseModel):
     """
@@ -815,6 +830,55 @@ class MessageAutoDeleteTimerChanged(BaseModel):
     """
 
     message_auto_delete_time: int 
+
+class ManagedBotCreated(BaseModel):
+    """
+    This object contains information about the bot that
+    was created to be managed by the current
+    bot.
+
+    Reference: https://core.telegram.org/bots/api#managedbotcreated
+    """
+
+    bot: User 
+
+class ManagedBotUpdated(BaseModel):
+    """
+    This object contains information about the creation or
+    token update of a bot that is managed
+    by the current bot.
+
+    Reference: https://core.telegram.org/bots/api#managedbotupdated
+    """
+
+    user: User
+    bot: User 
+
+class PollOptionAdded(BaseModel):
+    """
+    Describes a service message about an option added
+    to a poll.
+
+    Reference: https://core.telegram.org/bots/api#polloptionadded
+    """
+
+    option_persistent_id: str
+    option_text: str
+    poll_message: Optional[Message] = Field(default=None)
+    option_text_entities: Optional[List[MessageEntity]] = Field(default=None) 
+
+class PollOptionDeleted(BaseModel):
+    """
+    Describes a service message about an option deleted
+    from a poll.
+
+    Reference: https://core.telegram.org/bots/api#polloptiondeleted
+    """
+
+    option_persistent_id: str
+    option_text: str
+    poll_message: Optional[Message] = Field(default=None)
+    option_text_entities: Optional[List[MessageEntity]] = Field(default=None) 
 
 class ChatBoostAdded(BaseModel):
     """
@@ -1373,6 +1437,7 @@ class KeyboardButton(BaseModel):
     style: Optional[str] = Field(default=None)
     request_users: Optional[KeyboardButtonRequestUsers] = Field(default=None)
     request_chat: Optional[KeyboardButtonRequestChat] = Field(default=None)
+    request_managed_bot: Optional[KeyboardButtonRequestManagedBot] = Field(default=None)
     request_contact: Optional[bool] = Field(default=None)
     request_location: Optional[bool] = Field(default=None)
     request_poll: Optional[KeyboardButtonPollType] = Field(default=None)
@@ -1419,6 +1484,21 @@ class KeyboardButtonRequestChat(BaseModel):
     request_title: Optional[bool] = Field(default=None)
     request_username: Optional[bool] = Field(default=None)
     request_photo: Optional[bool] = Field(default=None) 
+
+class KeyboardButtonRequestManagedBot(BaseModel):
+    """
+    This object defines the parameters for the creation
+    of a managed bot. Information about the created
+    bot will be shared with the bot using
+    the update managed_bot and a Message with the
+    field managed_bot_created.
+
+    Reference: https://core.telegram.org/bots/api#keyboardbuttonrequestmanagedbot
+    """
+
+    request_id: int
+    suggested_name: Optional[str] = Field(default=None)
+    suggested_username: Optional[str] = Field(default=None) 
 
 class KeyboardButtonPollType(BaseModel):
     """
@@ -2599,6 +2679,37 @@ class BusinessMessagesDeleted(BaseModel):
     chat: Chat
     message_ids: List[int] 
 
+class SentWebAppMessage(BaseModel):
+    """
+    Describes an inline message sent by a Web
+    App on behalf of a user.
+
+    Reference: https://core.telegram.org/bots/api#sentwebappmessage
+    """
+
+    inline_message_id: Optional[str] = Field(default=None) 
+
+class PreparedInlineMessage(BaseModel):
+    """
+    Describes an inline message to be sent by
+    a user of a Mini App.
+
+    Reference: https://core.telegram.org/bots/api#preparedinlinemessage
+    """
+
+    id: str
+    expiration_date: int 
+
+class PreparedKeyboardButton(BaseModel):
+    """
+    Describes a keyboard button to be used by
+    a user of a Mini App.
+
+    Reference: https://core.telegram.org/bots/api#preparedkeyboardbutton
+    """
+
+    id: str 
+
 class ResponseParameters(BaseModel):
     """
     Describes why a request was unsuccessful.
@@ -3450,27 +3561,6 @@ class ChosenInlineResult(BaseModel):
     location: Optional[Location] = Field(default=None)
     inline_message_id: Optional[str] = Field(default=None) 
 
-class SentWebAppMessage(BaseModel):
-    """
-    Describes an inline message sent by a Web
-    App on behalf of a user.
-
-    Reference: https://core.telegram.org/bots/api#sentwebappmessage
-    """
-
-    inline_message_id: Optional[str] = Field(default=None) 
-
-class PreparedInlineMessage(BaseModel):
-    """
-    Describes an inline message to be sent by
-    a user of a Mini App.
-
-    Reference: https://core.telegram.org/bots/api#preparedinlinemessage
-    """
-
-    id: str
-    expiration_date: int 
-
 class LabeledPrice(BaseModel):
     """
     This object represents a portion of the price
@@ -4209,6 +4299,10 @@ Venue.model_rebuild()
 WebAppData.model_rebuild()
 ProximityAlertTriggered.model_rebuild()
 MessageAutoDeleteTimerChanged.model_rebuild()
+ManagedBotCreated.model_rebuild()
+ManagedBotUpdated.model_rebuild()
+PollOptionAdded.model_rebuild()
+PollOptionDeleted.model_rebuild()
 ChatBoostAdded.model_rebuild()
 BackgroundFillSolid.model_rebuild()
 BackgroundFillGradient.model_rebuild()
@@ -4256,6 +4350,7 @@ ReplyKeyboardMarkup.model_rebuild()
 KeyboardButton.model_rebuild()
 KeyboardButtonRequestUsers.model_rebuild()
 KeyboardButtonRequestChat.model_rebuild()
+KeyboardButtonRequestManagedBot.model_rebuild()
 KeyboardButtonPollType.model_rebuild()
 ReplyKeyboardRemove.model_rebuild()
 InlineKeyboardMarkup.model_rebuild()
@@ -4341,6 +4436,9 @@ UserChatBoosts.model_rebuild()
 BusinessBotRights.model_rebuild()
 BusinessConnection.model_rebuild()
 BusinessMessagesDeleted.model_rebuild()
+SentWebAppMessage.model_rebuild()
+PreparedInlineMessage.model_rebuild()
+PreparedKeyboardButton.model_rebuild()
 ResponseParameters.model_rebuild()
 InputMediaPhoto.model_rebuild()
 InputMediaVideo.model_rebuild()
@@ -4386,8 +4484,6 @@ InputVenueMessageContent.model_rebuild()
 InputContactMessageContent.model_rebuild()
 InputInvoiceMessageContent.model_rebuild()
 ChosenInlineResult.model_rebuild()
-SentWebAppMessage.model_rebuild()
-PreparedInlineMessage.model_rebuild()
 LabeledPrice.model_rebuild()
 Invoice.model_rebuild()
 ShippingAddress.model_rebuild()

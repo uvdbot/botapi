@@ -53,6 +53,10 @@ from botapi.types import (
     WebAppData,
     ProximityAlertTriggered,
     MessageAutoDeleteTimerChanged,
+    ManagedBotCreated,
+    ManagedBotUpdated,
+    PollOptionAdded,
+    PollOptionDeleted,
     ChatBoostAdded,
     BackgroundFillSolid,
     BackgroundFillGradient,
@@ -100,6 +104,7 @@ from botapi.types import (
     KeyboardButton,
     KeyboardButtonRequestUsers,
     KeyboardButtonRequestChat,
+    KeyboardButtonRequestManagedBot,
     KeyboardButtonPollType,
     ReplyKeyboardRemove,
     InlineKeyboardMarkup,
@@ -185,6 +190,9 @@ from botapi.types import (
     BusinessBotRights,
     BusinessConnection,
     BusinessMessagesDeleted,
+    SentWebAppMessage,
+    PreparedInlineMessage,
+    PreparedKeyboardButton,
     ResponseParameters,
     InputMediaPhoto,
     InputMediaVideo,
@@ -230,8 +238,6 @@ from botapi.types import (
     InputContactMessageContent,
     InputInvoiceMessageContent,
     ChosenInlineResult,
-    SentWebAppMessage,
-    PreparedInlineMessage,
     LabeledPrice,
     Invoice,
     ShippingAddress,
@@ -1296,13 +1302,20 @@ class Methods:
         is_anonymous: Optional[bool] = None,
         type: Optional[str] = None,
         allows_multiple_answers: Optional[bool] = None,
-        correct_option_id: Optional[int] = None,
+        allows_revoting: Optional[bool] = None,
+        shuffle_options: Optional[bool] = None,
+        allow_adding_options: Optional[bool] = None,
+        hide_results_until_closes: Optional[bool] = None,
+        correct_option_ids: Optional[List[int]] = None,
         explanation: Optional[str] = None,
         explanation_parse_mode: Optional[str] = None,
         explanation_entities: Optional[List[MessageEntity]] = None,
         open_period: Optional[int] = None,
         close_date: Optional[int] = None,
         is_closed: Optional[bool] = None,
+        description: Optional[str] = None,
+        description_parse_mode: Optional[str] = None,
+        description_entities: Optional[List[MessageEntity]] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
@@ -1328,13 +1341,20 @@ class Methods:
             "is_anonymous": is_anonymous,
             "type": type,
             "allows_multiple_answers": allows_multiple_answers,
-            "correct_option_id": correct_option_id,
+            "allows_revoting": allows_revoting,
+            "shuffle_options": shuffle_options,
+            "allow_adding_options": allow_adding_options,
+            "hide_results_until_closes": hide_results_until_closes,
+            "correct_option_ids": correct_option_ids,
             "explanation": explanation,
             "explanation_parse_mode": explanation_parse_mode,
             "explanation_entities": explanation_entities,
             "open_period": open_period,
             "close_date": close_date,
             "is_closed": is_closed,
+            "description": description,
+            "description_parse_mode": description_parse_mode,
+            "description_entities": description_entities,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
@@ -2667,6 +2687,41 @@ class Methods:
         })
         return BusinessConnection.model_validate(response)
 
+    async def get_managed_bot_token(
+        self: botapi.BotAPI,
+        user_id: int,
+    ) -> Optional[str]:
+        """
+        Use this method to get the token of
+        a managed bot. Returns the token as String
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#getmanagedbottoken
+        """
+
+        response = await self._send_request("getManagedBotToken", {
+            "user_id": user_id,
+        })
+        return response
+
+    async def replace_managed_bot_token(
+        self: botapi.BotAPI,
+        user_id: int,
+    ) -> Optional[str]:
+        """
+        Use this method to revoke the current token
+        of a managed bot and generate a new
+        one. Returns the new token as String on
+        success.
+
+        Reference: https://core.telegram.org/bots/api#replacemanagedbottoken
+        """
+
+        response = await self._send_request("replaceManagedBotToken", {
+            "user_id": user_id,
+        })
+        return response
+
     async def set_my_commands(
         self: botapi.BotAPI,
         commands: List[BotCommand],
@@ -3571,6 +3626,73 @@ class Methods:
         })
         return response
 
+    async def answer_web_app_query(
+        self: botapi.BotAPI,
+        web_app_query_id: str,
+        result: InlineQueryResult,
+    ) -> Optional[SentWebAppMessage]:
+        """
+        Use this method to set the result of
+        an interaction with a Web App and send
+        a corresponding message on behalf of the user
+        to the chat from which the query originated.
+        On success, a SentWebAppMessage object is returned.
+
+        Reference: https://core.telegram.org/bots/api#answerwebappquery
+        """
+
+        response = await self._send_request("answerWebAppQuery", {
+            "web_app_query_id": web_app_query_id,
+            "result": result,
+        })
+        return SentWebAppMessage.model_validate(response)
+
+    async def save_prepared_inline_message(
+        self: botapi.BotAPI,
+        user_id: int,
+        result: InlineQueryResult,
+        allow_user_chats: Optional[bool] = None,
+        allow_bot_chats: Optional[bool] = None,
+        allow_group_chats: Optional[bool] = None,
+        allow_channel_chats: Optional[bool] = None,
+    ) -> Optional[PreparedInlineMessage]:
+        """
+        Stores a message that can be sent by
+        a user of a Mini App. Returns a
+        PreparedInlineMessage object.
+
+        Reference: https://core.telegram.org/bots/api#savepreparedinlinemessage
+        """
+
+        response = await self._send_request("savePreparedInlineMessage", {
+            "user_id": user_id,
+            "result": result,
+            "allow_user_chats": allow_user_chats,
+            "allow_bot_chats": allow_bot_chats,
+            "allow_group_chats": allow_group_chats,
+            "allow_channel_chats": allow_channel_chats,
+        })
+        return PreparedInlineMessage.model_validate(response)
+
+    async def save_prepared_keyboard_button(
+        self: botapi.BotAPI,
+        user_id: int,
+        button: KeyboardButton,
+    ) -> Optional[PreparedKeyboardButton]:
+        """
+        Stores a keyboard button that can be used
+        by a user within a Mini App. Returns
+        a PreparedKeyboardButton object.
+
+        Reference: https://core.telegram.org/bots/api#savepreparedkeyboardbutton
+        """
+
+        response = await self._send_request("savePreparedKeyboardButton", {
+            "user_id": user_id,
+            "button": button,
+        })
+        return PreparedKeyboardButton.model_validate(response)
+
     async def edit_message_text(
         self: botapi.BotAPI,
         text: str,
@@ -4328,54 +4450,6 @@ class Methods:
             "button": button,
         })
         return response
-
-    async def answer_web_app_query(
-        self: botapi.BotAPI,
-        web_app_query_id: str,
-        result: InlineQueryResult,
-    ) -> Optional[SentWebAppMessage]:
-        """
-        Use this method to set the result of
-        an interaction with a Web App and send
-        a corresponding message on behalf of the user
-        to the chat from which the query originated.
-        On success, a SentWebAppMessage object is returned.
-
-        Reference: https://core.telegram.org/bots/api#answerwebappquery
-        """
-
-        response = await self._send_request("answerWebAppQuery", {
-            "web_app_query_id": web_app_query_id,
-            "result": result,
-        })
-        return SentWebAppMessage.model_validate(response)
-
-    async def save_prepared_inline_message(
-        self: botapi.BotAPI,
-        user_id: int,
-        result: InlineQueryResult,
-        allow_user_chats: Optional[bool] = None,
-        allow_bot_chats: Optional[bool] = None,
-        allow_group_chats: Optional[bool] = None,
-        allow_channel_chats: Optional[bool] = None,
-    ) -> Optional[PreparedInlineMessage]:
-        """
-        Stores a message that can be sent by
-        a user of a Mini App. Returns a
-        PreparedInlineMessage object.
-
-        Reference: https://core.telegram.org/bots/api#savepreparedinlinemessage
-        """
-
-        response = await self._send_request("savePreparedInlineMessage", {
-            "user_id": user_id,
-            "result": result,
-            "allow_user_chats": allow_user_chats,
-            "allow_bot_chats": allow_bot_chats,
-            "allow_group_chats": allow_group_chats,
-            "allow_channel_chats": allow_channel_chats,
-        })
-        return PreparedInlineMessage.model_validate(response)
 
     async def send_invoice(
         self: botapi.BotAPI,
