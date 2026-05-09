@@ -10,7 +10,7 @@ from typing import Union, Optional, Literal, List
 class Update(BaseModel):
     """
     This object represents an incoming update.At most one
-    of the optional parameters can be present in
+    of the optional fields can be present in
     any given update.
 
     Reference: https://core.telegram.org/bots/api#update
@@ -25,6 +25,7 @@ class Update(BaseModel):
     business_message: Optional[Message] = Field(default=None)
     edited_business_message: Optional[Message] = Field(default=None)
     deleted_business_messages: Optional[BusinessMessagesDeleted] = Field(default=None)
+    guest_message: Optional[Message] = Field(default=None)
     message_reaction: Optional[MessageReactionUpdated] = Field(default=None)
     message_reaction_count: Optional[MessageReactionCountUpdated] = Field(default=None)
     inline_query: Optional[InlineQuery] = Field(default=None)
@@ -76,6 +77,7 @@ class User(BaseModel):
     added_to_attachment_menu: Optional[bool] = Field(default=None)
     can_join_groups: Optional[bool] = Field(default=None)
     can_read_all_group_messages: Optional[bool] = Field(default=None)
+    supports_guest_queries: Optional[bool] = Field(default=None)
     supports_inline_queries: Optional[bool] = Field(default=None)
     can_connect_to_business: Optional[bool] = Field(default=None)
     has_main_web_app: Optional[bool] = Field(default=None)
@@ -175,6 +177,7 @@ class Message(BaseModel):
     sender_boost_count: Optional[int] = Field(default=None)
     sender_business_bot: Optional[User] = Field(default=None)
     sender_tag: Optional[str] = Field(default=None)
+    guest_query_id: Optional[str] = Field(default=None)
     business_connection_id: Optional[str] = Field(default=None)
     forward_origin: Optional[MessageOrigin] = Field(default=None)
     is_topic_message: Optional[bool] = Field(default=None)
@@ -186,6 +189,8 @@ class Message(BaseModel):
     reply_to_checklist_task_id: Optional[int] = Field(default=None)
     reply_to_poll_option_id: Optional[str] = Field(default=None)
     via_bot: Optional[User] = Field(default=None)
+    guest_bot_caller_user: Optional[User] = Field(default=None)
+    guest_bot_caller_chat: Optional[Chat] = Field(default=None)
     edit_date: Optional[int] = Field(default=None)
     has_protected_content: Optional[bool] = Field(default=None)
     is_from_offline: Optional[bool] = Field(default=None)
@@ -201,6 +206,7 @@ class Message(BaseModel):
     animation: Optional[Animation] = Field(default=None)
     audio: Optional[Audio] = Field(default=None)
     document: Optional[Document] = Field(default=None)
+    live_photo: Optional[LivePhoto] = Field(default=None)
     paid_media: Optional[PaidMediaInfo] = Field(default=None)
     photo: Optional[List[PhotoSize]] = Field(default=None)
     sticker: Optional[Sticker] = Field(default=None)
@@ -333,6 +339,7 @@ class ExternalReplyInfo(BaseModel):
     animation: Optional[Animation] = Field(default=None)
     audio: Optional[Audio] = Field(default=None)
     document: Optional[Document] = Field(default=None)
+    live_photo: Optional[LivePhoto] = Field(default=None)
     paid_media: Optional[PaidMediaInfo] = Field(default=None)
     photo: Optional[List[PhotoSize]] = Field(default=None)
     sticker: Optional[Sticker] = Field(default=None)
@@ -486,6 +493,22 @@ class Document(BaseModel):
     mime_type: Optional[str] = Field(default=None)
     file_size: Optional[int] = Field(default=None) 
 
+class LivePhoto(BaseModel):
+    """
+    This object represents a live photo.
+
+    Reference: https://core.telegram.org/bots/api#livephoto
+    """
+
+    file_id: str
+    file_unique_id: str
+    width: int
+    height: int
+    duration: int
+    photo: Optional[List[PhotoSize]] = Field(default=None)
+    mime_type: Optional[str] = Field(default=None)
+    file_size: Optional[int] = Field(default=None) 
+
 class Story(BaseModel):
     """
     This object represents a story.
@@ -569,6 +592,26 @@ class PaidMediaInfo(BaseModel):
     star_count: int
     paid_media: List[PaidMedia] 
 
+class PaidMediaLivePhoto(BaseModel):
+    """
+    The paid media is a live photo.
+
+    Reference: https://core.telegram.org/bots/api#paidmedialivephoto
+    """
+
+    type: Literal["live_photo"] = "live_photo"
+    live_photo: LivePhoto 
+
+class PaidMediaPhoto(BaseModel):
+    """
+    The paid media is a photo.
+
+    Reference: https://core.telegram.org/bots/api#paidmediaphoto
+    """
+
+    type: Literal["photo"] = "photo"
+    photo: List[PhotoSize] 
+
 class PaidMediaPreview(BaseModel):
     """
     The paid media isn't available before the payment.
@@ -580,16 +623,6 @@ class PaidMediaPreview(BaseModel):
     width: Optional[int] = Field(default=None)
     height: Optional[int] = Field(default=None)
     duration: Optional[int] = Field(default=None) 
-
-class PaidMediaPhoto(BaseModel):
-    """
-    The paid media is a photo.
-
-    Reference: https://core.telegram.org/bots/api#paidmediaphoto
-    """
-
-    type: Literal["photo"] = "photo"
-    photo: List[PhotoSize] 
 
 class PaidMediaVideo(BaseModel):
     """
@@ -625,6 +658,24 @@ class Dice(BaseModel):
     emoji: str
     value: int 
 
+class PollMedia(BaseModel):
+    """
+    At most one of the optional fields can
+    be present in any given object.
+
+    Reference: https://core.telegram.org/bots/api#pollmedia
+    """
+
+    animation: Optional[Animation] = Field(default=None)
+    audio: Optional[Audio] = Field(default=None)
+    document: Optional[Document] = Field(default=None)
+    live_photo: Optional[LivePhoto] = Field(default=None)
+    location: Optional[Location] = Field(default=None)
+    photo: Optional[List[PhotoSize]] = Field(default=None)
+    sticker: Optional[Sticker] = Field(default=None)
+    venue: Optional[Venue] = Field(default=None)
+    video: Optional[Video] = Field(default=None) 
+
 class PollOption(BaseModel):
     """
     This object contains information about one answer option
@@ -637,6 +688,7 @@ class PollOption(BaseModel):
     text: str
     voter_count: int
     text_entities: Optional[List[MessageEntity]] = Field(default=None)
+    media: Optional[PollMedia] = Field(default=None)
     added_by_user: Optional[User] = Field(default=None)
     added_by_chat: Optional[Chat] = Field(default=None)
     addition_date: Optional[int] = Field(default=None) 
@@ -651,7 +703,8 @@ class InputPollOption(BaseModel):
 
     text: str
     text_parse_mode: Optional[str] = Field(default=None)
-    text_entities: Optional[List[MessageEntity]] = Field(default=None) 
+    text_entities: Optional[List[MessageEntity]] = Field(default=None)
+    media: Optional[InputPollOptionMedia] = Field(default=None) 
 
 class PollAnswer(BaseModel):
     """
@@ -683,14 +736,18 @@ class Poll(BaseModel):
     type: str
     allows_multiple_answers: bool
     allows_revoting: bool
+    members_only: bool
     question_entities: Optional[List[MessageEntity]] = Field(default=None)
+    country_codes: Optional[List[str]] = Field(default=None)
     correct_option_ids: Optional[List[int]] = Field(default=None)
     explanation: Optional[str] = Field(default=None)
     explanation_entities: Optional[List[MessageEntity]] = Field(default=None)
+    explanation_media: Optional[PollMedia] = Field(default=None)
     open_period: Optional[int] = Field(default=None)
     close_date: Optional[int] = Field(default=None)
     description: Optional[str] = Field(default=None)
-    description_entities: Optional[List[MessageEntity]] = Field(default=None) 
+    description_entities: Optional[List[MessageEntity]] = Field(default=None)
+    media: Optional[PollMedia] = Field(default=None) 
 
 class ChecklistTask(BaseModel):
     """
@@ -1408,7 +1465,7 @@ class ReplyKeyboardMarkup(BaseModel):
     This object represents a custom keyboard with reply
     options (see Introduction to bots for details and
     examples). Not supported in channels and for messages
-    sent on behalf of a Telegram Business account.
+    sent on behalf of a business account.
 
     Reference: https://core.telegram.org/bots/api#replykeyboardmarkup
     """
@@ -1521,7 +1578,7 @@ class ReplyKeyboardRemove(BaseModel):
     one-time keyboards that are hidden immediately after the
     user presses a button (see ReplyKeyboardMarkup). Not supported
     in channels and for messages sent on behalf
-    of a Telegram Business account.
+    of a business account.
 
     Reference: https://core.telegram.org/bots/api#replykeyboardremove
     """
@@ -1638,7 +1695,7 @@ class ForceReply(BaseModel):
     be extremely useful if you want to create
     user-friendly step-by-step interfaces without having to sacrifice privacy
     mode. Not supported in channels and for messages
-    sent on behalf of a Telegram Business account.
+    sent on behalf of a user account.
 
     Reference: https://core.telegram.org/bots/api#forcereply
     """
@@ -1798,6 +1855,7 @@ class ChatMemberRestricted(BaseModel):
     can_send_polls: bool
     can_send_other_messages: bool
     can_add_web_page_previews: bool
+    can_react_to_messages: bool
     can_edit_tag: bool
     can_change_info: bool
     can_invite_users: bool
@@ -1863,6 +1921,7 @@ class ChatPermissions(BaseModel):
     can_send_polls: Optional[bool] = Field(default=None)
     can_send_other_messages: Optional[bool] = Field(default=None)
     can_add_web_page_previews: Optional[bool] = Field(default=None)
+    can_react_to_messages: Optional[bool] = Field(default=None)
     can_edit_tag: Optional[bool] = Field(default=None)
     can_change_info: Optional[bool] = Field(default=None)
     can_invite_users: Optional[bool] = Field(default=None)
@@ -2351,6 +2410,17 @@ class OwnedGifts(BaseModel):
     gifts: List[OwnedGift]
     next_offset: Optional[str] = Field(default=None) 
 
+class BotAccessSettings(BaseModel):
+    """
+    This object describes the access settings of a
+    bot.
+
+    Reference: https://core.telegram.org/bots/api#botaccesssettings
+    """
+
+    is_access_restricted: bool
+    added_users: Optional[List[User]] = Field(default=None) 
+
 class AcceptedGiftTypes(BaseModel):
     """
     This object describes the types of gifts that
@@ -2689,6 +2759,16 @@ class SentWebAppMessage(BaseModel):
 
     inline_message_id: Optional[str] = Field(default=None) 
 
+class SentGuestMessage(BaseModel):
+    """
+    Describes an inline message sent by a guest
+    bot.
+
+    Reference: https://core.telegram.org/bots/api#sentguestmessage
+    """
+
+    inline_message_id: str 
+
 class PreparedInlineMessage(BaseModel):
     """
     Describes an inline message to be sent by
@@ -2719,43 +2799,6 @@ class ResponseParameters(BaseModel):
 
     migrate_to_chat_id: Optional[int] = Field(default=None)
     retry_after: Optional[int] = Field(default=None) 
-
-class InputMediaPhoto(BaseModel):
-    """
-    Represents a photo to be sent.
-
-    Reference: https://core.telegram.org/bots/api#inputmediaphoto
-    """
-
-    type: Literal["photo"] = "photo"
-    media: str
-    caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default="HTML")
-    caption_entities: Optional[List[MessageEntity]] = Field(default=None)
-    show_caption_above_media: Optional[bool] = Field(default=None)
-    has_spoiler: Optional[bool] = Field(default=None) 
-
-class InputMediaVideo(BaseModel):
-    """
-    Represents a video to be sent.
-
-    Reference: https://core.telegram.org/bots/api#inputmediavideo
-    """
-
-    type: Literal["video"] = "video"
-    media: str
-    thumbnail: Optional[str] = Field(default=None)
-    cover: Optional[str] = Field(default=None)
-    start_timestamp: Optional[int] = Field(default=None)
-    caption: Optional[str] = Field(default=None)
-    parse_mode: Optional[str] = Field(default="HTML")
-    caption_entities: Optional[List[MessageEntity]] = Field(default=None)
-    show_caption_above_media: Optional[bool] = Field(default=None)
-    width: Optional[int] = Field(default=None)
-    height: Optional[int] = Field(default=None)
-    duration: Optional[int] = Field(default=None)
-    supports_streaming: Optional[bool] = Field(default=None)
-    has_spoiler: Optional[bool] = Field(default=None) 
 
 class InputMediaAnimation(BaseModel):
     """
@@ -2810,6 +2853,99 @@ class InputMediaDocument(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     disable_content_type_detection: Optional[bool] = Field(default=None) 
 
+class InputMediaLivePhoto(BaseModel):
+    """
+    Represents a live photo to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputmedialivephoto
+    """
+
+    type: Literal["live_photo"] = "live_photo"
+    media: str
+    photo: str
+    caption: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
+    caption_entities: Optional[List[MessageEntity]] = Field(default=None)
+    show_caption_above_media: Optional[bool] = Field(default=None)
+    has_spoiler: Optional[bool] = Field(default=None) 
+
+class InputMediaLocation(BaseModel):
+    """
+    Represents a location to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputmedialocation
+    """
+
+    type: Literal["location"] = "location"
+    latitude: float
+    longitude: float
+    horizontal_accuracy: Optional[float] = Field(default=None) 
+
+class InputMediaPhoto(BaseModel):
+    """
+    Represents a photo to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputmediaphoto
+    """
+
+    type: Literal["photo"] = "photo"
+    media: str
+    caption: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
+    caption_entities: Optional[List[MessageEntity]] = Field(default=None)
+    show_caption_above_media: Optional[bool] = Field(default=None)
+    has_spoiler: Optional[bool] = Field(default=None) 
+
+class InputMediaSticker(BaseModel):
+    """
+    Represents a sticker file to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputmediasticker
+    """
+
+    type: Literal["sticker"] = "sticker"
+    media: str
+    emoji: Optional[str] = Field(default=None) 
+
+class InputMediaVenue(BaseModel):
+    """
+    Represents a venue to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputmediavenue
+    """
+
+    type: Literal["venue"] = "venue"
+    latitude: float
+    longitude: float
+    title: str
+    address: str
+    foursquare_id: Optional[str] = Field(default=None)
+    foursquare_type: Optional[str] = Field(default=None)
+    google_place_id: Optional[str] = Field(default=None)
+    google_place_type: Optional[str] = Field(default=None) 
+
+class InputMediaVideo(BaseModel):
+    """
+    Represents a video to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputmediavideo
+    """
+
+    type: Literal["video"] = "video"
+    media: str
+    thumbnail: Optional[str] = Field(default=None)
+    cover: Optional[str] = Field(default=None)
+    start_timestamp: Optional[int] = Field(default=None)
+    caption: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
+    caption_entities: Optional[List[MessageEntity]] = Field(default=None)
+    show_caption_above_media: Optional[bool] = Field(default=None)
+    width: Optional[int] = Field(default=None)
+    height: Optional[int] = Field(default=None)
+    duration: Optional[int] = Field(default=None)
+    supports_streaming: Optional[bool] = Field(default=None)
+    has_spoiler: Optional[bool] = Field(default=None) 
+
 class InputFile(BaseModel):
     """
     This object represents the contents of a file
@@ -2822,6 +2958,18 @@ class InputFile(BaseModel):
 
     pass
  
+
+class InputPaidMediaLivePhoto(BaseModel):
+    """
+    The paid media to send is a live
+    photo.
+
+    Reference: https://core.telegram.org/bots/api#inputpaidmedialivephoto
+    """
+
+    type: Literal["live_photo"] = "live_photo"
+    media: str
+    photo: str 
 
 class InputPaidMediaPhoto(BaseModel):
     """
@@ -4085,11 +4233,35 @@ MessageOrigin = Union[
 _MessageOriginAdapter = TypeAdapter(MessageOrigin) 
 
 PaidMedia = Union[
-    PaidMediaPreview,
+    PaidMediaLivePhoto,
     PaidMediaPhoto,
+    PaidMediaPreview,
     PaidMediaVideo,
 ]
 _PaidMediaAdapter = TypeAdapter(PaidMedia) 
+
+InputPollMedia = Union[
+    InputMediaAnimation,
+    InputMediaAudio,
+    InputMediaDocument,
+    InputMediaLivePhoto,
+    InputMediaLocation,
+    InputMediaPhoto,
+    InputMediaVenue,
+    InputMediaVideo,
+]
+_InputPollMediaAdapter = TypeAdapter(InputPollMedia) 
+
+InputPollOptionMedia = Union[
+    InputMediaAnimation,
+    InputMediaLivePhoto,
+    InputMediaLocation,
+    InputMediaPhoto,
+    InputMediaSticker,
+    InputMediaVenue,
+    InputMediaVideo,
+]
+_InputPollOptionMediaAdapter = TypeAdapter(InputPollOptionMedia) 
 
 BackgroundFill = Union[
     BackgroundFillSolid,
@@ -4165,14 +4337,16 @@ _ChatBoostSourceAdapter = TypeAdapter(ChatBoostSource)
 
 InputMedia = Union[
     InputMediaAnimation,
-    InputMediaDocument,
     InputMediaAudio,
+    InputMediaDocument,
+    InputMediaLivePhoto,
     InputMediaPhoto,
     InputMediaVideo,
 ]
 _InputMediaAdapter = TypeAdapter(InputMedia) 
 
 InputPaidMedia = Union[
+    InputPaidMediaLivePhoto,
     InputPaidMediaPhoto,
     InputPaidMediaVideo,
 ]
@@ -4273,17 +4447,20 @@ PhotoSize.model_rebuild()
 Animation.model_rebuild()
 Audio.model_rebuild()
 Document.model_rebuild()
+LivePhoto.model_rebuild()
 Story.model_rebuild()
 VideoQuality.model_rebuild()
 Video.model_rebuild()
 VideoNote.model_rebuild()
 Voice.model_rebuild()
 PaidMediaInfo.model_rebuild()
-PaidMediaPreview.model_rebuild()
+PaidMediaLivePhoto.model_rebuild()
 PaidMediaPhoto.model_rebuild()
+PaidMediaPreview.model_rebuild()
 PaidMediaVideo.model_rebuild()
 Contact.model_rebuild()
 Dice.model_rebuild()
+PollMedia.model_rebuild()
 PollOption.model_rebuild()
 InputPollOption.model_rebuild()
 PollAnswer.model_rebuild()
@@ -4408,6 +4585,7 @@ UniqueGiftInfo.model_rebuild()
 OwnedGiftRegular.model_rebuild()
 OwnedGiftUnique.model_rebuild()
 OwnedGifts.model_rebuild()
+BotAccessSettings.model_rebuild()
 AcceptedGiftTypes.model_rebuild()
 StarAmount.model_rebuild()
 BotCommand.model_rebuild()
@@ -4437,15 +4615,21 @@ BusinessBotRights.model_rebuild()
 BusinessConnection.model_rebuild()
 BusinessMessagesDeleted.model_rebuild()
 SentWebAppMessage.model_rebuild()
+SentGuestMessage.model_rebuild()
 PreparedInlineMessage.model_rebuild()
 PreparedKeyboardButton.model_rebuild()
 ResponseParameters.model_rebuild()
-InputMediaPhoto.model_rebuild()
-InputMediaVideo.model_rebuild()
 InputMediaAnimation.model_rebuild()
 InputMediaAudio.model_rebuild()
 InputMediaDocument.model_rebuild()
+InputMediaLivePhoto.model_rebuild()
+InputMediaLocation.model_rebuild()
+InputMediaPhoto.model_rebuild()
+InputMediaSticker.model_rebuild()
+InputMediaVenue.model_rebuild()
+InputMediaVideo.model_rebuild()
 InputFile.model_rebuild()
+InputPaidMediaLivePhoto.model_rebuild()
 InputPaidMediaPhoto.model_rebuild()
 InputPaidMediaVideo.model_rebuild()
 InputProfilePhotoStatic.model_rebuild()

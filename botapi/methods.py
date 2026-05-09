@@ -27,17 +27,20 @@ from botapi.types import (
     Animation,
     Audio,
     Document,
+    LivePhoto,
     Story,
     VideoQuality,
     Video,
     VideoNote,
     Voice,
     PaidMediaInfo,
-    PaidMediaPreview,
+    PaidMediaLivePhoto,
     PaidMediaPhoto,
+    PaidMediaPreview,
     PaidMediaVideo,
     Contact,
     Dice,
+    PollMedia,
     PollOption,
     InputPollOption,
     PollAnswer,
@@ -162,6 +165,7 @@ from botapi.types import (
     OwnedGiftRegular,
     OwnedGiftUnique,
     OwnedGifts,
+    BotAccessSettings,
     AcceptedGiftTypes,
     StarAmount,
     BotCommand,
@@ -191,15 +195,21 @@ from botapi.types import (
     BusinessConnection,
     BusinessMessagesDeleted,
     SentWebAppMessage,
+    SentGuestMessage,
     PreparedInlineMessage,
     PreparedKeyboardButton,
     ResponseParameters,
-    InputMediaPhoto,
-    InputMediaVideo,
     InputMediaAnimation,
     InputMediaAudio,
     InputMediaDocument,
+    InputMediaLivePhoto,
+    InputMediaLocation,
+    InputMediaPhoto,
+    InputMediaSticker,
+    InputMediaVenue,
+    InputMediaVideo,
     InputFile,
+    InputPaidMediaLivePhoto,
     InputPaidMediaPhoto,
     InputPaidMediaVideo,
     InputProfilePhotoStatic,
@@ -281,6 +291,10 @@ from botapi.types import (
     _MessageOriginAdapter,
     PaidMedia,
     _PaidMediaAdapter,
+    InputPollMedia,
+    _InputPollMediaAdapter,
+    InputPollOptionMedia,
+    _InputPollOptionMediaAdapter,
     BackgroundFill,
     _BackgroundFillAdapter,
     BackgroundType,
@@ -724,6 +738,56 @@ class Methods:
         })
         return Message.model_validate(response)
 
+    async def send_live_photo(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        live_photo: Union[InputFile, str],
+        photo: Union[InputFile, str],
+        business_connection_id: Optional[str] = None,
+        message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
+        caption: Optional[str] = None,
+        parse_mode: Optional[str] = "HTML",
+        caption_entities: Optional[List[MessageEntity]] = None,
+        show_caption_above_media: Optional[bool] = None,
+        has_spoiler: Optional[bool] = None,
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
+        message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
+        reply_parameters: Optional[ReplyParameters] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
+    ) -> Optional[Message]:
+        """
+        Use this method to send live photos. On
+        success, the sent Message is returned.
+
+        Reference: https://core.telegram.org/bots/api#sendlivephoto
+        """
+
+        response = await self._send_request("sendLivePhoto", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
+            "live_photo": live_photo,
+            "photo": photo,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "caption_entities": caption_entities,
+            "show_caption_above_media": show_caption_above_media,
+            "has_spoiler": has_spoiler,
+            "disable_notification": disable_notification,
+            "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
+            "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
+            "reply_parameters": reply_parameters,
+            "reply_markup": reply_markup,
+        })
+        return Message.model_validate(response)
+
     async def send_audio(
         self: botapi.BotAPI,
         chat_id: Union[int, str],
@@ -1111,7 +1175,7 @@ class Methods:
     async def send_media_group(
         self: botapi.BotAPI,
         chat_id: Union[int, str],
-        media: List[Union[InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo]],
+        media: List[Union[InputMediaAudio, InputMediaDocument, InputMediaLivePhoto, InputMediaPhoto, InputMediaVideo]],
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
@@ -1123,11 +1187,11 @@ class Methods:
     ) -> Optional[List[Message]]:
         """
         Use this method to send a group of
-        photos, videos, documents or audios as an album.
-        Documents and audio files can be only grouped
-        in an album with messages of the same
-        type. On success, an array of Message objects
-        that were sent is returned.
+        photos, live photos, videos, documents or audios as
+        an album. Documents and audio files can be
+        only grouped in an album with messages of
+        the same type. On success, an array of
+        Message objects that were sent is returned.
 
         Reference: https://core.telegram.org/bots/api#sendmediagroup
         """
@@ -1306,16 +1370,20 @@ class Methods:
         shuffle_options: Optional[bool] = None,
         allow_adding_options: Optional[bool] = None,
         hide_results_until_closes: Optional[bool] = None,
+        members_only: Optional[bool] = None,
+        country_codes: Optional[List[str]] = None,
         correct_option_ids: Optional[List[int]] = None,
         explanation: Optional[str] = None,
         explanation_parse_mode: Optional[str] = None,
         explanation_entities: Optional[List[MessageEntity]] = None,
+        explanation_media: Optional[InputPollMedia] = None,
         open_period: Optional[int] = None,
         close_date: Optional[int] = None,
         is_closed: Optional[bool] = None,
         description: Optional[str] = None,
         description_parse_mode: Optional[str] = None,
         description_entities: Optional[List[MessageEntity]] = None,
+        media: Optional[InputPollMedia] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
@@ -1345,16 +1413,20 @@ class Methods:
             "shuffle_options": shuffle_options,
             "allow_adding_options": allow_adding_options,
             "hide_results_until_closes": hide_results_until_closes,
+            "members_only": members_only,
+            "country_codes": country_codes,
             "correct_option_ids": correct_option_ids,
             "explanation": explanation,
             "explanation_parse_mode": explanation_parse_mode,
             "explanation_entities": explanation_entities,
+            "explanation_media": explanation_media,
             "open_period": open_period,
             "close_date": close_date,
             "is_closed": is_closed,
             "description": description,
             "description_parse_mode": description_parse_mode,
             "description_entities": description_entities,
+            "media": media,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
@@ -1367,7 +1439,7 @@ class Methods:
     async def send_checklist(
         self: botapi.BotAPI,
         business_connection_id: str,
-        chat_id: int,
+        chat_id: Union[int, str],
         checklist: InputChecklist,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
@@ -1438,15 +1510,19 @@ class Methods:
         self: botapi.BotAPI,
         chat_id: int,
         draft_id: int,
-        text: str,
         message_thread_id: Optional[int] = None,
+        text: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         entities: Optional[List[MessageEntity]] = None,
     ) -> Optional[bool]:
         """
         Use this method to stream a partial message
         to a user while the message is being
-        generated. Returns True on success.
+        generated. Note that the streamed draft is ephemeral
+        and acts as a temporary 30-second preview -
+        once the output is finalized, you must call
+        sendMessage with the complete message to persist it
+        in the user's chat. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#sendmessagedraft
         """
@@ -2248,17 +2324,19 @@ class Methods:
     async def get_chat_administrators(
         self: botapi.BotAPI,
         chat_id: Union[int, str],
+        return_bots: Optional[bool] = None,
     ) -> Optional[List[ChatMember]]:
         """
         Use this method to get a list of
-        administrators in a chat, which aren't bots. Returns
-        an Array of ChatMember objects.
+        administrators in a chat. Returns an Array of
+        ChatMember objects.
 
         Reference: https://core.telegram.org/bots/api#getchatadministrators
         """
 
         response = await self._send_request("getChatAdministrators", {
             "chat_id": chat_id,
+            "return_bots": return_bots,
         })
         return [_ChatMemberAdapter.validate_python(x) for x in response]
 
@@ -2298,6 +2376,27 @@ class Methods:
             "user_id": user_id,
         })
         return TypeAdapter(ChatMember).validate_python(response)
+
+    async def get_user_personal_chat_messages(
+        self: botapi.BotAPI,
+        user_id: int,
+        limit: int,
+    ) -> Optional[List[Message]]:
+        """
+        Use this method to get the last messages
+        from the personal chat (i.e., the chat currently
+        added to their profile) of a given user.
+        On success, an array of Message objects is
+        returned.
+
+        Reference: https://core.telegram.org/bots/api#getuserpersonalchatmessages
+        """
+
+        response = await self._send_request("getUserPersonalChatMessages", {
+            "user_id": user_id,
+            "limit": limit,
+        })
+        return [Message.model_validate(x) for x in response]
 
     async def set_chat_sticker_set(
         self: botapi.BotAPI,
@@ -2650,6 +2749,25 @@ class Methods:
         })
         return response
 
+    async def answer_guest_query(
+        self: botapi.BotAPI,
+        guest_query_id: str,
+        result: InlineQueryResult,
+    ) -> Optional[SentGuestMessage]:
+        """
+        Use this method to reply to a received
+        guest message. On success, a SentGuestMessage object is
+        returned.
+
+        Reference: https://core.telegram.org/bots/api#answerguestquery
+        """
+
+        response = await self._send_request("answerGuestQuery", {
+            "guest_query_id": guest_query_id,
+            "result": result,
+        })
+        return SentGuestMessage.model_validate(response)
+
     async def get_user_chat_boosts(
         self: botapi.BotAPI,
         chat_id: Union[int, str],
@@ -2719,6 +2837,43 @@ class Methods:
 
         response = await self._send_request("replaceManagedBotToken", {
             "user_id": user_id,
+        })
+        return response
+
+    async def get_managed_bot_access_settings(
+        self: botapi.BotAPI,
+        user_id: int,
+    ) -> Optional[BotAccessSettings]:
+        """
+        Use this method to get the access settings
+        of a managed bot. Returns a BotAccessSettings object
+        on success.
+
+        Reference: https://core.telegram.org/bots/api#getmanagedbotaccesssettings
+        """
+
+        response = await self._send_request("getManagedBotAccessSettings", {
+            "user_id": user_id,
+        })
+        return BotAccessSettings.model_validate(response)
+
+    async def set_managed_bot_access_settings(
+        self: botapi.BotAPI,
+        user_id: int,
+        is_access_restricted: bool,
+        added_user_ids: Optional[List[int]] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to change the access settings
+        of a managed bot. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#setmanagedbotaccesssettings
+        """
+
+        response = await self._send_request("setManagedBotAccessSettings", {
+            "user_id": user_id,
+            "is_access_restricted": is_access_restricted,
+            "added_user_ids": added_user_ids,
         })
         return response
 
@@ -3788,22 +3943,22 @@ class Methods:
     ) -> Optional[Union[Message, bool]]:
         """
         Use this method to edit animation, audio, document,
-        photo, or video messages, or to add media
-        to text messages. If a message is part
-        of a message album, then it can be
-        edited only to an audio for audio albums,
-        only to a document for document albums and
-        to a photo or a video otherwise. When
-        an inline message is edited, a new file
-        can't be uploaded; use a previously uploaded file
-        via its file_id or specify a URL. On
-        success, if the edited message is not an
-        inline message, the edited Message is returned, otherwise
-        True is returned. Note that business messages that
-        were not sent by the bot and do
-        not contain an inline keyboard can only be
-        edited within 48 hours from the time they
-        were sent.
+        live photo, photo, or video messages, or to
+        add media to text messages. If a message
+        is part of a message album, then it
+        can be edited only to an audio for
+        audio albums, only to a document for document
+        albums and to a photo, a live photo,
+        or a video otherwise. When an inline message
+        is edited, a new file can't be uploaded;
+        use a previously uploaded file via its file_id
+        or specify a URL. On success, if the
+        edited message is not an inline message, the
+        edited Message is returned, otherwise True is returned.
+        Note that business messages that were not sent
+        by the bot and do not contain an
+        inline keyboard can only be edited within 48
+        hours from the time they were sent.
 
         Reference: https://core.telegram.org/bots/api#editmessagemedia
         """
@@ -3899,7 +4054,7 @@ class Methods:
     async def edit_message_checklist(
         self: botapi.BotAPI,
         business_connection_id: str,
-        chat_id: int,
+        chat_id: Union[int, str],
         message_id: int,
         checklist: InputChecklist,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
@@ -4073,6 +4228,53 @@ class Methods:
         response = await self._send_request("deleteMessages", {
             "chat_id": chat_id,
             "message_ids": message_ids,
+        })
+        return response
+
+    async def delete_message_reaction(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        message_id: int,
+        user_id: Optional[int] = None,
+        actor_chat_id: Optional[int] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to remove a reaction from
+        a message in a group or a supergroup
+        chat. The bot must have the 'can_delete_messages' administrator
+        right in the chat. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#deletemessagereaction
+        """
+
+        response = await self._send_request("deleteMessageReaction", {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "user_id": user_id,
+            "actor_chat_id": actor_chat_id,
+        })
+        return response
+
+    async def delete_all_message_reactions(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        user_id: Optional[int] = None,
+        actor_chat_id: Optional[int] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to remove up to 10000
+        recent reactions in a group or a supergroup
+        chat added by a given user or chat.
+        The bot must have the 'can_delete_messages' administrator right
+        in the chat. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#deleteallmessagereactions
+        """
+
+        response = await self._send_request("deleteAllMessageReactions", {
+            "chat_id": chat_id,
+            "user_id": user_id,
+            "actor_chat_id": actor_chat_id,
         })
         return response
 
@@ -4733,7 +4935,7 @@ class Methods:
 
     async def send_game(
         self: botapi.BotAPI,
-        chat_id: int,
+        chat_id: Union[int, str],
         game_short_name: str,
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
