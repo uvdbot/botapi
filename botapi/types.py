@@ -3800,7 +3800,7 @@ class RefundedPayment(BaseModel):
     Reference: https://core.telegram.org/bots/api#refundedpayment
     """
 
-    currency: Literal["XTR"] = "XTR"
+    currency: str
     total_amount: int
     invoice_payload: str
     telegram_payment_charge_id: str
