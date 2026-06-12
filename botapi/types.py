@@ -83,7 +83,8 @@ class User(BaseModel):
     has_main_web_app: Optional[bool] = Field(default=None)
     has_topics_enabled: Optional[bool] = Field(default=None)
     allows_users_to_create_topics: Optional[bool] = Field(default=None)
-    can_manage_bots: Optional[bool] = Field(default=None) 
+    can_manage_bots: Optional[bool] = Field(default=None)
+    supports_join_request_queries: Optional[bool] = Field(default=None) 
 
 class Chat(BaseModel):
     """
@@ -158,7 +159,8 @@ class ChatFullInfo(BaseModel):
     rating: Optional[UserRating] = Field(default=None)
     first_profile_audio: Optional[Audio] = Field(default=None)
     unique_gift_colors: Optional[UniqueGiftColors] = Field(default=None)
-    paid_message_star_count: Optional[int] = Field(default=None) 
+    paid_message_star_count: Optional[int] = Field(default=None)
+    guard_bot: Optional[User] = Field(default=None) 
 
 class Message(BaseModel):
     """
@@ -203,6 +205,7 @@ class Message(BaseModel):
     link_preview_options: Optional[LinkPreviewOptions] = Field(default=None)
     suggested_post_info: Optional[SuggestedPostInfo] = Field(default=None)
     effect_id: Optional[str] = Field(default=None)
+    rich_message: Optional[RichMessage] = Field(default=None)
     animation: Optional[Animation] = Field(default=None)
     audio: Optional[Audio] = Field(default=None)
     document: Optional[Document] = Field(default=None)
@@ -658,6 +661,15 @@ class Dice(BaseModel):
     emoji: str
     value: int 
 
+class Link(BaseModel):
+    """
+    Represents an HTTP link.
+
+    Reference: https://core.telegram.org/bots/api#link
+    """
+
+    url: str 
+
 class PollMedia(BaseModel):
     """
     At most one of the optional fields can
@@ -669,6 +681,7 @@ class PollMedia(BaseModel):
     animation: Optional[Animation] = Field(default=None)
     audio: Optional[Audio] = Field(default=None)
     document: Optional[Document] = Field(default=None)
+    link: Optional[Link] = Field(default=None)
     live_photo: Optional[LivePhoto] = Field(default=None)
     location: Optional[Location] = Field(default=None)
     photo: Optional[List[PhotoSize]] = Field(default=None)
@@ -1901,7 +1914,8 @@ class ChatJoinRequest(BaseModel):
     user_chat_id: int
     date: int
     bio: Optional[str] = Field(default=None)
-    invite_link: Optional[ChatInviteLink] = Field(default=None) 
+    invite_link: Optional[ChatInviteLink] = Field(default=None)
+    query_id: Optional[str] = Field(default=None) 
 
 class ChatPermissions(BaseModel):
     """
@@ -2853,6 +2867,16 @@ class InputMediaDocument(BaseModel):
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     disable_content_type_detection: Optional[bool] = Field(default=None) 
 
+class InputMediaLink(BaseModel):
+    """
+    Represents an HTTP link to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputmedialink
+    """
+
+    type: Literal["link"] = "link"
+    url: str 
+
 class InputMediaLivePhoto(BaseModel):
     """
     Represents a live photo to be sent.
@@ -3104,6 +3128,589 @@ class InputSticker(BaseModel):
     emoji_list: List[str]
     mask_position: Optional[MaskPosition] = Field(default=None)
     keywords: Optional[List[str]] = Field(default=None) 
+
+class RichMessage(BaseModel):
+    """
+    Rich formatted message.
+
+    Reference: https://core.telegram.org/bots/api#richmessage
+    """
+
+    blocks: List[RichBlock]
+    is_rtl: Optional[bool] = Field(default=None) 
+
+class InputRichMessage(BaseModel):
+    """
+    Describes a rich message to be sent. Exactly
+    one of the fields html or markdown must
+    be used.
+
+    Reference: https://core.telegram.org/bots/api#inputrichmessage
+    """
+
+    html: Optional[str] = Field(default=None)
+    markdown: Optional[str] = Field(default=None)
+    is_rtl: Optional[bool] = Field(default=None)
+    skip_entity_detection: Optional[bool] = Field(default=None) 
+
+class RichTextBold(BaseModel):
+    """
+    A bold text.
+
+    Reference: https://core.telegram.org/bots/api#richtextbold
+    """
+
+    type: Literal["bold"] = "bold"
+    text: RichText 
+
+class RichTextItalic(BaseModel):
+    """
+    An italicized text.
+
+    Reference: https://core.telegram.org/bots/api#richtextitalic
+    """
+
+    type: Literal["italic"] = "italic"
+    text: RichText 
+
+class RichTextUnderline(BaseModel):
+    """
+    An underlined text.
+
+    Reference: https://core.telegram.org/bots/api#richtextunderline
+    """
+
+    type: Literal["underline"] = "underline"
+    text: RichText 
+
+class RichTextStrikethrough(BaseModel):
+    """
+    A strikethrough text.
+
+    Reference: https://core.telegram.org/bots/api#richtextstrikethrough
+    """
+
+    type: Literal["strikethrough"] = "strikethrough"
+    text: RichText 
+
+class RichTextSpoiler(BaseModel):
+    """
+    A text covered by a spoiler.
+
+    Reference: https://core.telegram.org/bots/api#richtextspoiler
+    """
+
+    type: Literal["spoiler"] = "spoiler"
+    text: RichText 
+
+class RichTextDateTime(BaseModel):
+    """
+    Formatted date and time.
+
+    Reference: https://core.telegram.org/bots/api#richtextdatetime
+    """
+
+    type: Literal["date_time"] = "date_time"
+    text: RichText
+    unix_time: int
+    date_time_format: str 
+
+class RichTextTextMention(BaseModel):
+    """
+    A mention of a Telegram user by their
+    identifier.
+
+    Reference: https://core.telegram.org/bots/api#richtexttextmention
+    """
+
+    type: Literal["text_mention"] = "text_mention"
+    text: RichText
+    user: User 
+
+class RichTextSubscript(BaseModel):
+    """
+    A subscript text.
+
+    Reference: https://core.telegram.org/bots/api#richtextsubscript
+    """
+
+    type: Literal["subscript"] = "subscript"
+    text: RichText 
+
+class RichTextSuperscript(BaseModel):
+    """
+    A superscript text.
+
+    Reference: https://core.telegram.org/bots/api#richtextsuperscript
+    """
+
+    type: Literal["superscript"] = "superscript"
+    text: RichText 
+
+class RichTextMarked(BaseModel):
+    """
+    A marked text.
+
+    Reference: https://core.telegram.org/bots/api#richtextmarked
+    """
+
+    type: Literal["marked"] = "marked"
+    text: RichText 
+
+class RichTextCode(BaseModel):
+    """
+    A monowidth text.
+
+    Reference: https://core.telegram.org/bots/api#richtextcode
+    """
+
+    type: Literal["code"] = "code"
+    text: RichText 
+
+class RichTextCustomEmoji(BaseModel):
+    """
+    A custom emoji.
+
+    Reference: https://core.telegram.org/bots/api#richtextcustomemoji
+    """
+
+    type: Literal["custom_emoji"] = "custom_emoji"
+    custom_emoji_id: str
+    alternative_text: str 
+
+class RichTextMathematicalExpression(BaseModel):
+    """
+    A mathematical expression.
+
+    Reference: https://core.telegram.org/bots/api#richtextmathematicalexpression
+    """
+
+    type: Literal["mathematical_expression"] = "mathematical_expression"
+    expression: str 
+
+class RichTextUrl(BaseModel):
+    """
+    A text with a link.
+
+    Reference: https://core.telegram.org/bots/api#richtexturl
+    """
+
+    type: Literal["url"] = "url"
+    text: RichText
+    url: str 
+
+class RichTextEmailAddress(BaseModel):
+    """
+    A text with an email address.
+
+    Reference: https://core.telegram.org/bots/api#richtextemailaddress
+    """
+
+    type: Literal["email_address"] = "email_address"
+    text: RichText
+    email_address: str 
+
+class RichTextPhoneNumber(BaseModel):
+    """
+    A text with a phone number.
+
+    Reference: https://core.telegram.org/bots/api#richtextphonenumber
+    """
+
+    type: Literal["phone_number"] = "phone_number"
+    text: RichText
+    phone_number: str 
+
+class RichTextBankCardNumber(BaseModel):
+    """
+    A text with a bank card number.
+
+    Reference: https://core.telegram.org/bots/api#richtextbankcardnumber
+    """
+
+    type: Literal["bank_card_number"] = "bank_card_number"
+    text: RichText
+    bank_card_number: str 
+
+class RichTextMention(BaseModel):
+    """
+    A mention by a username.
+
+    Reference: https://core.telegram.org/bots/api#richtextmention
+    """
+
+    type: Literal["mention"] = "mention"
+    text: RichText
+    username: str 
+
+class RichTextHashtag(BaseModel):
+    """
+    A hashtag.
+
+    Reference: https://core.telegram.org/bots/api#richtexthashtag
+    """
+
+    type: Literal["hashtag"] = "hashtag"
+    text: RichText
+    hashtag: str 
+
+class RichTextCashtag(BaseModel):
+    """
+    A cashtag.
+
+    Reference: https://core.telegram.org/bots/api#richtextcashtag
+    """
+
+    type: Literal["cashtag"] = "cashtag"
+    text: RichText
+    cashtag: str 
+
+class RichTextBotCommand(BaseModel):
+    """
+    A bot command.
+
+    Reference: https://core.telegram.org/bots/api#richtextbotcommand
+    """
+
+    type: Literal["bot_command"] = "bot_command"
+    text: RichText
+    bot_command: str 
+
+class RichTextAnchor(BaseModel):
+    """
+    An anchor.
+
+    Reference: https://core.telegram.org/bots/api#richtextanchor
+    """
+
+    type: Literal["anchor"] = "anchor"
+    name: str 
+
+class RichTextAnchorLink(BaseModel):
+    """
+    A link to an anchor.
+
+    Reference: https://core.telegram.org/bots/api#richtextanchorlink
+    """
+
+    type: Literal["anchor_link"] = "anchor_link"
+    text: RichText
+    anchor_name: str 
+
+class RichTextReference(BaseModel):
+    """
+    A reference.
+
+    Reference: https://core.telegram.org/bots/api#richtextreference
+    """
+
+    type: Literal["reference"] = "reference"
+    text: RichText
+    name: str 
+
+class RichTextReferenceLink(BaseModel):
+    """
+    A link to a reference.
+
+    Reference: https://core.telegram.org/bots/api#richtextreferencelink
+    """
+
+    type: Literal["reference_link"] = "reference_link"
+    text: RichText
+    reference_name: str 
+
+class RichBlockCaption(BaseModel):
+    """
+    Caption of a rich formatted block.
+
+    Reference: https://core.telegram.org/bots/api#richblockcaption
+    """
+
+    text: RichText
+    credit: Optional[RichText] = Field(default=None) 
+
+class RichBlockTableCell(BaseModel):
+    """
+    Cell in a table.
+
+    Reference: https://core.telegram.org/bots/api#richblocktablecell
+    """
+
+    align: str
+    valign: str
+    text: Optional[RichText] = Field(default=None)
+    is_header: Optional[bool] = Field(default=None)
+    colspan: Optional[int] = Field(default=None)
+    rowspan: Optional[int] = Field(default=None) 
+
+class RichBlockListItem(BaseModel):
+    """
+    An item of a list.
+
+    Reference: https://core.telegram.org/bots/api#richblocklistitem
+    """
+
+    label: str
+    blocks: List[RichBlock]
+    has_checkbox: Optional[bool] = Field(default=None)
+    is_checked: Optional[bool] = Field(default=None)
+    value: Optional[int] = Field(default=None)
+    type: Optional[str] = Field(default=None) 
+
+class RichBlockParagraph(BaseModel):
+    """
+    A text paragraph, corresponding to the HTML tag
+    <p>.
+
+    Reference: https://core.telegram.org/bots/api#richblockparagraph
+    """
+
+    type: Literal["paragraph"] = "paragraph"
+    text: RichText 
+
+class RichBlockSectionHeading(BaseModel):
+    """
+    A section heading, corresponding to the HTML tags
+    <h1>, <h2>, <h3>, <h4>, <h5>, or <h6>.
+
+    Reference: https://core.telegram.org/bots/api#richblocksectionheading
+    """
+
+    type: Literal["heading"] = "heading"
+    text: RichText
+    size: int 
+
+class RichBlockPreformatted(BaseModel):
+    """
+    A preformatted text block, corresponding to the nested
+    HTML tags <pre> and <code>.
+
+    Reference: https://core.telegram.org/bots/api#richblockpreformatted
+    """
+
+    type: Literal["pre"] = "pre"
+    text: RichText
+    language: Optional[str] = Field(default=None) 
+
+class RichBlockFooter(BaseModel):
+    """
+    A footer, corresponding to the HTML tag <footer>.
+
+    Reference: https://core.telegram.org/bots/api#richblockfooter
+    """
+
+    type: Literal["footer"] = "footer"
+    text: RichText 
+
+class RichBlockDivider(BaseModel):
+    """
+    A divider, corresponding to the HTML tag <hr/>.
+
+    Reference: https://core.telegram.org/bots/api#richblockdivider
+    """
+
+    type: Literal["divider"] = "divider" 
+
+class RichBlockMathematicalExpression(BaseModel):
+    """
+    A block with a mathematical expression in LaTeX
+    format, corresponding to the custom HTML tag <tg-math-block>.
+
+    Reference: https://core.telegram.org/bots/api#richblockmathematicalexpression
+    """
+
+    type: Literal["mathematical_expression"] = "mathematical_expression"
+    expression: str 
+
+class RichBlockAnchor(BaseModel):
+    """
+    A block with an anchor, corresponding to the
+    HTML tag <a> with the attribute name.
+
+    Reference: https://core.telegram.org/bots/api#richblockanchor
+    """
+
+    type: Literal["anchor"] = "anchor"
+    name: str 
+
+class RichBlockList(BaseModel):
+    """
+    A list of blocks, corresponding to the HTML
+    tag <ul> or <ol> with multiple nested tags
+    <li>.
+
+    Reference: https://core.telegram.org/bots/api#richblocklist
+    """
+
+    type: Literal["list"] = "list"
+    items: List[RichBlockListItem] 
+
+class RichBlockBlockQuotation(BaseModel):
+    """
+    A block quotation, corresponding to the HTML tag
+    <blockquote>.
+
+    Reference: https://core.telegram.org/bots/api#richblockblockquotation
+    """
+
+    type: Literal["blockquote"] = "blockquote"
+    blocks: List[RichBlock]
+    credit: Optional[RichText] = Field(default=None) 
+
+class RichBlockPullQuotation(BaseModel):
+    """
+    A quotation with centered text, loosely corresponding to
+    the HTML tag <aside>.
+
+    Reference: https://core.telegram.org/bots/api#richblockpullquotation
+    """
+
+    type: Literal["pullquote"] = "pullquote"
+    text: RichText
+    credit: Optional[RichText] = Field(default=None) 
+
+class RichBlockCollage(BaseModel):
+    """
+    A collage, corresponding to the custom HTML tag
+    <tg-collage>.
+
+    Reference: https://core.telegram.org/bots/api#richblockcollage
+    """
+
+    type: Literal["collage"] = "collage"
+    blocks: List[RichBlock]
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockSlideshow(BaseModel):
+    """
+    A slideshow, corresponding to the custom HTML tag
+    <tg-slideshow>.
+
+    Reference: https://core.telegram.org/bots/api#richblockslideshow
+    """
+
+    type: Literal["slideshow"] = "slideshow"
+    blocks: List[RichBlock]
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockTable(BaseModel):
+    """
+    A table, corresponding to the HTML tag <table>.
+
+    Reference: https://core.telegram.org/bots/api#richblocktable
+    """
+
+    type: Literal["table"] = "table"
+    cells: List[List[RichBlockTableCell]]
+    is_bordered: Optional[bool] = Field(default=None)
+    is_striped: Optional[bool] = Field(default=None)
+    caption: Optional[RichText] = Field(default=None) 
+
+class RichBlockDetails(BaseModel):
+    """
+    An expandable block for details disclosure, corresponding to
+    the HTML tag <details>.
+
+    Reference: https://core.telegram.org/bots/api#richblockdetails
+    """
+
+    type: Literal["details"] = "details"
+    summary: RichText
+    blocks: List[RichBlock]
+    is_open: Optional[bool] = Field(default=None) 
+
+class RichBlockMap(BaseModel):
+    """
+    A block with a map, corresponding to the
+    custom HTML tag <tg-map>.
+
+    Reference: https://core.telegram.org/bots/api#richblockmap
+    """
+
+    type: Literal["map"] = "map"
+    location: Location
+    zoom: int
+    width: int
+    height: int
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockAnimation(BaseModel):
+    """
+    A block with an animation, corresponding to the
+    HTML tag <video>.
+
+    Reference: https://core.telegram.org/bots/api#richblockanimation
+    """
+
+    type: Literal["animation"] = "animation"
+    animation: Animation
+    has_spoiler: Optional[bool] = Field(default=None)
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockAudio(BaseModel):
+    """
+    A block with a music file, corresponding to
+    the HTML tag <audio>.
+
+    Reference: https://core.telegram.org/bots/api#richblockaudio
+    """
+
+    type: Literal["audio"] = "audio"
+    audio: Audio
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockPhoto(BaseModel):
+    """
+    A block with a photo, corresponding to the
+    HTML tag <photo>.
+
+    Reference: https://core.telegram.org/bots/api#richblockphoto
+    """
+
+    type: Literal["photo"] = "photo"
+    photo: List[PhotoSize]
+    has_spoiler: Optional[bool] = Field(default=None)
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockVideo(BaseModel):
+    """
+    A block with a video, corresponding to the
+    HTML tag <video>.
+
+    Reference: https://core.telegram.org/bots/api#richblockvideo
+    """
+
+    type: Literal["video"] = "video"
+    video: Video
+    has_spoiler: Optional[bool] = Field(default=None)
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockVoiceNote(BaseModel):
+    """
+    A block with a voice note, corresponding to
+    the HTML tag <audio>.
+
+    Reference: https://core.telegram.org/bots/api#richblockvoicenote
+    """
+
+    type: Literal["voice_note"] = "voice_note"
+    voice_note: Voice
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockThinking(BaseModel):
+    """
+    A block with a “Thinking…” placeholder, corresponding to
+    the custom HTML tag <tg-thinking>. The block may
+    be used only in sendRichMessageDraft, therefore it can't
+    be received in messages. See https://t.me/addemoji/AIActions for examples
+    of custom emoji, which are recommended for usage
+    in the block.
+
+    Reference: https://core.telegram.org/bots/api#richblockthinking
+    """
+
+    type: Literal["thinking"] = "thinking"
+    text: RichText 
 
 class InlineQuery(BaseModel):
     """
@@ -3615,6 +4222,17 @@ class InputTextMessageContent(BaseModel):
     parse_mode: Optional[str] = Field(default="HTML")
     entities: Optional[List[MessageEntity]] = Field(default=None)
     link_preview_options: Optional[LinkPreviewOptions] = Field(default=None) 
+
+class InputRichMessageContent(BaseModel):
+    """
+    Represents the content of a rich message to
+    be sent as the result of an inline
+    query.
+
+    Reference: https://core.telegram.org/bots/api#inputrichmessagecontent
+    """
+
+    rich_message: InputRichMessage 
 
 class InputLocationMessageContent(BaseModel):
     """
@@ -4254,6 +4872,7 @@ _InputPollMediaAdapter = TypeAdapter(InputPollMedia)
 
 InputPollOptionMedia = Union[
     InputMediaAnimation,
+    InputMediaLink,
     InputMediaLivePhoto,
     InputMediaLocation,
     InputMediaPhoto,
@@ -4364,6 +4983,60 @@ InputStoryContent = Union[
 ]
 _InputStoryContentAdapter = TypeAdapter(InputStoryContent) 
 
+RichText = Union[
+    RichTextBold,
+    RichTextItalic,
+    RichTextUnderline,
+    RichTextStrikethrough,
+    RichTextSpoiler,
+    RichTextDateTime,
+    RichTextTextMention,
+    RichTextSubscript,
+    RichTextSuperscript,
+    RichTextMarked,
+    RichTextCode,
+    RichTextCustomEmoji,
+    RichTextMathematicalExpression,
+    RichTextUrl,
+    RichTextEmailAddress,
+    RichTextPhoneNumber,
+    RichTextBankCardNumber,
+    RichTextMention,
+    RichTextHashtag,
+    RichTextCashtag,
+    RichTextBotCommand,
+    RichTextAnchor,
+    RichTextAnchorLink,
+    RichTextReference,
+    RichTextReferenceLink,
+]
+_RichTextAdapter = TypeAdapter(RichText) 
+
+RichBlock = Union[
+    RichBlockParagraph,
+    RichBlockSectionHeading,
+    RichBlockPreformatted,
+    RichBlockFooter,
+    RichBlockDivider,
+    RichBlockMathematicalExpression,
+    RichBlockAnchor,
+    RichBlockList,
+    RichBlockBlockQuotation,
+    RichBlockPullQuotation,
+    RichBlockCollage,
+    RichBlockSlideshow,
+    RichBlockTable,
+    RichBlockDetails,
+    RichBlockMap,
+    RichBlockAnimation,
+    RichBlockAudio,
+    RichBlockPhoto,
+    RichBlockVideo,
+    RichBlockVoiceNote,
+    RichBlockThinking,
+]
+_RichBlockAdapter = TypeAdapter(RichBlock) 
+
 InlineQueryResult = Union[
     InlineQueryResultCachedAudio,
     InlineQueryResultCachedDocument,
@@ -4390,6 +5063,7 @@ _InlineQueryResultAdapter = TypeAdapter(InlineQueryResult)
 
 InputMessageContent = Union[
     InputTextMessageContent,
+    InputRichMessageContent,
     InputLocationMessageContent,
     InputVenueMessageContent,
     InputContactMessageContent,
@@ -4460,6 +5134,7 @@ PaidMediaPreview.model_rebuild()
 PaidMediaVideo.model_rebuild()
 Contact.model_rebuild()
 Dice.model_rebuild()
+Link.model_rebuild()
 PollMedia.model_rebuild()
 PollOption.model_rebuild()
 InputPollOption.model_rebuild()
@@ -4622,6 +5297,7 @@ ResponseParameters.model_rebuild()
 InputMediaAnimation.model_rebuild()
 InputMediaAudio.model_rebuild()
 InputMediaDocument.model_rebuild()
+InputMediaLink.model_rebuild()
 InputMediaLivePhoto.model_rebuild()
 InputMediaLocation.model_rebuild()
 InputMediaPhoto.model_rebuild()
@@ -4640,6 +5316,57 @@ Sticker.model_rebuild()
 StickerSet.model_rebuild()
 MaskPosition.model_rebuild()
 InputSticker.model_rebuild()
+RichMessage.model_rebuild()
+InputRichMessage.model_rebuild()
+RichTextBold.model_rebuild()
+RichTextItalic.model_rebuild()
+RichTextUnderline.model_rebuild()
+RichTextStrikethrough.model_rebuild()
+RichTextSpoiler.model_rebuild()
+RichTextDateTime.model_rebuild()
+RichTextTextMention.model_rebuild()
+RichTextSubscript.model_rebuild()
+RichTextSuperscript.model_rebuild()
+RichTextMarked.model_rebuild()
+RichTextCode.model_rebuild()
+RichTextCustomEmoji.model_rebuild()
+RichTextMathematicalExpression.model_rebuild()
+RichTextUrl.model_rebuild()
+RichTextEmailAddress.model_rebuild()
+RichTextPhoneNumber.model_rebuild()
+RichTextBankCardNumber.model_rebuild()
+RichTextMention.model_rebuild()
+RichTextHashtag.model_rebuild()
+RichTextCashtag.model_rebuild()
+RichTextBotCommand.model_rebuild()
+RichTextAnchor.model_rebuild()
+RichTextAnchorLink.model_rebuild()
+RichTextReference.model_rebuild()
+RichTextReferenceLink.model_rebuild()
+RichBlockCaption.model_rebuild()
+RichBlockTableCell.model_rebuild()
+RichBlockListItem.model_rebuild()
+RichBlockParagraph.model_rebuild()
+RichBlockSectionHeading.model_rebuild()
+RichBlockPreformatted.model_rebuild()
+RichBlockFooter.model_rebuild()
+RichBlockDivider.model_rebuild()
+RichBlockMathematicalExpression.model_rebuild()
+RichBlockAnchor.model_rebuild()
+RichBlockList.model_rebuild()
+RichBlockBlockQuotation.model_rebuild()
+RichBlockPullQuotation.model_rebuild()
+RichBlockCollage.model_rebuild()
+RichBlockSlideshow.model_rebuild()
+RichBlockTable.model_rebuild()
+RichBlockDetails.model_rebuild()
+RichBlockMap.model_rebuild()
+RichBlockAnimation.model_rebuild()
+RichBlockAudio.model_rebuild()
+RichBlockPhoto.model_rebuild()
+RichBlockVideo.model_rebuild()
+RichBlockVoiceNote.model_rebuild()
+RichBlockThinking.model_rebuild()
 InlineQuery.model_rebuild()
 InlineQueryResultsButton.model_rebuild()
 InlineQueryResultArticle.model_rebuild()
@@ -4663,6 +5390,7 @@ InlineQueryResultCachedVideo.model_rebuild()
 InlineQueryResultCachedVoice.model_rebuild()
 InlineQueryResultCachedAudio.model_rebuild()
 InputTextMessageContent.model_rebuild()
+InputRichMessageContent.model_rebuild()
 InputLocationMessageContent.model_rebuild()
 InputVenueMessageContent.model_rebuild()
 InputContactMessageContent.model_rebuild()

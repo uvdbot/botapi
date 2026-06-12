@@ -40,6 +40,7 @@ from botapi.types import (
     PaidMediaVideo,
     Contact,
     Dice,
+    Link,
     PollMedia,
     PollOption,
     InputPollOption,
@@ -202,6 +203,7 @@ from botapi.types import (
     InputMediaAnimation,
     InputMediaAudio,
     InputMediaDocument,
+    InputMediaLink,
     InputMediaLivePhoto,
     InputMediaLocation,
     InputMediaPhoto,
@@ -220,6 +222,57 @@ from botapi.types import (
     StickerSet,
     MaskPosition,
     InputSticker,
+    RichMessage,
+    InputRichMessage,
+    RichTextBold,
+    RichTextItalic,
+    RichTextUnderline,
+    RichTextStrikethrough,
+    RichTextSpoiler,
+    RichTextDateTime,
+    RichTextTextMention,
+    RichTextSubscript,
+    RichTextSuperscript,
+    RichTextMarked,
+    RichTextCode,
+    RichTextCustomEmoji,
+    RichTextMathematicalExpression,
+    RichTextUrl,
+    RichTextEmailAddress,
+    RichTextPhoneNumber,
+    RichTextBankCardNumber,
+    RichTextMention,
+    RichTextHashtag,
+    RichTextCashtag,
+    RichTextBotCommand,
+    RichTextAnchor,
+    RichTextAnchorLink,
+    RichTextReference,
+    RichTextReferenceLink,
+    RichBlockCaption,
+    RichBlockTableCell,
+    RichBlockListItem,
+    RichBlockParagraph,
+    RichBlockSectionHeading,
+    RichBlockPreformatted,
+    RichBlockFooter,
+    RichBlockDivider,
+    RichBlockMathematicalExpression,
+    RichBlockAnchor,
+    RichBlockList,
+    RichBlockBlockQuotation,
+    RichBlockPullQuotation,
+    RichBlockCollage,
+    RichBlockSlideshow,
+    RichBlockTable,
+    RichBlockDetails,
+    RichBlockMap,
+    RichBlockAnimation,
+    RichBlockAudio,
+    RichBlockPhoto,
+    RichBlockVideo,
+    RichBlockVoiceNote,
+    RichBlockThinking,
     InlineQuery,
     InlineQueryResultsButton,
     InlineQueryResultArticle,
@@ -243,6 +296,7 @@ from botapi.types import (
     InlineQueryResultCachedVoice,
     InlineQueryResultCachedAudio,
     InputTextMessageContent,
+    InputRichMessageContent,
     InputLocationMessageContent,
     InputVenueMessageContent,
     InputContactMessageContent,
@@ -321,6 +375,10 @@ from botapi.types import (
     _InputProfilePhotoAdapter,
     InputStoryContent,
     _InputStoryContentAdapter,
+    RichText,
+    _RichTextAdapter,
+    RichBlock,
+    _RichBlockAdapter,
     InlineQueryResult,
     _InlineQueryResultAdapter,
     InputMessageContent,
@@ -2129,6 +2187,44 @@ class Methods:
         })
         return response
 
+    async def answer_chat_join_request_query(
+        self: botapi.BotAPI,
+        chat_join_request_query_id: str,
+        result: str,
+    ) -> Optional[bool]:
+        """
+        Use this method to process a received chat
+        join request query. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#answerchatjoinrequestquery
+        """
+
+        response = await self._send_request("answerChatJoinRequestQuery", {
+            "chat_join_request_query_id": chat_join_request_query_id,
+            "result": result,
+        })
+        return response
+
+    async def send_chat_join_request_web_app(
+        self: botapi.BotAPI,
+        chat_join_request_query_id: str,
+        web_app_url: str,
+    ) -> Optional[bool]:
+        """
+        Use this method to process a received chat
+        join request query by showing a Mini App
+        to the user before deciding the outcome. Returns
+        True on success.
+
+        Reference: https://core.telegram.org/bots/api#sendchatjoinrequestwebapp
+        """
+
+        response = await self._send_request("sendChatJoinRequestWebApp", {
+            "chat_join_request_query_id": chat_join_request_query_id,
+            "web_app_url": web_app_url,
+        })
+        return response
+
     async def set_chat_photo(
         self: botapi.BotAPI,
         chat_id: Union[int, str],
@@ -3850,25 +3946,26 @@ class Methods:
 
     async def edit_message_text(
         self: botapi.BotAPI,
-        text: str,
         business_connection_id: Optional[str] = None,
         chat_id: Optional[Union[int, str]] = None,
         message_id: Optional[int] = None,
         inline_message_id: Optional[str] = None,
+        text: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         entities: Optional[List[MessageEntity]] = None,
         link_preview_options: Optional[LinkPreviewOptions] = None,
+        rich_message: Optional[InputRichMessage] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
     ) -> Optional[Union[Message, bool]]:
         """
-        Use this method to edit text and game
-        messages. On success, if the edited message is
-        not an inline message, the edited Message is
-        returned, otherwise True is returned. Note that business
-        messages that were not sent by the bot
-        and do not contain an inline keyboard can
-        only be edited within 48 hours from the
-        time they were sent.
+        Use this method to edit text, rich and
+        game messages. On success, if the edited message
+        is not an inline message, the edited Message
+        is returned, otherwise True is returned. Note that
+        business messages that were not sent by the
+        bot and do not contain an inline keyboard
+        can only be edited within 48 hours from
+        the time they were sent.
 
         Reference: https://core.telegram.org/bots/api#editmessagetext
         """
@@ -3882,6 +3979,7 @@ class Methods:
             "parse_mode": parse_mode,
             "entities": entities,
             "link_preview_options": link_preview_options,
+            "rich_message": rich_message,
             "reply_markup": reply_markup,
         })
         try:
@@ -3944,21 +4042,22 @@ class Methods:
         """
         Use this method to edit animation, audio, document,
         live photo, photo, or video messages, or to
-        add media to text messages. If a message
-        is part of a message album, then it
-        can be edited only to an audio for
-        audio albums, only to a document for document
-        albums and to a photo, a live photo,
-        or a video otherwise. When an inline message
-        is edited, a new file can't be uploaded;
-        use a previously uploaded file via its file_id
-        or specify a URL. On success, if the
-        edited message is not an inline message, the
-        edited Message is returned, otherwise True is returned.
-        Note that business messages that were not sent
-        by the bot and do not contain an
-        inline keyboard can only be edited within 48
-        hours from the time they were sent.
+        replace a text or a rich message with
+        a media. If a message is part of
+        a message album, then it can be edited
+        only to an audio for audio albums, only
+        to a document for document albums and to
+        a photo, a live photo, or a video
+        otherwise. When an inline message is edited, a
+        new file can't be uploaded; use a previously
+        uploaded file via its file_id or specify a
+        URL. On success, if the edited message is
+        not an inline message, the edited Message is
+        returned, otherwise True is returned. Note that business
+        messages that were not sent by the bot
+        and do not contain an inline keyboard can
+        only be edited within 48 hours from the
+        time they were sent.
 
         Reference: https://core.telegram.org/bots/api#editmessagemedia
         """
@@ -4623,6 +4722,75 @@ class Methods:
 
         response = await self._send_request("deleteStickerSet", {
             "name": name,
+        })
+        return response
+
+    async def send_rich_message(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        rich_message: InputRichMessage,
+        business_connection_id: Optional[str] = None,
+        message_thread_id: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
+        message_effect_id: Optional[str] = None,
+        suggested_post_parameters: Optional[SuggestedPostParameters] = None,
+        reply_parameters: Optional[ReplyParameters] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
+    ) -> Optional[Message]:
+        """
+        Use this method to send rich messages. If
+        the message contains a block with a media
+        element, then the bot must have the right
+        to send the media to the chat. On
+        success, the sent Message is returned.
+
+        Reference: https://core.telegram.org/bots/api#sendrichmessage
+        """
+
+        response = await self._send_request("sendRichMessage", {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
+            "rich_message": rich_message,
+            "disable_notification": disable_notification,
+            "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
+            "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
+            "reply_parameters": reply_parameters,
+            "reply_markup": reply_markup,
+        })
+        return Message.model_validate(response)
+
+    async def send_rich_message_draft(
+        self: botapi.BotAPI,
+        chat_id: int,
+        draft_id: int,
+        rich_message: InputRichMessage,
+        message_thread_id: Optional[int] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to stream a partial rich
+        message to a user while the message is
+        being generated. Note that the streamed draft is
+        ephemeral and acts as a temporary 30-second preview
+        - once the output is finalized, you must
+        call sendRichMessage with the complete message to persist
+        it in the user's chat. Returns True on
+        success.
+
+        Reference: https://core.telegram.org/bots/api#sendrichmessagedraft
+        """
+
+        response = await self._send_request("sendRichMessageDraft", {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "draft_id": draft_id,
+            "rich_message": rich_message,
         })
         return response
 
