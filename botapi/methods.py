@@ -2213,8 +2213,10 @@ class Methods:
         """
         Use this method to process a received chat
         join request query by showing a Mini App
-        to the user before deciding the outcome. Returns
-        True on success.
+        to the user before deciding the outcome. Call
+        answerChatJoinRequestQuery to resolve the join request query based
+        on the user interaction with the Mini App.
+        Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#sendchatjoinrequestwebapp
         """

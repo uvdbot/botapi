@@ -3662,7 +3662,7 @@ class RichBlockAudio(BaseModel):
 class RichBlockPhoto(BaseModel):
     """
     A block with a photo, corresponding to the
-    HTML tag <photo>.
+    HTML tag <img>.
 
     Reference: https://core.telegram.org/bots/api#richblockphoto
     """
