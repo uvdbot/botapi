@@ -50,8 +50,6 @@ from botapi.types import (
     Checklist,
     InputChecklistTask,
     InputChecklist,
-    ChecklistTasksDone,
-    ChecklistTasksAdded,
     Location,
     Venue,
     WebAppData,
@@ -59,6 +57,7 @@ from botapi.types import (
     MessageAutoDeleteTimerChanged,
     ManagedBotCreated,
     ManagedBotUpdated,
+    BotSubscriptionUpdated,
     PollOptionAdded,
     PollOptionDeleted,
     ChatBoostAdded,
@@ -70,6 +69,10 @@ from botapi.types import (
     BackgroundTypePattern,
     BackgroundTypeChatTheme,
     ChatBackground,
+    ChecklistTasksDone,
+    ChecklistTasksAdded,
+    CommunityChatAdded,
+    CommunityChatRemoved,
     ForumTopicCreated,
     ForumTopicClosed,
     ForumTopicEdited,
@@ -118,6 +121,7 @@ from botapi.types import (
     CopyTextButton,
     CallbackQuery,
     ForceReply,
+    Community,
     ChatPhoto,
     ChatInviteLink,
     ChatAdministratorRights,
@@ -210,6 +214,7 @@ from botapi.types import (
     InputMediaSticker,
     InputMediaVenue,
     InputMediaVideo,
+    InputMediaVoiceNote,
     InputFile,
     InputPaidMediaLivePhoto,
     InputPaidMediaPhoto,
@@ -224,6 +229,7 @@ from botapi.types import (
     InputSticker,
     RichMessage,
     InputRichMessage,
+    InputRichMessageMedia,
     RichTextBold,
     RichTextItalic,
     RichTextUnderline,
@@ -273,6 +279,28 @@ from botapi.types import (
     RichBlockVideo,
     RichBlockVoiceNote,
     RichBlockThinking,
+    InputRichBlockListItem,
+    InputRichBlockParagraph,
+    InputRichBlockSectionHeading,
+    InputRichBlockPreformatted,
+    InputRichBlockFooter,
+    InputRichBlockDivider,
+    InputRichBlockMathematicalExpression,
+    InputRichBlockAnchor,
+    InputRichBlockList,
+    InputRichBlockBlockQuotation,
+    InputRichBlockPullQuotation,
+    InputRichBlockCollage,
+    InputRichBlockSlideshow,
+    InputRichBlockTable,
+    InputRichBlockDetails,
+    InputRichBlockMap,
+    InputRichBlockAnimation,
+    InputRichBlockAudio,
+    InputRichBlockPhoto,
+    InputRichBlockVideo,
+    InputRichBlockVoiceNote,
+    InputRichBlockThinking,
     InlineQuery,
     InlineQueryResultsButton,
     InlineQueryResultArticle,
@@ -379,6 +407,8 @@ from botapi.types import (
     _RichTextAdapter,
     RichBlock,
     _RichBlockAdapter,
+    InputRichBlock,
+    _InputRichBlockAdapter,
     InlineQueryResult,
     _InlineQueryResultAdapter,
     InputMessageContent,
@@ -545,6 +575,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         entities: Optional[List[MessageEntity]] = None,
         link_preview_options: Optional[LinkPreviewOptions] = None,
@@ -568,6 +600,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "text": text,
             "parse_mode": parse_mode,
             "entities": entities,
@@ -634,7 +668,7 @@ class Methods:
         can't be found or forwarded, they are skipped.
         Service messages and messages with protected content can't
         be forwarded. Album grouping is kept for forwarded
-        messages. On success, an array of MessageId of
+        messages. On success, an Array of MessageId of
         the sent messages is returned.
 
         Reference: https://core.telegram.org/bots/api#forwardmessages
@@ -730,7 +764,7 @@ class Methods:
         method forwardMessages, but the copied messages don't have
         a link to the original message. Album grouping
         is kept for copied messages. On success, an
-        array of MessageId of the sent messages is
+        Array of MessageId of the sent messages is
         returned.
 
         Reference: https://core.telegram.org/bots/api#copymessages
@@ -755,6 +789,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -780,6 +816,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "photo": photo,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -804,6 +842,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -829,6 +869,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "live_photo": live_photo,
             "photo": photo,
             "caption": caption,
@@ -853,6 +895,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -886,6 +930,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "audio": audio,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -911,6 +957,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         thumbnail: Optional[Union[InputFile, str]] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
@@ -939,6 +987,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "document": document,
             "thumbnail": thumbnail,
             "caption": caption,
@@ -962,6 +1012,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         duration: Optional[int] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -998,6 +1050,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "video": video,
             "duration": duration,
             "width": width,
@@ -1028,6 +1082,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         duration: Optional[int] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -1061,6 +1117,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "animation": animation,
             "duration": duration,
             "width": width,
@@ -1088,6 +1146,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -1121,6 +1181,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "voice": voice,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -1143,6 +1205,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         duration: Optional[int] = None,
         length: Optional[int] = None,
         thumbnail: Optional[Union[InputFile, str]] = None,
@@ -1168,6 +1232,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "video_note": video_note,
             "duration": duration,
             "length": length,
@@ -1248,7 +1314,7 @@ class Methods:
         photos, live photos, videos, documents or audios as
         an album. Documents and audio files can be
         only grouped in an album with messages of
-        the same type. On success, an array of
+        the same type. On success, an Array of
         Message objects that were sent is returned.
 
         Reference: https://core.telegram.org/bots/api#sendmediagroup
@@ -1276,6 +1342,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         horizontal_accuracy: Optional[float] = None,
         live_period: Optional[int] = None,
         heading: Optional[int] = None,
@@ -1300,6 +1368,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "latitude": latitude,
             "longitude": longitude,
             "horizontal_accuracy": horizontal_accuracy,
@@ -1326,6 +1396,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         foursquare_id: Optional[str] = None,
         foursquare_type: Optional[str] = None,
         google_place_id: Optional[str] = None,
@@ -1350,6 +1422,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "latitude": latitude,
             "longitude": longitude,
             "title": title,
@@ -1376,6 +1450,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         last_name: Optional[str] = None,
         vcard: Optional[str] = None,
         disable_notification: Optional[bool] = None,
@@ -1398,6 +1474,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "phone_number": phone_number,
             "first_name": first_name,
             "last_name": last_name,
@@ -2444,7 +2522,7 @@ class Methods:
     ) -> Optional[int]:
         """
         Use this method to get the number of
-        members in a chat. Returns Int on success.
+        members in a chat. Returns Integer on success.
 
         Reference: https://core.telegram.org/bots/api#getchatmembercount
         """
@@ -2484,7 +2562,7 @@ class Methods:
         Use this method to get the last messages
         from the personal chat (i.e., the chat currently
         added to their profile) of a given user.
-        On success, an array of Message objects is
+        On success, an Array of Message objects is
         returned.
 
         Reference: https://core.telegram.org/bots/api#getuserpersonalchatmessages
@@ -4234,6 +4312,122 @@ class Methods:
         })
         return Poll.model_validate(response)
 
+    async def edit_ephemeral_message_text(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        receiver_user_id: int,
+        ephemeral_message_id: int,
+        text: str,
+        parse_mode: Optional[str] = "HTML",
+        entities: Optional[List[MessageEntity]] = None,
+        link_preview_options: Optional[LinkPreviewOptions] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to edit an ephemeral text
+        message. Note that it is not guaranteed that
+        the user will receive the message edit event,
+        especially if they are offline. On success, True
+        is returned.
+
+        Reference: https://core.telegram.org/bots/api#editephemeralmessagetext
+        """
+
+        response = await self._send_request("editEphemeralMessageText", {
+            "chat_id": chat_id,
+            "receiver_user_id": receiver_user_id,
+            "ephemeral_message_id": ephemeral_message_id,
+            "text": text,
+            "parse_mode": parse_mode,
+            "entities": entities,
+            "link_preview_options": link_preview_options,
+            "reply_markup": reply_markup,
+        })
+        return response
+
+    async def edit_ephemeral_message_media(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        receiver_user_id: int,
+        ephemeral_message_id: int,
+        media: InputMedia,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to edit the media of
+        an ephemeral message. Note that it is not
+        guaranteed that the user will receive the message
+        edit event, especially if they are offline. On
+        success, True is returned.
+
+        Reference: https://core.telegram.org/bots/api#editephemeralmessagemedia
+        """
+
+        response = await self._send_request("editEphemeralMessageMedia", {
+            "chat_id": chat_id,
+            "receiver_user_id": receiver_user_id,
+            "ephemeral_message_id": ephemeral_message_id,
+            "media": media,
+            "reply_markup": reply_markup,
+        })
+        return response
+
+    async def edit_ephemeral_message_caption(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        receiver_user_id: int,
+        ephemeral_message_id: int,
+        caption: Optional[str] = None,
+        parse_mode: Optional[str] = "HTML",
+        caption_entities: Optional[List[MessageEntity]] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to edit the caption of
+        an ephemeral message. Note that it is not
+        guaranteed that the user will receive the message
+        edit event, especially if they are offline. On
+        success, True is returned.
+
+        Reference: https://core.telegram.org/bots/api#editephemeralmessagecaption
+        """
+
+        response = await self._send_request("editEphemeralMessageCaption", {
+            "chat_id": chat_id,
+            "receiver_user_id": receiver_user_id,
+            "ephemeral_message_id": ephemeral_message_id,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "caption_entities": caption_entities,
+            "reply_markup": reply_markup,
+        })
+        return response
+
+    async def edit_ephemeral_message_reply_markup(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        receiver_user_id: int,
+        ephemeral_message_id: int,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to edit only the reply
+        markup of an ephemeral message. Note that it
+        is not guaranteed that the user will receive
+        the message edit event, especially if they are
+        offline. On success, True is returned.
+
+        Reference: https://core.telegram.org/bots/api#editephemeralmessagereplymarkup
+        """
+
+        response = await self._send_request("editEphemeralMessageReplyMarkup", {
+            "chat_id": chat_id,
+            "receiver_user_id": receiver_user_id,
+            "ephemeral_message_id": ephemeral_message_id,
+            "reply_markup": reply_markup,
+        })
+        return response
+
     async def approve_suggested_post(
         self: botapi.BotAPI,
         chat_id: int,
@@ -4332,6 +4526,28 @@ class Methods:
         })
         return response
 
+    async def delete_ephemeral_message(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        receiver_user_id: int,
+        ephemeral_message_id: int,
+    ) -> Optional[bool]:
+        """
+        Use this method to delete an ephemeral message.
+        Note that it is not guaranteed that the
+        user will receive the message deletion event, especially
+        if they are offline. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#deleteephemeralmessage
+        """
+
+        response = await self._send_request("deleteEphemeralMessage", {
+            "chat_id": chat_id,
+            "receiver_user_id": receiver_user_id,
+            "ephemeral_message_id": ephemeral_message_id,
+        })
+        return response
+
     async def delete_message_reaction(
         self: botapi.BotAPI,
         chat_id: Union[int, str],
@@ -4386,6 +4602,8 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        receiver_user_id: Optional[int] = None,
+        callback_query_id: Optional[str] = None,
         emoji: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
@@ -4408,6 +4626,8 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "receiver_user_id": receiver_user_id,
+            "callback_query_id": callback_query_id,
             "sticker": sticker,
             "emoji": emoji,
             "disable_notification": disable_notification,

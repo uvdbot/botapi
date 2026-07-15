@@ -41,7 +41,8 @@ class Update(BaseModel):
     chat_join_request: Optional[ChatJoinRequest] = Field(default=None)
     chat_boost: Optional[ChatBoostUpdated] = Field(default=None)
     removed_chat_boost: Optional[ChatBoostRemoved] = Field(default=None)
-    managed_bot: Optional[ManagedBotUpdated] = Field(default=None) 
+    managed_bot: Optional[ManagedBotUpdated] = Field(default=None)
+    subscription: Optional[BotSubscriptionUpdated] = Field(default=None) 
 
 class WebhookInfo(BaseModel):
     """
@@ -160,7 +161,8 @@ class ChatFullInfo(BaseModel):
     first_profile_audio: Optional[Audio] = Field(default=None)
     unique_gift_colors: Optional[UniqueGiftColors] = Field(default=None)
     paid_message_star_count: Optional[int] = Field(default=None)
-    guard_bot: Optional[User] = Field(default=None) 
+    guard_bot: Optional[User] = Field(default=None)
+    community: Optional[Community] = Field(default=None) 
 
 class Message(BaseModel):
     """
@@ -179,6 +181,8 @@ class Message(BaseModel):
     sender_boost_count: Optional[int] = Field(default=None)
     sender_business_bot: Optional[User] = Field(default=None)
     sender_tag: Optional[str] = Field(default=None)
+    receiver_user: Optional[User] = Field(default=None)
+    ephemeral_message_id: Optional[int] = Field(default=None)
     guest_query_id: Optional[str] = Field(default=None)
     business_connection_id: Optional[str] = Field(default=None)
     forward_origin: Optional[MessageOrigin] = Field(default=None)
@@ -258,6 +262,8 @@ class Message(BaseModel):
     chat_background_set: Optional[ChatBackground] = Field(default=None)
     checklist_tasks_done: Optional[ChecklistTasksDone] = Field(default=None)
     checklist_tasks_added: Optional[ChecklistTasksAdded] = Field(default=None)
+    community_chat_added: Optional[CommunityChatAdded] = Field(default=None)
+    community_chat_removed: Optional[CommunityChatRemoved] = Field(default=None)
     direct_message_price_changed: Optional[DirectMessagePriceChanged] = Field(default=None)
     forum_topic_created: Optional[ForumTopicCreated] = Field(default=None)
     forum_topic_edited: Optional[ForumTopicEdited] = Field(default=None)
@@ -370,8 +376,9 @@ class ReplyParameters(BaseModel):
     Reference: https://core.telegram.org/bots/api#replyparameters
     """
 
-    message_id: int
+    message_id: Optional[int] = Field(default=None)
     chat_id: Optional[Union[int, str]] = Field(default=None)
+    ephemeral_message_id: Optional[int] = Field(default=None)
     allow_sending_without_reply: Optional[bool] = Field(default=None)
     quote: Optional[str] = Field(default=None)
     quote_parse_mode: Optional[str] = Field(default=None)
@@ -815,29 +822,6 @@ class InputChecklist(BaseModel):
     others_can_add_tasks: Optional[bool] = Field(default=None)
     others_can_mark_tasks_as_done: Optional[bool] = Field(default=None) 
 
-class ChecklistTasksDone(BaseModel):
-    """
-    Describes a service message about checklist tasks marked
-    as done or not done.
-
-    Reference: https://core.telegram.org/bots/api#checklisttasksdone
-    """
-
-    checklist_message: Optional[Message] = Field(default=None)
-    marked_as_done_task_ids: Optional[List[int]] = Field(default=None)
-    marked_as_not_done_task_ids: Optional[List[int]] = Field(default=None) 
-
-class ChecklistTasksAdded(BaseModel):
-    """
-    Describes a service message about tasks added to
-    a checklist.
-
-    Reference: https://core.telegram.org/bots/api#checklisttasksadded
-    """
-
-    tasks: List[ChecklistTask]
-    checklist_message: Optional[Message] = Field(default=None) 
-
 class Location(BaseModel):
     """
     This object represents a point on the map.
@@ -923,6 +907,18 @@ class ManagedBotUpdated(BaseModel):
 
     user: User
     bot: User 
+
+class BotSubscriptionUpdated(BaseModel):
+    """
+    This object contains information about changes to a
+    user payment subscription toward the current bot.
+
+    Reference: https://core.telegram.org/bots/api#botsubscriptionupdated
+    """
+
+    user: User
+    invoice_payload: str
+    state: str 
 
 class PollOptionAdded(BaseModel):
     """
@@ -1055,6 +1051,50 @@ class ChatBackground(BaseModel):
     """
 
     type: BackgroundType 
+
+class ChecklistTasksDone(BaseModel):
+    """
+    Describes a service message about checklist tasks marked
+    as done or not done.
+
+    Reference: https://core.telegram.org/bots/api#checklisttasksdone
+    """
+
+    checklist_message: Optional[Message] = Field(default=None)
+    marked_as_done_task_ids: Optional[List[int]] = Field(default=None)
+    marked_as_not_done_task_ids: Optional[List[int]] = Field(default=None) 
+
+class ChecklistTasksAdded(BaseModel):
+    """
+    Describes a service message about tasks added to
+    a checklist.
+
+    Reference: https://core.telegram.org/bots/api#checklisttasksadded
+    """
+
+    tasks: List[ChecklistTask]
+    checklist_message: Optional[Message] = Field(default=None) 
+
+class CommunityChatAdded(BaseModel):
+    """
+    Describes a service message about a chat being
+    added to a community.
+
+    Reference: https://core.telegram.org/bots/api#communitychatadded
+    """
+
+    community: Community 
+
+class CommunityChatRemoved(BaseModel):
+    """
+    Describes a service message about a chat being
+    removed from a community. Currently holds no information.
+
+    Reference: https://core.telegram.org/bots/api#communitychatremoved
+    """
+
+    pass
+ 
 
 class ForumTopicCreated(BaseModel):
     """
@@ -1716,6 +1756,16 @@ class ForceReply(BaseModel):
     force_reply: bool
     input_field_placeholder: Optional[str] = Field(default=None)
     selective: Optional[bool] = Field(default=None) 
+
+class Community(BaseModel):
+    """
+    Represents a community (a group of chats).
+
+    Reference: https://core.telegram.org/bots/api#community
+    """
+
+    id: int
+    name: str 
 
 class ChatPhoto(BaseModel):
     """
@@ -2468,7 +2518,8 @@ class BotCommand(BaseModel):
     """
 
     command: str
-    description: str 
+    description: str
+    is_ephemeral: Optional[bool] = Field(default=None) 
 
 class BotCommandScopeDefault(BaseModel):
     """
@@ -2970,6 +3021,20 @@ class InputMediaVideo(BaseModel):
     supports_streaming: Optional[bool] = Field(default=None)
     has_spoiler: Optional[bool] = Field(default=None) 
 
+class InputMediaVoiceNote(BaseModel):
+    """
+    Represents a voice message file to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputmediavoicenote
+    """
+
+    type: Literal["voice_note"] = "voice_note"
+    media: str
+    caption: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
+    caption_entities: Optional[List[MessageEntity]] = Field(default=None)
+    duration: Optional[int] = Field(default=None) 
+
 class InputFile(BaseModel):
     """
     This object represents the contents of a file
@@ -3142,16 +3207,29 @@ class RichMessage(BaseModel):
 class InputRichMessage(BaseModel):
     """
     Describes a rich message to be sent. Exactly
-    one of the fields html or markdown must
-    be used.
+    one of the fields html, markdown, or blocks
+    must be used.
 
     Reference: https://core.telegram.org/bots/api#inputrichmessage
     """
 
+    blocks: Optional[List[InputRichBlock]] = Field(default=None)
     html: Optional[str] = Field(default=None)
     markdown: Optional[str] = Field(default=None)
+    media: Optional[List[InputRichMessageMedia]] = Field(default=None)
     is_rtl: Optional[bool] = Field(default=None)
     skip_entity_detection: Optional[bool] = Field(default=None) 
+
+class InputRichMessageMedia(BaseModel):
+    """
+    Describes a media element embedded in an outgoing
+    rich message.
+
+    Reference: https://core.telegram.org/bots/api#inputrichmessagemedia
+    """
+
+    id: str
+    media: Union[InputMediaAnimation, InputMediaAudio, InputMediaPhoto, InputMediaVideo, InputMediaVoiceNote] 
 
 class RichTextBold(BaseModel):
     """
@@ -3703,10 +3781,278 @@ class RichBlockThinking(BaseModel):
     the custom HTML tag <tg-thinking>. The block may
     be used only in sendRichMessageDraft, therefore it can't
     be received in messages. See https://t.me/addemoji/AIActions for examples
-    of custom emoji, which are recommended for usage
+    of custom emoji that are recommended for usage
     in the block.
 
     Reference: https://core.telegram.org/bots/api#richblockthinking
+    """
+
+    type: Literal["thinking"] = "thinking"
+    text: RichText 
+
+class InputRichBlockListItem(BaseModel):
+    """
+    An item of a list to be sent.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblocklistitem
+    """
+
+    blocks: List[InputRichBlock]
+    has_checkbox: Optional[bool] = Field(default=None)
+    is_checked: Optional[bool] = Field(default=None)
+    value: Optional[int] = Field(default=None)
+    type: Optional[str] = Field(default=None) 
+
+class InputRichBlockParagraph(BaseModel):
+    """
+    A text paragraph, corresponding to the HTML tag
+    <p>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockparagraph
+    """
+
+    type: Literal["paragraph"] = "paragraph"
+    text: RichText 
+
+class InputRichBlockSectionHeading(BaseModel):
+    """
+    A section heading, corresponding to the HTML tags
+    <h1>, <h2>, <h3>, <h4>, <h5>, or <h6>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblocksectionheading
+    """
+
+    type: Literal["heading"] = "heading"
+    text: RichText
+    size: int 
+
+class InputRichBlockPreformatted(BaseModel):
+    """
+    A preformatted text block, corresponding to the nested
+    HTML tags <pre> and <code>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockpreformatted
+    """
+
+    type: Literal["pre"] = "pre"
+    text: RichText
+    language: Optional[str] = Field(default=None) 
+
+class InputRichBlockFooter(BaseModel):
+    """
+    A footer, corresponding to the HTML tag <footer>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockfooter
+    """
+
+    type: Literal["footer"] = "footer"
+    text: RichText 
+
+class InputRichBlockDivider(BaseModel):
+    """
+    A divider, corresponding to the HTML tag <hr/>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockdivider
+    """
+
+    type: Literal["divider"] = "divider" 
+
+class InputRichBlockMathematicalExpression(BaseModel):
+    """
+    A block with a mathematical expression in LaTeX
+    format, corresponding to the custom HTML tag <tg-math-block>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockmathematicalexpression
+    """
+
+    type: Literal["mathematical_expression"] = "mathematical_expression"
+    expression: str 
+
+class InputRichBlockAnchor(BaseModel):
+    """
+    A block with an anchor, corresponding to the
+    HTML tag <a> with the attribute name.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockanchor
+    """
+
+    type: Literal["anchor"] = "anchor"
+    name: str 
+
+class InputRichBlockList(BaseModel):
+    """
+    A list of blocks, corresponding to the HTML
+    tag <ul> or <ol> with multiple nested tags
+    <li>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblocklist
+    """
+
+    type: Literal["list"] = "list"
+    items: List[InputRichBlockListItem] 
+
+class InputRichBlockBlockQuotation(BaseModel):
+    """
+    A block quotation, corresponding to the HTML tag
+    <blockquote>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockblockquotation
+    """
+
+    type: Literal["blockquote"] = "blockquote"
+    blocks: List[InputRichBlock]
+    credit: Optional[RichText] = Field(default=None) 
+
+class InputRichBlockPullQuotation(BaseModel):
+    """
+    A quotation with centered text, loosely corresponding to
+    the HTML tag <aside>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockpullquotation
+    """
+
+    type: Literal["pullquote"] = "pullquote"
+    text: RichText
+    credit: Optional[RichText] = Field(default=None) 
+
+class InputRichBlockCollage(BaseModel):
+    """
+    A collage, corresponding to the custom HTML tag
+    <tg-collage>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockcollage
+    """
+
+    type: Literal["collage"] = "collage"
+    blocks: List[InputRichBlock]
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockSlideshow(BaseModel):
+    """
+    A slideshow, corresponding to the custom HTML tag
+    <tg-slideshow>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockslideshow
+    """
+
+    type: Literal["slideshow"] = "slideshow"
+    blocks: List[InputRichBlock]
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockTable(BaseModel):
+    """
+    A table, corresponding to the HTML tag <table>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblocktable
+    """
+
+    type: Literal["table"] = "table"
+    cells: List[List[RichBlockTableCell]]
+    is_bordered: Optional[bool] = Field(default=None)
+    is_striped: Optional[bool] = Field(default=None)
+    caption: Optional[RichText] = Field(default=None) 
+
+class InputRichBlockDetails(BaseModel):
+    """
+    An expandable block for details disclosure, corresponding to
+    the HTML tag <details>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockdetails
+    """
+
+    type: Literal["details"] = "details"
+    summary: RichText
+    blocks: List[InputRichBlock]
+    is_open: Optional[bool] = Field(default=None) 
+
+class InputRichBlockMap(BaseModel):
+    """
+    A block with a map, corresponding to the
+    custom HTML tag <tg-map>. The map's width and
+    height must not exceed 10000 in total. The
+    width and height ratio must be at most
+    20.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockmap
+    """
+
+    type: Literal["map"] = "map"
+    location: Location
+    zoom: int
+    width: int
+    height: int
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockAnimation(BaseModel):
+    """
+    A block with an animation, corresponding to the
+    HTML tag <video>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockanimation
+    """
+
+    type: Literal["animation"] = "animation"
+    animation: InputMediaAnimation
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockAudio(BaseModel):
+    """
+    A block with a music file, corresponding to
+    the HTML tag <audio>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockaudio
+    """
+
+    type: Literal["audio"] = "audio"
+    audio: InputMediaAudio
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockPhoto(BaseModel):
+    """
+    A block with a photo, corresponding to the
+    HTML tag <img>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockphoto
+    """
+
+    type: Literal["photo"] = "photo"
+    photo: InputMediaPhoto
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockVideo(BaseModel):
+    """
+    A block with a video, corresponding to the
+    HTML tag <video>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockvideo
+    """
+
+    type: Literal["video"] = "video"
+    video: InputMediaVideo
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockVoiceNote(BaseModel):
+    """
+    A block with a voice note, corresponding to
+    the HTML tag <audio>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockvoicenote
+    """
+
+    type: Literal["voice_note"] = "voice_note"
+    voice_note: InputMediaVoiceNote
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockThinking(BaseModel):
+    """
+    A block with a “Thinking…” placeholder, corresponding to
+    the custom HTML tag <tg-thinking>. The block may
+    be used only in sendRichMessageDraft, therefore it can't
+    be received in messages. See https://t.me/addemoji/AIActions for examples
+    of custom emoji that are recommended for usage
+    in the block.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockthinking
     """
 
     type: Literal["thinking"] = "thinking"
@@ -5037,6 +5383,31 @@ RichBlock = Union[
 ]
 _RichBlockAdapter = TypeAdapter(RichBlock) 
 
+InputRichBlock = Union[
+    InputRichBlockParagraph,
+    InputRichBlockSectionHeading,
+    InputRichBlockPreformatted,
+    InputRichBlockFooter,
+    InputRichBlockDivider,
+    InputRichBlockMathematicalExpression,
+    InputRichBlockAnchor,
+    InputRichBlockList,
+    InputRichBlockBlockQuotation,
+    InputRichBlockPullQuotation,
+    InputRichBlockCollage,
+    InputRichBlockSlideshow,
+    InputRichBlockTable,
+    InputRichBlockDetails,
+    InputRichBlockMap,
+    InputRichBlockAnimation,
+    InputRichBlockAudio,
+    InputRichBlockPhoto,
+    InputRichBlockVideo,
+    InputRichBlockVoiceNote,
+    InputRichBlockThinking,
+]
+_InputRichBlockAdapter = TypeAdapter(InputRichBlock) 
+
 InlineQueryResult = Union[
     InlineQueryResultCachedAudio,
     InlineQueryResultCachedDocument,
@@ -5144,8 +5515,6 @@ ChecklistTask.model_rebuild()
 Checklist.model_rebuild()
 InputChecklistTask.model_rebuild()
 InputChecklist.model_rebuild()
-ChecklistTasksDone.model_rebuild()
-ChecklistTasksAdded.model_rebuild()
 Location.model_rebuild()
 Venue.model_rebuild()
 WebAppData.model_rebuild()
@@ -5153,6 +5522,7 @@ ProximityAlertTriggered.model_rebuild()
 MessageAutoDeleteTimerChanged.model_rebuild()
 ManagedBotCreated.model_rebuild()
 ManagedBotUpdated.model_rebuild()
+BotSubscriptionUpdated.model_rebuild()
 PollOptionAdded.model_rebuild()
 PollOptionDeleted.model_rebuild()
 ChatBoostAdded.model_rebuild()
@@ -5164,6 +5534,10 @@ BackgroundTypeWallpaper.model_rebuild()
 BackgroundTypePattern.model_rebuild()
 BackgroundTypeChatTheme.model_rebuild()
 ChatBackground.model_rebuild()
+ChecklistTasksDone.model_rebuild()
+ChecklistTasksAdded.model_rebuild()
+CommunityChatAdded.model_rebuild()
+CommunityChatRemoved.model_rebuild()
 ForumTopicCreated.model_rebuild()
 ForumTopicClosed.model_rebuild()
 ForumTopicEdited.model_rebuild()
@@ -5212,6 +5586,7 @@ SwitchInlineQueryChosenChat.model_rebuild()
 CopyTextButton.model_rebuild()
 CallbackQuery.model_rebuild()
 ForceReply.model_rebuild()
+Community.model_rebuild()
 ChatPhoto.model_rebuild()
 ChatInviteLink.model_rebuild()
 ChatAdministratorRights.model_rebuild()
@@ -5304,6 +5679,7 @@ InputMediaPhoto.model_rebuild()
 InputMediaSticker.model_rebuild()
 InputMediaVenue.model_rebuild()
 InputMediaVideo.model_rebuild()
+InputMediaVoiceNote.model_rebuild()
 InputFile.model_rebuild()
 InputPaidMediaLivePhoto.model_rebuild()
 InputPaidMediaPhoto.model_rebuild()
@@ -5318,6 +5694,7 @@ MaskPosition.model_rebuild()
 InputSticker.model_rebuild()
 RichMessage.model_rebuild()
 InputRichMessage.model_rebuild()
+InputRichMessageMedia.model_rebuild()
 RichTextBold.model_rebuild()
 RichTextItalic.model_rebuild()
 RichTextUnderline.model_rebuild()
@@ -5367,6 +5744,28 @@ RichBlockPhoto.model_rebuild()
 RichBlockVideo.model_rebuild()
 RichBlockVoiceNote.model_rebuild()
 RichBlockThinking.model_rebuild()
+InputRichBlockListItem.model_rebuild()
+InputRichBlockParagraph.model_rebuild()
+InputRichBlockSectionHeading.model_rebuild()
+InputRichBlockPreformatted.model_rebuild()
+InputRichBlockFooter.model_rebuild()
+InputRichBlockDivider.model_rebuild()
+InputRichBlockMathematicalExpression.model_rebuild()
+InputRichBlockAnchor.model_rebuild()
+InputRichBlockList.model_rebuild()
+InputRichBlockBlockQuotation.model_rebuild()
+InputRichBlockPullQuotation.model_rebuild()
+InputRichBlockCollage.model_rebuild()
+InputRichBlockSlideshow.model_rebuild()
+InputRichBlockTable.model_rebuild()
+InputRichBlockDetails.model_rebuild()
+InputRichBlockMap.model_rebuild()
+InputRichBlockAnimation.model_rebuild()
+InputRichBlockAudio.model_rebuild()
+InputRichBlockPhoto.model_rebuild()
+InputRichBlockVideo.model_rebuild()
+InputRichBlockVoiceNote.model_rebuild()
+InputRichBlockThinking.model_rebuild()
 InlineQuery.model_rebuild()
 InlineQueryResultsButton.model_rebuild()
 InlineQueryResultArticle.model_rebuild()
