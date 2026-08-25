@@ -42,7 +42,8 @@ class Update(BaseModel):
     chat_boost: Optional[ChatBoostUpdated] = Field(default=None)
     removed_chat_boost: Optional[ChatBoostRemoved] = Field(default=None)
     managed_bot: Optional[ManagedBotUpdated] = Field(default=None)
-    subscription: Optional[BotSubscriptionUpdated] = Field(default=None) 
+    subscription: Optional[BotSubscriptionUpdated] = Field(default=None)
+    stopped_message_generation: Optional[MessageGenerationStopped] = Field(default=None) 
 
 class WebhookInfo(BaseModel):
     """
@@ -263,6 +264,7 @@ class Message(BaseModel):
     checklist_tasks_done: Optional[ChecklistTasksDone] = Field(default=None)
     checklist_tasks_added: Optional[ChecklistTasksAdded] = Field(default=None)
     community_chat_added: Optional[CommunityChatAdded] = Field(default=None)
+    community_chat_joined: Optional[CommunityChatJoined] = Field(default=None)
     community_chat_removed: Optional[CommunityChatRemoved] = Field(default=None)
     direct_message_price_changed: Optional[DirectMessagePriceChanged] = Field(default=None)
     forum_topic_created: Optional[ForumTopicCreated] = Field(default=None)
@@ -386,6 +388,18 @@ class ReplyParameters(BaseModel):
     quote_position: Optional[int] = Field(default=None)
     checklist_task_id: Optional[int] = Field(default=None)
     poll_option_id: Optional[str] = Field(default=None) 
+
+class EphemeralMessageParameters(BaseModel):
+    """
+    This object describes the origin of a message.
+    It can be one of
+
+    Reference: https://core.telegram.org/bots/api#ephemeralmessageparameters
+    """
+
+    receiver_user_id: int
+    callback_query_id: Optional[str] = Field(default=None)
+    replace_callback_query_message: Optional[bool] = Field(default=None) 
 
 class MessageOriginUser(BaseModel):
     """
@@ -566,8 +580,7 @@ class Video(BaseModel):
 
 class VideoNote(BaseModel):
     """
-    This object represents a video message (available in
-    Telegram apps as of v.4.0).
+    This object represents a video message.
 
     Reference: https://core.telegram.org/bots/api#videonote
     """
@@ -920,6 +933,18 @@ class BotSubscriptionUpdated(BaseModel):
     invoice_payload: str
     state: str 
 
+class MessageGenerationStopped(BaseModel):
+    """
+    This object describes an update about a user
+    stopping message generation.
+
+    Reference: https://core.telegram.org/bots/api#messagegenerationstopped
+    """
+
+    chat: Chat
+    draft_id: int
+    message_thread_id: Optional[int] = Field(default=None) 
+
 class PollOptionAdded(BaseModel):
     """
     Describes a service message about an option added
@@ -1077,18 +1102,29 @@ class ChecklistTasksAdded(BaseModel):
 
 class CommunityChatAdded(BaseModel):
     """
-    Describes a service message about a chat being
-    added to a community.
+    Describes a service message about a chat or
+    a bot being added to a community.
 
     Reference: https://core.telegram.org/bots/api#communitychatadded
     """
 
     community: Community 
 
-class CommunityChatRemoved(BaseModel):
+class CommunityChatJoined(BaseModel):
     """
     Describes a service message about a chat being
-    removed from a community. Currently holds no information.
+    joined by a user from a community.
+
+    Reference: https://core.telegram.org/bots/api#communitychatjoined
+    """
+
+    community: Community 
+
+class CommunityChatRemoved(BaseModel):
+    """
+    Describes a service message about a chat or
+    a bot being removed from a community. Currently
+    holds no information.
 
     Reference: https://core.telegram.org/bots/api#communitychatremoved
     """
@@ -1528,7 +1564,8 @@ class ReplyKeyboardMarkup(BaseModel):
     resize_keyboard: Optional[bool] = Field(default=None)
     one_time_keyboard: Optional[bool] = Field(default=None)
     input_field_placeholder: Optional[str] = Field(default=None)
-    selective: Optional[bool] = Field(default=None) 
+    selective: Optional[bool] = Field(default=None)
+    force_reply: Optional[bool] = Field(default=None) 
 
 class KeyboardButton(BaseModel):
     """
@@ -1647,7 +1684,8 @@ class InlineKeyboardMarkup(BaseModel):
     Reference: https://core.telegram.org/bots/api#inlinekeyboardmarkup
     """
 
-    inline_keyboard: List[List[InlineKeyboardButton]] 
+    inline_keyboard: List[List[InlineKeyboardButton]]
+    force_reply: Optional[bool] = Field(default=None) 
 
 class InlineKeyboardButton(BaseModel):
     """
@@ -1671,17 +1709,18 @@ class InlineKeyboardButton(BaseModel):
     switch_inline_query_chosen_chat: Optional[SwitchInlineQueryChosenChat] = Field(default=None)
     copy_text: Optional[CopyTextButton] = Field(default=None)
     callback_game: Optional[CallbackGame] = Field(default=None)
-    pay: Optional[bool] = Field(default=None) 
+    pay: Optional[bool] = Field(default=None)
+    disabled: Optional[DisabledButton] = Field(default=None) 
 
 class LoginUrl(BaseModel):
     """
     This object represents a parameter of the inline
     keyboard button used to automatically authorize a user.
-    Serves as a great replacement for the Telegram
-    Login Widget when the user is coming from
-    Telegram. All the user needs to do is
-    tap/click a button and confirm that they want
-    to log in:
+    It serves as a great replacement for the
+    Telegram Login Widget when the user is coming
+    from Telegram. All the user needs to do
+    is tap/click a button and confirm that they
+    want to log in:
 
     Reference: https://core.telegram.org/bots/api#loginurl
     """
@@ -1715,6 +1754,17 @@ class CopyTextButton(BaseModel):
     """
 
     text: str 
+
+class DisabledButton(BaseModel):
+    """
+    This object represents a disabled button which does
+    nothing. Currently holds no information.
+
+    Reference: https://core.telegram.org/bots/api#disabledbutton
+    """
+
+    pass
+ 
 
 class CallbackQuery(BaseModel):
     """
@@ -1817,6 +1867,7 @@ class ChatAdministratorRights(BaseModel):
     can_post_stories: bool
     can_edit_stories: bool
     can_delete_stories: bool
+    can_send_welcome_messages: bool
     can_post_messages: Optional[bool] = Field(default=None)
     can_edit_messages: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
@@ -1876,6 +1927,7 @@ class ChatMemberAdministrator(BaseModel):
     can_post_stories: bool
     can_edit_stories: bool
     can_delete_stories: bool
+    can_send_welcome_messages: bool
     can_post_messages: Optional[bool] = Field(default=None)
     can_edit_messages: Optional[bool] = Field(default=None)
     can_pin_messages: Optional[bool] = Field(default=None)
@@ -2414,6 +2466,9 @@ class UniqueGiftInfo(BaseModel):
 
     gift: UniqueGift
     origin: str
+    text: Optional[str] = Field(default=None)
+    entities: Optional[List[MessageEntity]] = Field(default=None)
+    is_private: Optional[bool] = Field(default=None)
     last_resale_currency: Optional[str] = Field(default=None)
     last_resale_amount: Optional[int] = Field(default=None)
     owned_gift_id: Optional[str] = Field(default=None)
@@ -3229,7 +3284,29 @@ class InputRichMessageMedia(BaseModel):
     """
 
     id: str
-    media: Union[InputMediaAnimation, InputMediaAudio, InputMediaPhoto, InputMediaVideo, InputMediaVoiceNote] 
+    media: Union[InputMediaAnimation, InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo, InputMediaVoiceNote] 
+
+class RichMessageButton(BaseModel):
+    """
+    This object represents a button in a RichMessage.
+    Exactly one of the fields other than text
+    and style must be used to specify the
+    type of the button.
+
+    Reference: https://core.telegram.org/bots/api#richmessagebutton
+    """
+
+    text: RichText
+    style: Optional[str] = Field(default=None)
+    url: Optional[str] = Field(default=None)
+    callback_data: Optional[str] = Field(default=None)
+    web_app: Optional[WebAppInfo] = Field(default=None)
+    login_url: Optional[LoginUrl] = Field(default=None)
+    switch_inline_query: Optional[str] = Field(default=None)
+    switch_inline_query_current_chat: Optional[str] = Field(default=None)
+    switch_inline_query_chosen_chat: Optional[SwitchInlineQueryChosenChat] = Field(default=None)
+    copy_text: Optional[CopyTextButton] = Field(default=None)
+    disabled: Optional[DisabledButton] = Field(default=None) 
 
 class RichTextBold(BaseModel):
     """
@@ -3454,6 +3531,16 @@ class RichTextBotCommand(BaseModel):
     text: RichText
     bot_command: str 
 
+class RichTextButton(BaseModel):
+    """
+    A button.
+
+    Reference: https://core.telegram.org/bots/api#richtextbutton
+    """
+
+    type: Literal["button"] = "button"
+    button: RichMessageButton 
+
 class RichTextAnchor(BaseModel):
     """
     An anchor.
@@ -3635,6 +3722,18 @@ class RichBlockBlockQuotation(BaseModel):
     blocks: List[RichBlock]
     credit: Optional[RichText] = Field(default=None) 
 
+class RichBlockExpandableBlockQuotation(BaseModel):
+    """
+    A block quotation, corresponding to the HTML tag
+    <blockquote> with custom attribute "collapsed".
+
+    Reference: https://core.telegram.org/bots/api#richblockexpandableblockquotation
+    """
+
+    type: Literal["expandable_blockquote"] = "expandable_blockquote"
+    text: RichText
+    credit: Optional[RichText] = Field(default=None) 
+
 class RichBlockPullQuotation(BaseModel):
     """
     A quotation with centered text, loosely corresponding to
@@ -3682,6 +3781,7 @@ class RichBlockTable(BaseModel):
     cells: List[List[RichBlockTableCell]]
     is_bordered: Optional[bool] = Field(default=None)
     is_striped: Optional[bool] = Field(default=None)
+    is_compact: Optional[bool] = Field(default=None)
     caption: Optional[RichText] = Field(default=None) 
 
 class RichBlockDetails(BaseModel):
@@ -3712,6 +3812,19 @@ class RichBlockMap(BaseModel):
     height: int
     caption: Optional[RichBlockCaption] = Field(default=None) 
 
+class RichBlockButtons(BaseModel):
+    """
+    A block containing a list of buttons that
+    are shown in one row, corresponding to the
+    custom HTML tag <tg-button-row>.
+
+    Reference: https://core.telegram.org/bots/api#richblockbuttons
+    """
+
+    type: Literal["buttons"] = "buttons"
+    buttons: List[RichMessageButton]
+    align: Optional[str] = Field(default=None) 
+
 class RichBlockAnimation(BaseModel):
     """
     A block with an animation, corresponding to the
@@ -3735,6 +3848,18 @@ class RichBlockAudio(BaseModel):
 
     type: Literal["audio"] = "audio"
     audio: Audio
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class RichBlockDocument(BaseModel):
+    """
+    A block with a general file, corresponding to
+    the custom HTML tag <tg-document>.
+
+    Reference: https://core.telegram.org/bots/api#richblockdocument
+    """
+
+    type: Literal["document"] = "document"
+    document: Document
     caption: Optional[RichBlockCaption] = Field(default=None) 
 
 class RichBlockPhoto(BaseModel):
@@ -3903,6 +4028,18 @@ class InputRichBlockBlockQuotation(BaseModel):
     blocks: List[InputRichBlock]
     credit: Optional[RichText] = Field(default=None) 
 
+class InputRichBlockExpandableBlockQuotation(BaseModel):
+    """
+    A block quotation, corresponding to the HTML tag
+    <blockquote> with custom attribute "collapsed".
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockexpandableblockquotation
+    """
+
+    type: Literal["expandable_blockquote"] = "expandable_blockquote"
+    text: RichText
+    credit: Optional[RichText] = Field(default=None) 
+
 class InputRichBlockPullQuotation(BaseModel):
     """
     A quotation with centered text, loosely corresponding to
@@ -3950,6 +4087,7 @@ class InputRichBlockTable(BaseModel):
     cells: List[List[RichBlockTableCell]]
     is_bordered: Optional[bool] = Field(default=None)
     is_striped: Optional[bool] = Field(default=None)
+    is_compact: Optional[bool] = Field(default=None)
     caption: Optional[RichText] = Field(default=None) 
 
 class InputRichBlockDetails(BaseModel):
@@ -3978,10 +4116,23 @@ class InputRichBlockMap(BaseModel):
 
     type: Literal["map"] = "map"
     location: Location
-    zoom: int
-    width: int
-    height: int
+    zoom: Optional[int] = Field(default=None)
+    width: Optional[int] = Field(default=None)
+    height: Optional[int] = Field(default=None)
     caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockButtons(BaseModel):
+    """
+    A block containing a list of buttons that
+    are shown in one row, corresponding to the
+    custom HTML tag <tg-button-row>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockbuttons
+    """
+
+    type: Literal["buttons"] = "buttons"
+    buttons: List[RichMessageButton]
+    align: Optional[str] = Field(default=None) 
 
 class InputRichBlockAnimation(BaseModel):
     """
@@ -4005,6 +4156,18 @@ class InputRichBlockAudio(BaseModel):
 
     type: Literal["audio"] = "audio"
     audio: InputMediaAudio
+    caption: Optional[RichBlockCaption] = Field(default=None) 
+
+class InputRichBlockDocument(BaseModel):
+    """
+    A block with a general file, corresponding to
+    the custom HTML tag <tg-document>.
+
+    Reference: https://core.telegram.org/bots/api#inputrichblockdocument
+    """
+
+    type: Literal["document"] = "document"
+    document: InputMediaDocument
     caption: Optional[RichBlockCaption] = Field(default=None) 
 
 class InputRichBlockPhoto(BaseModel):
@@ -5351,6 +5514,7 @@ RichText = Union[
     RichTextHashtag,
     RichTextCashtag,
     RichTextBotCommand,
+    RichTextButton,
     RichTextAnchor,
     RichTextAnchorLink,
     RichTextReference,
@@ -5368,14 +5532,17 @@ RichBlock = Union[
     RichBlockAnchor,
     RichBlockList,
     RichBlockBlockQuotation,
+    RichBlockExpandableBlockQuotation,
     RichBlockPullQuotation,
     RichBlockCollage,
     RichBlockSlideshow,
     RichBlockTable,
     RichBlockDetails,
     RichBlockMap,
+    RichBlockButtons,
     RichBlockAnimation,
     RichBlockAudio,
+    RichBlockDocument,
     RichBlockPhoto,
     RichBlockVideo,
     RichBlockVoiceNote,
@@ -5393,14 +5560,17 @@ InputRichBlock = Union[
     InputRichBlockAnchor,
     InputRichBlockList,
     InputRichBlockBlockQuotation,
+    InputRichBlockExpandableBlockQuotation,
     InputRichBlockPullQuotation,
     InputRichBlockCollage,
     InputRichBlockSlideshow,
     InputRichBlockTable,
     InputRichBlockDetails,
     InputRichBlockMap,
+    InputRichBlockButtons,
     InputRichBlockAnimation,
     InputRichBlockAudio,
+    InputRichBlockDocument,
     InputRichBlockPhoto,
     InputRichBlockVideo,
     InputRichBlockVoiceNote,
@@ -5484,6 +5654,7 @@ MessageEntity.model_rebuild()
 TextQuote.model_rebuild()
 ExternalReplyInfo.model_rebuild()
 ReplyParameters.model_rebuild()
+EphemeralMessageParameters.model_rebuild()
 MessageOriginUser.model_rebuild()
 MessageOriginHiddenUser.model_rebuild()
 MessageOriginChat.model_rebuild()
@@ -5523,6 +5694,7 @@ MessageAutoDeleteTimerChanged.model_rebuild()
 ManagedBotCreated.model_rebuild()
 ManagedBotUpdated.model_rebuild()
 BotSubscriptionUpdated.model_rebuild()
+MessageGenerationStopped.model_rebuild()
 PollOptionAdded.model_rebuild()
 PollOptionDeleted.model_rebuild()
 ChatBoostAdded.model_rebuild()
@@ -5537,6 +5709,7 @@ ChatBackground.model_rebuild()
 ChecklistTasksDone.model_rebuild()
 ChecklistTasksAdded.model_rebuild()
 CommunityChatAdded.model_rebuild()
+CommunityChatJoined.model_rebuild()
 CommunityChatRemoved.model_rebuild()
 ForumTopicCreated.model_rebuild()
 ForumTopicClosed.model_rebuild()
@@ -5584,6 +5757,7 @@ InlineKeyboardButton.model_rebuild()
 LoginUrl.model_rebuild()
 SwitchInlineQueryChosenChat.model_rebuild()
 CopyTextButton.model_rebuild()
+DisabledButton.model_rebuild()
 CallbackQuery.model_rebuild()
 ForceReply.model_rebuild()
 Community.model_rebuild()
@@ -5695,6 +5869,7 @@ InputSticker.model_rebuild()
 RichMessage.model_rebuild()
 InputRichMessage.model_rebuild()
 InputRichMessageMedia.model_rebuild()
+RichMessageButton.model_rebuild()
 RichTextBold.model_rebuild()
 RichTextItalic.model_rebuild()
 RichTextUnderline.model_rebuild()
@@ -5716,6 +5891,7 @@ RichTextMention.model_rebuild()
 RichTextHashtag.model_rebuild()
 RichTextCashtag.model_rebuild()
 RichTextBotCommand.model_rebuild()
+RichTextButton.model_rebuild()
 RichTextAnchor.model_rebuild()
 RichTextAnchorLink.model_rebuild()
 RichTextReference.model_rebuild()
@@ -5732,14 +5908,17 @@ RichBlockMathematicalExpression.model_rebuild()
 RichBlockAnchor.model_rebuild()
 RichBlockList.model_rebuild()
 RichBlockBlockQuotation.model_rebuild()
+RichBlockExpandableBlockQuotation.model_rebuild()
 RichBlockPullQuotation.model_rebuild()
 RichBlockCollage.model_rebuild()
 RichBlockSlideshow.model_rebuild()
 RichBlockTable.model_rebuild()
 RichBlockDetails.model_rebuild()
 RichBlockMap.model_rebuild()
+RichBlockButtons.model_rebuild()
 RichBlockAnimation.model_rebuild()
 RichBlockAudio.model_rebuild()
+RichBlockDocument.model_rebuild()
 RichBlockPhoto.model_rebuild()
 RichBlockVideo.model_rebuild()
 RichBlockVoiceNote.model_rebuild()
@@ -5754,14 +5933,17 @@ InputRichBlockMathematicalExpression.model_rebuild()
 InputRichBlockAnchor.model_rebuild()
 InputRichBlockList.model_rebuild()
 InputRichBlockBlockQuotation.model_rebuild()
+InputRichBlockExpandableBlockQuotation.model_rebuild()
 InputRichBlockPullQuotation.model_rebuild()
 InputRichBlockCollage.model_rebuild()
 InputRichBlockSlideshow.model_rebuild()
 InputRichBlockTable.model_rebuild()
 InputRichBlockDetails.model_rebuild()
 InputRichBlockMap.model_rebuild()
+InputRichBlockButtons.model_rebuild()
 InputRichBlockAnimation.model_rebuild()
 InputRichBlockAudio.model_rebuild()
+InputRichBlockDocument.model_rebuild()
 InputRichBlockPhoto.model_rebuild()
 InputRichBlockVideo.model_rebuild()
 InputRichBlockVoiceNote.model_rebuild()

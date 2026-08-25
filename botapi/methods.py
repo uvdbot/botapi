@@ -19,6 +19,7 @@ from botapi.types import (
     TextQuote,
     ExternalReplyInfo,
     ReplyParameters,
+    EphemeralMessageParameters,
     MessageOriginUser,
     MessageOriginHiddenUser,
     MessageOriginChat,
@@ -58,6 +59,7 @@ from botapi.types import (
     ManagedBotCreated,
     ManagedBotUpdated,
     BotSubscriptionUpdated,
+    MessageGenerationStopped,
     PollOptionAdded,
     PollOptionDeleted,
     ChatBoostAdded,
@@ -72,6 +74,7 @@ from botapi.types import (
     ChecklistTasksDone,
     ChecklistTasksAdded,
     CommunityChatAdded,
+    CommunityChatJoined,
     CommunityChatRemoved,
     ForumTopicCreated,
     ForumTopicClosed,
@@ -119,6 +122,7 @@ from botapi.types import (
     LoginUrl,
     SwitchInlineQueryChosenChat,
     CopyTextButton,
+    DisabledButton,
     CallbackQuery,
     ForceReply,
     Community,
@@ -230,6 +234,7 @@ from botapi.types import (
     RichMessage,
     InputRichMessage,
     InputRichMessageMedia,
+    RichMessageButton,
     RichTextBold,
     RichTextItalic,
     RichTextUnderline,
@@ -251,6 +256,7 @@ from botapi.types import (
     RichTextHashtag,
     RichTextCashtag,
     RichTextBotCommand,
+    RichTextButton,
     RichTextAnchor,
     RichTextAnchorLink,
     RichTextReference,
@@ -267,14 +273,17 @@ from botapi.types import (
     RichBlockAnchor,
     RichBlockList,
     RichBlockBlockQuotation,
+    RichBlockExpandableBlockQuotation,
     RichBlockPullQuotation,
     RichBlockCollage,
     RichBlockSlideshow,
     RichBlockTable,
     RichBlockDetails,
     RichBlockMap,
+    RichBlockButtons,
     RichBlockAnimation,
     RichBlockAudio,
+    RichBlockDocument,
     RichBlockPhoto,
     RichBlockVideo,
     RichBlockVoiceNote,
@@ -289,14 +298,17 @@ from botapi.types import (
     InputRichBlockAnchor,
     InputRichBlockList,
     InputRichBlockBlockQuotation,
+    InputRichBlockExpandableBlockQuotation,
     InputRichBlockPullQuotation,
     InputRichBlockCollage,
     InputRichBlockSlideshow,
     InputRichBlockTable,
     InputRichBlockDetails,
     InputRichBlockMap,
+    InputRichBlockButtons,
     InputRichBlockAnimation,
     InputRichBlockAudio,
+    InputRichBlockDocument,
     InputRichBlockPhoto,
     InputRichBlockVideo,
     InputRichBlockVoiceNote,
@@ -575,8 +587,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         parse_mode: Optional[str] = "HTML",
         entities: Optional[List[MessageEntity]] = None,
         link_preview_options: Optional[LinkPreviewOptions] = None,
@@ -600,8 +611,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "text": text,
             "parse_mode": parse_mode,
             "entities": entities,
@@ -789,8 +799,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -816,8 +825,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "photo": photo,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -842,8 +850,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -869,8 +876,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "live_photo": live_photo,
             "photo": photo,
             "caption": caption,
@@ -895,8 +901,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -930,8 +935,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "audio": audio,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -957,8 +961,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         thumbnail: Optional[Union[InputFile, str]] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
@@ -987,8 +990,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "document": document,
             "thumbnail": thumbnail,
             "caption": caption,
@@ -1012,8 +1014,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         duration: Optional[int] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -1050,8 +1051,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "video": video,
             "duration": duration,
             "width": width,
@@ -1082,8 +1082,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         duration: Optional[int] = None,
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -1117,8 +1116,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "animation": animation,
             "duration": duration,
             "width": width,
@@ -1146,8 +1144,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
@@ -1181,8 +1178,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "voice": voice,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -1205,8 +1201,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         duration: Optional[int] = None,
         length: Optional[int] = None,
         thumbnail: Optional[Union[InputFile, str]] = None,
@@ -1219,10 +1214,9 @@ class Methods:
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
         """
-        As of v.4.0, Telegram clients support rounded square
-        MPEG4 videos of up to 1 minute long.
-        Use this method to send video messages. On
-        success, the sent Message is returned.
+        Use this method to send a rounded square
+        MPEG4 video of up to 1 minute long.
+        On success, the sent Message is returned.
 
         Reference: https://core.telegram.org/bots/api#sendvideonote
         """
@@ -1232,8 +1226,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "video_note": video_note,
             "duration": duration,
             "length": length,
@@ -1342,8 +1335,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         horizontal_accuracy: Optional[float] = None,
         live_period: Optional[int] = None,
         heading: Optional[int] = None,
@@ -1368,8 +1360,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "latitude": latitude,
             "longitude": longitude,
             "horizontal_accuracy": horizontal_accuracy,
@@ -1396,8 +1387,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         foursquare_id: Optional[str] = None,
         foursquare_type: Optional[str] = None,
         google_place_id: Optional[str] = None,
@@ -1422,8 +1412,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "latitude": latitude,
             "longitude": longitude,
             "title": title,
@@ -1450,8 +1439,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         last_name: Optional[str] = None,
         vcard: Optional[str] = None,
         disable_notification: Optional[bool] = None,
@@ -1474,8 +1462,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "phone_number": phone_number,
             "first_name": first_name,
             "last_name": last_name,
@@ -1650,6 +1637,8 @@ class Methods:
         text: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         entities: Optional[List[MessageEntity]] = None,
+        can_stop: Optional[bool] = None,
+        keep_on_stop: Optional[bool] = None,
     ) -> Optional[bool]:
         """
         Use this method to stream a partial message
@@ -1670,6 +1659,8 @@ class Methods:
             "text": text,
             "parse_mode": parse_mode,
             "entities": entities,
+            "can_stop": can_stop,
+            "keep_on_stop": keep_on_stop,
         })
         return response
 
@@ -1923,6 +1914,7 @@ class Methods:
         can_manage_topics: Optional[bool] = None,
         can_manage_direct_messages: Optional[bool] = None,
         can_manage_tags: Optional[bool] = None,
+        can_send_welcome_messages: Optional[bool] = None,
     ) -> Optional[bool]:
         """
         Use this method to promote or demote a
@@ -1956,6 +1948,7 @@ class Methods:
             "can_manage_topics": can_manage_topics,
             "can_manage_direct_messages": can_manage_direct_messages,
             "can_manage_tags": can_manage_tags,
+            "can_send_welcome_messages": can_send_welcome_messages,
         })
         return response
 
@@ -4317,18 +4310,19 @@ class Methods:
         chat_id: Union[int, str],
         receiver_user_id: int,
         ephemeral_message_id: int,
-        text: str,
+        text: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         entities: Optional[List[MessageEntity]] = None,
+        rich_message: Optional[InputRichMessage] = None,
         link_preview_options: Optional[LinkPreviewOptions] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
     ) -> Optional[bool]:
         """
         Use this method to edit an ephemeral text
-        message. Note that it is not guaranteed that
-        the user will receive the message edit event,
-        especially if they are offline. On success, True
-        is returned.
+        or rich message. Note that it is not
+        guaranteed that the user will receive the message
+        edit event, especially if they are offline. On
+        success, True is returned.
 
         Reference: https://core.telegram.org/bots/api#editephemeralmessagetext
         """
@@ -4340,6 +4334,7 @@ class Methods:
             "text": text,
             "parse_mode": parse_mode,
             "entities": entities,
+            "rich_message": rich_message,
             "link_preview_options": link_preview_options,
             "reply_markup": reply_markup,
         })
@@ -4380,6 +4375,7 @@ class Methods:
         caption: Optional[str] = None,
         parse_mode: Optional[str] = "HTML",
         caption_entities: Optional[List[MessageEntity]] = None,
+        show_caption_above_media: Optional[bool] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
     ) -> Optional[bool]:
         """
@@ -4399,6 +4395,7 @@ class Methods:
             "caption": caption,
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
+            "show_caption_above_media": show_caption_above_media,
             "reply_markup": reply_markup,
         })
         return response
@@ -4602,8 +4599,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
-        receiver_user_id: Optional[int] = None,
-        callback_query_id: Optional[str] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         emoji: Optional[str] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
@@ -4626,8 +4622,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "receiver_user_id": receiver_user_id,
-            "callback_query_id": callback_query_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "sticker": sticker,
             "emoji": emoji,
             "disable_notification": disable_notification,
@@ -4954,6 +4949,7 @@ class Methods:
         business_connection_id: Optional[str] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
+        ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
@@ -4977,6 +4973,7 @@ class Methods:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
+            "ephemeral_message_parameters": ephemeral_message_parameters,
             "rich_message": rich_message,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
@@ -4994,6 +4991,8 @@ class Methods:
         draft_id: int,
         rich_message: InputRichMessage,
         message_thread_id: Optional[int] = None,
+        can_stop: Optional[bool] = None,
+        keep_on_stop: Optional[bool] = None,
     ) -> Optional[bool]:
         """
         Use this method to stream a partial rich
@@ -5013,6 +5012,8 @@ class Methods:
             "message_thread_id": message_thread_id,
             "draft_id": draft_id,
             "rich_message": rich_message,
+            "can_stop": can_stop,
+            "keep_on_stop": keep_on_stop,
         })
         return response
 
