@@ -3725,7 +3725,7 @@ class RichBlockBlockQuotation(BaseModel):
 class RichBlockExpandableBlockQuotation(BaseModel):
     """
     A block quotation, corresponding to the HTML tag
-    <blockquote> with custom attribute "collapsed".
+    <blockquote> with custom attribute "expandable".
 
     Reference: https://core.telegram.org/bots/api#richblockexpandableblockquotation
     """
@@ -4031,7 +4031,7 @@ class InputRichBlockBlockQuotation(BaseModel):
 class InputRichBlockExpandableBlockQuotation(BaseModel):
     """
     A block quotation, corresponding to the HTML tag
-    <blockquote> with custom attribute "collapsed".
+    <blockquote> with custom attribute "expandable".
 
     Reference: https://core.telegram.org/bots/api#inputrichblockexpandableblockquotation
     """
