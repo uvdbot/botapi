@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="botapi",
-    version="2026.08.31",
+    version="2026.09.01",
     install_requires=[
         "httpx",
         "pydantic",
