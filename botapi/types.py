@@ -31,6 +31,8 @@ class Update(BaseModel):
     inline_query: Optional[InlineQuery] = Field(default=None)
     chosen_inline_result: Optional[ChosenInlineResult] = Field(default=None)
     callback_query: Optional[CallbackQuery] = Field(default=None)
+    widget_query: Optional[WidgetQuery] = Field(default=None)
+    shared_widget_query: Optional[SharedWidgetQuery] = Field(default=None)
     shipping_query: Optional[ShippingQuery] = Field(default=None)
     pre_checkout_query: Optional[PreCheckoutQuery] = Field(default=None)
     purchased_paid_media: Optional[PaidMediaPurchased] = Field(default=None)
@@ -163,7 +165,9 @@ class ChatFullInfo(BaseModel):
     unique_gift_colors: Optional[UniqueGiftColors] = Field(default=None)
     paid_message_star_count: Optional[int] = Field(default=None)
     guard_bot: Optional[User] = Field(default=None)
-    community: Optional[Community] = Field(default=None) 
+    community: Optional[Community] = Field(default=None)
+    ton_wallet_card: Optional[TonWalletCard] = Field(default=None)
+    share_theme: Optional[ChatShareTheme] = Field(default=None) 
 
 class Message(BaseModel):
     """
@@ -222,6 +226,7 @@ class Message(BaseModel):
     video: Optional[Video] = Field(default=None)
     video_note: Optional[VideoNote] = Field(default=None)
     voice: Optional[Voice] = Field(default=None)
+    widget: Optional[Widget] = Field(default=None)
     caption: Optional[str] = Field(default=None)
     caption_entities: Optional[List[MessageEntity]] = Field(default=None)
     show_caption_above_media: Optional[bool] = Field(default=None)
@@ -279,6 +284,7 @@ class Message(BaseModel):
     giveaway_completed: Optional[GiveawayCompleted] = Field(default=None)
     managed_bot_created: Optional[ManagedBotCreated] = Field(default=None)
     paid_message_price_changed: Optional[PaidMessagePriceChanged] = Field(default=None)
+    paid_messages_waived: Optional[PaidMessagesWaived] = Field(default=None)
     poll_option_added: Optional[PollOptionAdded] = Field(default=None)
     poll_option_deleted: Optional[PollOptionDeleted] = Field(default=None)
     suggested_post_approved: Optional[SuggestedPostApproved] = Field(default=None)
@@ -286,6 +292,7 @@ class Message(BaseModel):
     suggested_post_declined: Optional[SuggestedPostDeclined] = Field(default=None)
     suggested_post_paid: Optional[SuggestedPostPaid] = Field(default=None)
     suggested_post_refunded: Optional[SuggestedPostRefunded] = Field(default=None)
+    ton_wallet_transfer: Optional[TonWalletTransfer] = Field(default=None)
     video_chat_scheduled: Optional[VideoChatScheduled] = Field(default=None)
     video_chat_started: Optional[VideoChatStarted] = Field(default=None)
     video_chat_ended: Optional[VideoChatEnded] = Field(default=None)
@@ -332,6 +339,7 @@ class TextQuote(BaseModel):
     text: str
     position: int
     entities: Optional[List[MessageEntity]] = Field(default=None)
+    rich_texts: Optional[List[RichText]] = Field(default=None)
     is_manual: Optional[bool] = Field(default=None) 
 
 class ExternalReplyInfo(BaseModel):
@@ -358,6 +366,7 @@ class ExternalReplyInfo(BaseModel):
     video: Optional[Video] = Field(default=None)
     video_note: Optional[VideoNote] = Field(default=None)
     voice: Optional[Voice] = Field(default=None)
+    widget: Optional[Widget] = Field(default=None)
     has_media_spoiler: Optional[bool] = Field(default=None)
     checklist: Optional[Checklist] = Field(default=None)
     contact: Optional[Contact] = Field(default=None)
@@ -385,6 +394,7 @@ class ReplyParameters(BaseModel):
     quote: Optional[str] = Field(default=None)
     quote_parse_mode: Optional[str] = Field(default=None)
     quote_entities: Optional[List[MessageEntity]] = Field(default=None)
+    quote_rich_texts: Optional[List[RichText]] = Field(default=None)
     quote_position: Optional[int] = Field(default=None)
     checklist_task_id: Optional[int] = Field(default=None)
     poll_option_id: Optional[str] = Field(default=None) 
@@ -397,7 +407,7 @@ class EphemeralMessageParameters(BaseModel):
     Reference: https://core.telegram.org/bots/api#ephemeralmessageparameters
     """
 
-    receiver_user_id: int
+    receiver_user_id: Optional[int] = Field(default=None)
     callback_query_id: Optional[str] = Field(default=None)
     replace_callback_query_message: Optional[bool] = Field(default=None) 
 
@@ -604,6 +614,20 @@ class Voice(BaseModel):
     duration: int
     mime_type: Optional[str] = Field(default=None)
     file_size: Optional[int] = Field(default=None) 
+
+class Widget(BaseModel):
+    """
+    This object describes an HTML widget.
+
+    Reference: https://core.telegram.org/bots/api#widget
+    """
+
+    html: str
+    id: Optional[str] = Field(default=None)
+    width: Optional[int] = Field(default=None)
+    height: Optional[int] = Field(default=None)
+    public_data: Optional[str] = Field(default=None)
+    chat_data: Optional[str] = Field(default=None) 
 
 class PaidMediaInfo(BaseModel):
     """
@@ -1385,6 +1409,32 @@ class SuggestedPostRefunded(BaseModel):
     reason: str
     suggested_post_message: Optional[Message] = Field(default=None) 
 
+class PaidMessagesWaived(BaseModel):
+    """
+    Describes a service message about the sender of
+    the message using a link of the other
+    user, which allows sending messages to the user
+    without paying Telegram Stars. Currently holds no information.
+
+    Reference: https://core.telegram.org/bots/api#paidmessageswaived
+    """
+
+    pass
+ 
+
+class TonWalletTransfer(BaseModel):
+    """
+    Describes a service message about a transfer with
+    a TON wallet.
+
+    Reference: https://core.telegram.org/bots/api#tonwallettransfer
+    """
+
+    transaction_id: str
+    peer_address: str
+    amount: str
+    comment: Optional[str] = Field(default=None) 
+
 class GiveawayCreated(BaseModel):
     """
     This object represents a service message about the
@@ -1789,6 +1839,98 @@ class CallbackQuery(BaseModel):
     data: Optional[str] = Field(default=None)
     game_short_name: Optional[str] = Field(default=None) 
 
+class WidgetQueryTypeData(BaseModel):
+    """
+    The query contains data for the bot.
+
+    Reference: https://core.telegram.org/bots/api#widgetquerytypedata
+    """
+
+    type: Literal["data"] = "data"
+    wallet_card: Optional[TonWalletCard] = Field(default=None) 
+
+class WidgetQueryTypeSignData(BaseModel):
+    """
+    The query contains data signed by a TON
+    wallet of the user who sent the query.
+    The data is signed for the domain bot<bot_id>,
+    where <bot_id> is the identifier of the bot.
+
+    Reference: https://core.telegram.org/bots/api#widgetquerytypesigndata
+    """
+
+    type: Literal["sign_data"] = "sign_data"
+    wallet: WidgetQueryWallet
+    sign_data: str 
+
+class WidgetQueryTypeSentTransaction(BaseModel):
+    """
+    The query notifies the bot about a transaction
+    sent from a TON wallet of the user
+    who sent the query.
+
+    Reference: https://core.telegram.org/bots/api#widgetquerytypesenttransaction
+    """
+
+    type: Literal["sent_transaction"] = "sent_transaction"
+    wallet: WidgetQueryWallet
+    msg_hash: str 
+
+class WidgetQueryWallet(BaseModel):
+    """
+    This object describes a TON wallet of the
+    user, which is used in a query from
+    a widget.
+
+    Reference: https://core.telegram.org/bots/api#widgetquerywallet
+    """
+
+    address: str
+    amount: str
+    public_key: Optional[str] = Field(default=None)
+    state_init: Optional[str] = Field(default=None) 
+
+class WidgetQuery(BaseModel):
+    """
+    This object represents an incoming query from a
+    widget in a message sent by the bot
+    or via the bot. Use answerWidgetQuery to answer
+    the query. Each user can send at most
+    5 queries per 5 seconds to the bot
+    from all its widgets.
+
+    Reference: https://core.telegram.org/bots/api#widgetquery
+    """
+
+    id: str
+    from_user: User = Field(alias="from")
+    chat_instance: str
+    type: WidgetQueryType
+    data: str
+    chat: Optional[Chat] = Field(default=None)
+    message_id: Optional[int] = Field(default=None)
+    inline_message_id: Optional[str] = Field(default=None)
+    chat_type: Optional[str] = Field(default=None)
+    widget_id: Optional[str] = Field(default=None) 
+
+class SharedWidgetQuery(BaseModel):
+    """
+    This object represents an incoming query from a
+    forwarded message with a shared widget created by
+    the bot. Use answerWidgetQuery to answer the query.
+    Each user can send at most 5 queries
+    per 5 seconds to the bot from all
+    its widgets.
+
+    Reference: https://core.telegram.org/bots/api#sharedwidgetquery
+    """
+
+    id: str
+    from_user: User = Field(alias="from")
+    type: WidgetQueryType
+    data: str
+    widget_id: str 
+
 class ForceReply(BaseModel):
     """
     Upon receiving a message with this object, Telegram
@@ -2112,12 +2254,12 @@ class UserRating(BaseModel):
     current_level_rating: int
     next_level_rating: Optional[int] = Field(default=None) 
 
-class StoryAreaPosition(BaseModel):
+class AreaPosition(BaseModel):
     """
-    Describes the position of a clickable area within
-    a story.
+    Describes the position of a rectangle area on
+    a story media or a TON wallet card.
 
-    Reference: https://core.telegram.org/bots/api#storyareaposition
+    Reference: https://core.telegram.org/bots/api#areaposition
     """
 
     x_percentage: float
@@ -2126,6 +2268,126 @@ class StoryAreaPosition(BaseModel):
     height_percentage: float
     rotation_angle: float
     corner_radius_percentage: float 
+
+class TonNft(BaseModel):
+    """
+    This object represents an NFT in the TON
+    blockchain.
+
+    Reference: https://core.telegram.org/bots/api#tonnft
+    """
+
+    address: str
+    index: str
+    name: str
+    description: str
+    collection_address: Optional[str] = Field(default=None)
+    attributes: Optional[List[TonNftAttribute]] = Field(default=None)
+    gift: Optional[UniqueGift] = Field(default=None) 
+
+class TonNftAttribute(BaseModel):
+    """
+    This object represents an attribute of an NFT
+    in the TON blockchain.
+
+    Reference: https://core.telegram.org/bots/api#tonnftattribute
+    """
+
+    trait_type: str
+    value: str 
+
+class TonWalletCardSticker(BaseModel):
+    """
+    This object describes a sticker on a TON
+    wallet card.
+
+    Reference: https://core.telegram.org/bots/api#tonwalletcardsticker
+    """
+
+    position: AreaPosition
+    nft: TonNft 
+
+class TonWalletCard(BaseModel):
+    """
+    This object describes a TON wallet card, which
+    is shown on the profile page of a
+    user to everyone.
+
+    Reference: https://core.telegram.org/bots/api#tonwalletcard
+    """
+
+    address: str
+    amount: str
+    stickers: List[TonWalletCardSticker]
+    background_nft_address: Literal["used"] = "used" 
+
+class EmojiTypeEmoji(BaseModel):
+    """
+    A regular emoji.
+
+    Reference: https://core.telegram.org/bots/api#emojitypeemoji
+    """
+
+    type: Literal["emoji"] = "emoji"
+    emoji: str 
+
+class EmojiTypeCustomEmoji(BaseModel):
+    """
+    A custom emoji.
+
+    Reference: https://core.telegram.org/bots/api#emojitypecustomemoji
+    """
+
+    type: Literal["custom_emoji"] = "custom_emoji"
+    custom_emoji_id: str 
+
+class ChatShareThemeEmoji(BaseModel):
+    """
+    The theme with emoji placed on a background.
+
+    Reference: https://core.telegram.org/bots/api#chatsharethemeemoji
+    """
+
+    type: Literal["emoji"] = "emoji"
+    emojis: List[EmojiType]
+    background_backdrop_id: Optional[int] = Field(default=None) 
+
+class ChatShareThemeUniqueGift(BaseModel):
+    """
+    The theme based on a unique gift owned
+    by the user or the chat.
+
+    Reference: https://core.telegram.org/bots/api#chatsharethemeuniquegift
+    """
+
+    type: Literal["unique_gift"] = "unique_gift"
+    gift: UniqueGift 
+
+class ChatShareThemeBackdrops(BaseModel):
+    """
+    This object contains a list of backdrops, which
+    can be used as the background of a
+    theme of the screen for sharing a link
+    to a user or a chat.
+
+    Reference: https://core.telegram.org/bots/api#chatsharethemebackdrops
+    """
+
+    backdrops: List[ChatShareThemeBackdrop] 
+
+class ChatShareThemeBackdrop(BaseModel):
+    """
+    This object describes a backdrop, which can be
+    used as the background of a theme of
+    the screen for sharing a link to a
+    user or a chat.
+
+    Reference: https://core.telegram.org/bots/api#chatsharethemebackdrop
+    """
+
+    id: int
+    name: str
+    colors: UniqueGiftBackdropColors 
 
 class LocationAddress(BaseModel):
     """
@@ -2212,7 +2474,7 @@ class StoryArea(BaseModel):
     Reference: https://core.telegram.org/bots/api#storyarea
     """
 
-    position: StoryAreaPosition
+    position: AreaPosition
     type: StoryAreaType 
 
 class ChatLocation(BaseModel):
@@ -3486,6 +3748,17 @@ class RichTextBankCardNumber(BaseModel):
     type: Literal["bank_card_number"] = "bank_card_number"
     text: RichText
     bank_card_number: str 
+
+class RichTextTonAddress(BaseModel):
+    """
+    An address in the TON blockchain.
+
+    Reference: https://core.telegram.org/bots/api#richtexttonaddress
+    """
+
+    type: Literal["ton_address"] = "ton_address"
+    text: RichText
+    address: str 
 
 class RichTextMention(BaseModel):
     """
@@ -4821,6 +5094,47 @@ class InputInvoiceMessageContent(BaseModel):
     send_email_to_provider: Optional[bool] = Field(default=None)
     is_flexible: Optional[bool] = Field(default=None) 
 
+class InputWidgetMessageContent(BaseModel):
+    """
+    Represents the content of a message with an
+    HTML widget to be sent as the result
+    of an inline query. Currently, widgets can't be
+    sent in response to inline queries in the
+    production environment.
+
+    Reference: https://core.telegram.org/bots/api#inputwidgetmessagecontent
+    """
+
+    html: str
+    width: Optional[int] = Field(default=None)
+    height: Optional[int] = Field(default=None)
+    public_data: Optional[str] = Field(default=None)
+    chat_data: Optional[str] = Field(default=None)
+    caption: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
+    caption_entities: Optional[List[MessageEntity]] = Field(default=None)
+    show_caption_above_media: Optional[bool] = Field(default=None)
+    allow_queries: Optional[bool] = Field(default=None)
+    is_shared: Optional[bool] = Field(default=None) 
+
+class InputSharedWidgetMessageContent(BaseModel):
+    """
+    Represents the content of a message with a
+    shared widget to be sent as the result
+    of an inline query. Currently, widgets can't be
+    sent in response to inline queries in the
+    production environment.
+
+    Reference: https://core.telegram.org/bots/api#inputsharedwidgetmessagecontent
+    """
+
+    widget_id: str
+    chat_data: Optional[str] = Field(default=None)
+    caption: Optional[str] = Field(default=None)
+    parse_mode: Optional[str] = Field(default="HTML")
+    caption_entities: Optional[List[MessageEntity]] = Field(default=None)
+    show_caption_above_media: Optional[bool] = Field(default=None) 
+
 class ChosenInlineResult(BaseModel):
     """
     Represents a result of an inline query that
@@ -5406,6 +5720,13 @@ BackgroundType = Union[
 ]
 _BackgroundTypeAdapter = TypeAdapter(BackgroundType) 
 
+WidgetQueryType = Union[
+    WidgetQueryTypeData,
+    WidgetQueryTypeSignData,
+    WidgetQueryTypeSentTransaction,
+]
+_WidgetQueryTypeAdapter = TypeAdapter(WidgetQueryType) 
+
 ChatMember = Union[
     ChatMemberOwner,
     ChatMemberAdministrator,
@@ -5415,6 +5736,18 @@ ChatMember = Union[
     ChatMemberBanned,
 ]
 _ChatMemberAdapter = TypeAdapter(ChatMember) 
+
+EmojiType = Union[
+    EmojiTypeEmoji,
+    EmojiTypeCustomEmoji,
+]
+_EmojiTypeAdapter = TypeAdapter(EmojiType) 
+
+ChatShareTheme = Union[
+    ChatShareThemeEmoji,
+    ChatShareThemeUniqueGift,
+]
+_ChatShareThemeAdapter = TypeAdapter(ChatShareTheme) 
 
 StoryAreaType = Union[
     StoryAreaTypeLocation,
@@ -5510,6 +5843,7 @@ RichText = Union[
     RichTextEmailAddress,
     RichTextPhoneNumber,
     RichTextBankCardNumber,
+    RichTextTonAddress,
     RichTextMention,
     RichTextHashtag,
     RichTextCashtag,
@@ -5609,6 +5943,8 @@ InputMessageContent = Union[
     InputVenueMessageContent,
     InputContactMessageContent,
     InputInvoiceMessageContent,
+    InputWidgetMessageContent,
+    InputSharedWidgetMessageContent,
 ]
 _InputMessageContentAdapter = TypeAdapter(InputMessageContent) 
 
@@ -5669,6 +6005,7 @@ VideoQuality.model_rebuild()
 Video.model_rebuild()
 VideoNote.model_rebuild()
 Voice.model_rebuild()
+Widget.model_rebuild()
 PaidMediaInfo.model_rebuild()
 PaidMediaLivePhoto.model_rebuild()
 PaidMediaPhoto.model_rebuild()
@@ -5732,6 +6069,8 @@ SuggestedPostApprovalFailed.model_rebuild()
 SuggestedPostDeclined.model_rebuild()
 SuggestedPostPaid.model_rebuild()
 SuggestedPostRefunded.model_rebuild()
+PaidMessagesWaived.model_rebuild()
+TonWalletTransfer.model_rebuild()
 GiveawayCreated.model_rebuild()
 Giveaway.model_rebuild()
 GiveawayWinners.model_rebuild()
@@ -5759,6 +6098,12 @@ SwitchInlineQueryChosenChat.model_rebuild()
 CopyTextButton.model_rebuild()
 DisabledButton.model_rebuild()
 CallbackQuery.model_rebuild()
+WidgetQueryTypeData.model_rebuild()
+WidgetQueryTypeSignData.model_rebuild()
+WidgetQueryTypeSentTransaction.model_rebuild()
+WidgetQueryWallet.model_rebuild()
+WidgetQuery.model_rebuild()
+SharedWidgetQuery.model_rebuild()
 ForceReply.model_rebuild()
 Community.model_rebuild()
 ChatPhoto.model_rebuild()
@@ -5779,7 +6124,17 @@ BusinessLocation.model_rebuild()
 BusinessOpeningHoursInterval.model_rebuild()
 BusinessOpeningHours.model_rebuild()
 UserRating.model_rebuild()
-StoryAreaPosition.model_rebuild()
+AreaPosition.model_rebuild()
+TonNft.model_rebuild()
+TonNftAttribute.model_rebuild()
+TonWalletCardSticker.model_rebuild()
+TonWalletCard.model_rebuild()
+EmojiTypeEmoji.model_rebuild()
+EmojiTypeCustomEmoji.model_rebuild()
+ChatShareThemeEmoji.model_rebuild()
+ChatShareThemeUniqueGift.model_rebuild()
+ChatShareThemeBackdrops.model_rebuild()
+ChatShareThemeBackdrop.model_rebuild()
 LocationAddress.model_rebuild()
 StoryAreaTypeLocation.model_rebuild()
 StoryAreaTypeSuggestedReaction.model_rebuild()
@@ -5887,6 +6242,7 @@ RichTextUrl.model_rebuild()
 RichTextEmailAddress.model_rebuild()
 RichTextPhoneNumber.model_rebuild()
 RichTextBankCardNumber.model_rebuild()
+RichTextTonAddress.model_rebuild()
 RichTextMention.model_rebuild()
 RichTextHashtag.model_rebuild()
 RichTextCashtag.model_rebuild()
@@ -5976,6 +6332,8 @@ InputLocationMessageContent.model_rebuild()
 InputVenueMessageContent.model_rebuild()
 InputContactMessageContent.model_rebuild()
 InputInvoiceMessageContent.model_rebuild()
+InputWidgetMessageContent.model_rebuild()
+InputSharedWidgetMessageContent.model_rebuild()
 ChosenInlineResult.model_rebuild()
 LabeledPrice.model_rebuild()
 Invoice.model_rebuild()

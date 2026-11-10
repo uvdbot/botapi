@@ -34,6 +34,7 @@ from botapi.types import (
     Video,
     VideoNote,
     Voice,
+    Widget,
     PaidMediaInfo,
     PaidMediaLivePhoto,
     PaidMediaPhoto,
@@ -97,6 +98,8 @@ from botapi.types import (
     SuggestedPostDeclined,
     SuggestedPostPaid,
     SuggestedPostRefunded,
+    PaidMessagesWaived,
+    TonWalletTransfer,
     GiveawayCreated,
     Giveaway,
     GiveawayWinners,
@@ -124,6 +127,12 @@ from botapi.types import (
     CopyTextButton,
     DisabledButton,
     CallbackQuery,
+    WidgetQueryTypeData,
+    WidgetQueryTypeSignData,
+    WidgetQueryTypeSentTransaction,
+    WidgetQueryWallet,
+    WidgetQuery,
+    SharedWidgetQuery,
     ForceReply,
     Community,
     ChatPhoto,
@@ -144,7 +153,17 @@ from botapi.types import (
     BusinessOpeningHoursInterval,
     BusinessOpeningHours,
     UserRating,
-    StoryAreaPosition,
+    AreaPosition,
+    TonNft,
+    TonNftAttribute,
+    TonWalletCardSticker,
+    TonWalletCard,
+    EmojiTypeEmoji,
+    EmojiTypeCustomEmoji,
+    ChatShareThemeEmoji,
+    ChatShareThemeUniqueGift,
+    ChatShareThemeBackdrops,
+    ChatShareThemeBackdrop,
     LocationAddress,
     StoryAreaTypeLocation,
     StoryAreaTypeSuggestedReaction,
@@ -252,6 +271,7 @@ from botapi.types import (
     RichTextEmailAddress,
     RichTextPhoneNumber,
     RichTextBankCardNumber,
+    RichTextTonAddress,
     RichTextMention,
     RichTextHashtag,
     RichTextCashtag,
@@ -341,6 +361,8 @@ from botapi.types import (
     InputVenueMessageContent,
     InputContactMessageContent,
     InputInvoiceMessageContent,
+    InputWidgetMessageContent,
+    InputSharedWidgetMessageContent,
     ChosenInlineResult,
     LabeledPrice,
     Invoice,
@@ -393,8 +415,14 @@ from botapi.types import (
     _BackgroundFillAdapter,
     BackgroundType,
     _BackgroundTypeAdapter,
+    WidgetQueryType,
+    _WidgetQueryTypeAdapter,
     ChatMember,
     _ChatMemberAdapter,
+    EmojiType,
+    _EmojiTypeAdapter,
+    ChatShareTheme,
+    _ChatShareThemeAdapter,
     StoryAreaType,
     _StoryAreaTypeAdapter,
     ReactionType,
@@ -582,9 +610,9 @@ class Methods:
 
     async def send_message(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         text: str,
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -718,14 +746,14 @@ class Methods:
         """
         Use this method to copy messages of any
         kind. Service messages, paid media messages, giveaway messages,
-        giveaway winners messages, and invoice messages can't be
-        copied. A quiz poll can be copied only
-        if the value of the field correct_option_ids is
-        known to the bot. The method is analogous
-        to the method forwardMessage, but the copied message
-        doesn't have a link to the original message.
-        Returns the MessageId of the sent message on
-        success.
+        giveaway winners messages, invoice messages, and widget messages
+        can't be copied. A quiz poll can be
+        copied only if the value of the field
+        correct_option_ids is known to the bot. The method
+        is analogous to the method forwardMessage, but the
+        copied message doesn't have a link to the
+        original message. Returns the MessageId of the sent
+        message on success.
 
         Reference: https://core.telegram.org/bots/api#copymessage
         """
@@ -767,15 +795,15 @@ class Methods:
         kind. If some of the specified messages can't
         be found or copied, they are skipped. Service
         messages, paid media messages, giveaway messages, giveaway winners
-        messages, and invoice messages can't be copied. A
-        quiz poll can be copied only if the
-        value of the field correct_option_ids is known to
-        the bot. The method is analogous to the
-        method forwardMessages, but the copied messages don't have
-        a link to the original message. Album grouping
-        is kept for copied messages. On success, an
-        Array of MessageId of the sent messages is
-        returned.
+        messages, invoice messages, and widget messages can't be
+        copied. A quiz poll can be copied only
+        if the value of the field correct_option_ids is
+        known to the bot. The method is analogous
+        to the method forwardMessages, but the copied messages
+        don't have a link to the original message.
+        Album grouping is kept for copied messages. On
+        success, an Array of MessageId of the sent
+        messages is returned.
 
         Reference: https://core.telegram.org/bots/api#copymessages
         """
@@ -794,9 +822,9 @@ class Methods:
 
     async def send_photo(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         photo: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -844,10 +872,10 @@ class Methods:
 
     async def send_live_photo(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         live_photo: Union[InputFile, str],
         photo: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -896,9 +924,9 @@ class Methods:
 
     async def send_audio(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         audio: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -956,9 +984,9 @@ class Methods:
 
     async def send_document(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         document: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -1009,9 +1037,9 @@ class Methods:
 
     async def send_video(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         video: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -1077,9 +1105,9 @@ class Methods:
 
     async def send_animation(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         animation: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -1139,9 +1167,9 @@ class Methods:
 
     async def send_voice(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         voice: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -1196,9 +1224,9 @@ class Methods:
 
     async def send_video_note(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         video_note: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -1236,6 +1264,108 @@ class Methods:
             "allow_paid_broadcast": allow_paid_broadcast,
             "message_effect_id": message_effect_id,
             "suggested_post_parameters": suggested_post_parameters,
+            "reply_parameters": reply_parameters,
+            "reply_markup": reply_markup,
+        })
+        return Message.model_validate(response)
+
+    async def send_widget(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        html: str,
+        message_thread_id: Optional[int] = None,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        public_data: Optional[str] = None,
+        chat_data: Optional[str] = None,
+        caption: Optional[str] = None,
+        parse_mode: Optional[str] = "HTML",
+        caption_entities: Optional[List[MessageEntity]] = None,
+        show_caption_above_media: Optional[bool] = None,
+        allow_queries: Optional[bool] = None,
+        is_shared: Optional[bool] = None,
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
+        message_effect_id: Optional[str] = None,
+        reply_parameters: Optional[ReplyParameters] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
+    ) -> Optional[Message]:
+        """
+        Use this method to send a message with
+        an HTML widget. Currently, in the production environment,
+        widgets can be sent only to private chats,
+        and sent widgets automatically have protected content and
+        therefore can't be forwarded. On success, the sent
+        Message is returned.
+
+        Reference: https://core.telegram.org/bots/api#sendwidget
+        """
+
+        response = await self._send_request("sendWidget", {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "html": html,
+            "width": width,
+            "height": height,
+            "public_data": public_data,
+            "chat_data": chat_data,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "caption_entities": caption_entities,
+            "show_caption_above_media": show_caption_above_media,
+            "allow_queries": allow_queries,
+            "is_shared": is_shared,
+            "disable_notification": disable_notification,
+            "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
+            "message_effect_id": message_effect_id,
+            "reply_parameters": reply_parameters,
+            "reply_markup": reply_markup,
+        })
+        return Message.model_validate(response)
+
+    async def send_shared_widget(
+        self: botapi.BotAPI,
+        chat_id: Union[int, str],
+        widget_id: str,
+        message_thread_id: Optional[int] = None,
+        chat_data: Optional[str] = None,
+        caption: Optional[str] = None,
+        parse_mode: Optional[str] = "HTML",
+        caption_entities: Optional[List[MessageEntity]] = None,
+        show_caption_above_media: Optional[bool] = None,
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        allow_paid_broadcast: Optional[bool] = None,
+        message_effect_id: Optional[str] = None,
+        reply_parameters: Optional[ReplyParameters] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
+    ) -> Optional[Message]:
+        """
+        Use this method to send again a shared
+        widget created by the bot. Currently, in the
+        production environment, widgets can be sent only to
+        private chats, and sent widgets automatically have protected
+        content and therefore can't be forwarded. On success,
+        the sent Message is returned.
+
+        Reference: https://core.telegram.org/bots/api#sendsharedwidget
+        """
+
+        response = await self._send_request("sendSharedWidget", {
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "widget_id": widget_id,
+            "chat_data": chat_data,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "caption_entities": caption_entities,
+            "show_caption_above_media": show_caption_above_media,
+            "disable_notification": disable_notification,
+            "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
+            "message_effect_id": message_effect_id,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         })
@@ -1329,10 +1459,10 @@ class Methods:
 
     async def send_location(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         latitude: float,
         longitude: float,
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -1379,12 +1509,12 @@ class Methods:
 
     async def send_venue(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         latitude: float,
         longitude: float,
         title: str,
         address: str,
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -1433,10 +1563,10 @@ class Methods:
 
     async def send_contact(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         phone_number: str,
         first_name: str,
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -2546,6 +2676,22 @@ class Methods:
         })
         return TypeAdapter(ChatMember).validate_python(response)
 
+    async def get_chat_share_theme_backdrops(
+        self: botapi.BotAPI,
+    ) -> Optional[ChatShareThemeBackdrops]:
+        """
+        Use this method to get the list of
+        backdrops, which can be used as the background
+        of a theme of the screen for sharing
+        a link to a user or a chat.
+        Requires no parameters. Returns a ChatShareThemeBackdrops object.
+
+        Reference: https://core.telegram.org/bots/api#getchatsharethemebackdrops
+        """
+
+        response = await self._send_request("getChatShareThemeBackdrops", {})
+        return ChatShareThemeBackdrops.model_validate(response)
+
     async def get_user_personal_chat_messages(
         self: botapi.BotAPI,
         user_id: int,
@@ -2639,8 +2785,12 @@ class Methods:
         with a user. In the case of a
         supergroup chat the bot must be an administrator
         in the chat for this to work and
-        must have the can_manage_topics administrator right. Returns information
-        about the created topic as a ForumTopic object.
+        must have the can_manage_topics administrator right. In the
+        case of a private chat, a link to
+        the topic can be created in the format
+        https://t.me/<bot_username>/<message_thread_id>; the link opens the topic only for
+        the user. Returns information about the created topic
+        as a ForumTopic object.
 
         Reference: https://core.telegram.org/bots/api#createforumtopic
         """
@@ -2915,6 +3065,29 @@ class Methods:
             "show_alert": show_alert,
             "url": url,
             "cache_time": cache_time,
+        })
+        return response
+
+    async def answer_widget_query(
+        self: botapi.BotAPI,
+        widget_query_id: str,
+        data: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to send an answer to
+        a query from a widget. The query must
+        be answered within 15 seconds. The answer is
+        received only by the widget that sent the
+        query and doesn't change data of the widget;
+        use editMessageWidgetData or editSharedWidgetData to change it. On
+        success, True is returned.
+
+        Reference: https://core.telegram.org/bots/api#answerwidgetquery
+        """
+
+        response = await self._send_request("answerWidgetQuery", {
+            "widget_query_id": widget_query_id,
+            "data": data,
         })
         return response
 
@@ -3398,6 +3571,8 @@ class Methods:
         self: botapi.BotAPI,
         user_id: int,
         custom_description: Optional[str] = None,
+        custom_description_parse_mode: Optional[str] = None,
+        custom_description_entities: Optional[List[MessageEntity]] = None,
     ) -> Optional[bool]:
         """
         Verifies a user on behalf of the organization
@@ -3410,6 +3585,8 @@ class Methods:
         response = await self._send_request("verifyUser", {
             "user_id": user_id,
             "custom_description": custom_description,
+            "custom_description_parse_mode": custom_description_parse_mode,
+            "custom_description_entities": custom_description_entities,
         })
         return response
 
@@ -3417,6 +3594,8 @@ class Methods:
         self: botapi.BotAPI,
         chat_id: Union[int, str],
         custom_description: Optional[str] = None,
+        custom_description_parse_mode: Optional[str] = None,
+        custom_description_entities: Optional[List[MessageEntity]] = None,
     ) -> Optional[bool]:
         """
         Verifies a chat on behalf of the organization
@@ -3429,6 +3608,8 @@ class Methods:
         response = await self._send_request("verifyChat", {
             "chat_id": chat_id,
             "custom_description": custom_description,
+            "custom_description_parse_mode": custom_description_parse_mode,
+            "custom_description_entities": custom_description_entities,
         })
         return response
 
@@ -3769,6 +3950,23 @@ class Methods:
         })
         return OwnedGifts.model_validate(response)
 
+    async def get_unique_gift(
+        self: botapi.BotAPI,
+        name: str,
+    ) -> Optional[UniqueGift]:
+        """
+        Use this method to get information about a
+        unique gift by its name. Returns a UniqueGift
+        object on success.
+
+        Reference: https://core.telegram.org/bots/api#getuniquegift
+        """
+
+        response = await self._send_request("getUniqueGift", {
+            "name": name,
+        })
+        return UniqueGift.model_validate(response)
+
     async def convert_gift_to_stars(
         self: botapi.BotAPI,
         business_connection_id: str,
@@ -3833,6 +4031,28 @@ class Methods:
             "owned_gift_id": owned_gift_id,
             "new_owner_chat_id": new_owner_chat_id,
             "star_count": star_count,
+        })
+        return response
+
+    async def delete_business_account_gift(
+        self: botapi.BotAPI,
+        business_connection_id: str,
+        owned_gift_id: str,
+    ) -> Optional[bool]:
+        """
+        Deletes a regular gift owned by a managed
+        business account without receiving Telegram Stars for it.
+        Requires the can_convert_gifts_to_stars business bot right. The gift
+        can be deleted only if it isn't limited
+        (the field total_count of the Gift is omitted)
+        and wasn't refunded. Returns True on success.
+
+        Reference: https://core.telegram.org/bots/api#deletebusinessaccountgift
+        """
+
+        response = await self._send_request("deleteBusinessAccountGift", {
+            "business_connection_id": business_connection_id,
+            "owned_gift_id": owned_gift_id,
         })
         return response
 
@@ -4248,6 +4468,56 @@ class Methods:
         })
         return Message.model_validate(response)
 
+    async def edit_message_widget_data(
+        self: botapi.BotAPI,
+        chat_id: Optional[Union[int, str]] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[str] = None,
+        public_data: Optional[str] = None,
+        chat_data: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to edit data of a
+        widget in a message sent by the bot
+        or via the bot (for inline bots). Public
+        data of a shared widget can be changed
+        at most once per second. On success, True
+        is returned.
+
+        Reference: https://core.telegram.org/bots/api#editmessagewidgetdata
+        """
+
+        response = await self._send_request("editMessageWidgetData", {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "inline_message_id": inline_message_id,
+            "public_data": public_data,
+            "chat_data": chat_data,
+        })
+        return response
+
+    async def edit_shared_widget_data(
+        self: botapi.BotAPI,
+        widget_id: str,
+        public_data: str,
+        cache_time: Optional[int] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to edit public data of
+        a shared widget created by the bot. A
+        shared widget can be edited at most once
+        per second. On success, True is returned.
+
+        Reference: https://core.telegram.org/bots/api#editsharedwidgetdata
+        """
+
+        response = await self._send_request("editSharedWidgetData", {
+            "widget_id": widget_id,
+            "public_data": public_data,
+            "cache_time": cache_time,
+        })
+        return response
+
     async def edit_message_reply_markup(
         self: botapi.BotAPI,
         business_connection_id: Optional[str] = None,
@@ -4594,9 +4864,9 @@ class Methods:
 
     async def send_sticker(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         sticker: Union[InputFile, str],
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
@@ -4944,9 +5214,9 @@ class Methods:
 
     async def send_rich_message(
         self: botapi.BotAPI,
-        chat_id: Union[int, str],
         rich_message: InputRichMessage,
         business_connection_id: Optional[str] = None,
+        chat_id: Optional[Union[int, str]] = None,
         message_thread_id: Optional[int] = None,
         direct_messages_topic_id: Optional[int] = None,
         ephemeral_message_parameters: Optional[EphemeralMessageParameters] = None,
