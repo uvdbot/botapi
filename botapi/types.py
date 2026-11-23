@@ -64,6 +64,33 @@ class WebhookInfo(BaseModel):
     max_connections: Optional[int] = Field(default=None)
     allowed_updates: Optional[List[str]] = Field(default=None) 
 
+class BotFullInfo(BaseModel):
+    """
+    This object contains full information about the bot
+    itself.
+
+    Reference: https://core.telegram.org/bots/api#botfullinfo
+    """
+
+    id: int
+    is_bot: bool
+    first_name: str
+    can_join_groups: bool
+    can_read_all_group_messages: bool
+    supports_guest_queries: bool
+    supports_inline_queries: bool
+    needs_inline_query_location: bool
+    can_connect_to_business: bool
+    has_main_web_app: bool
+    has_topics_enabled: bool
+    allows_users_to_create_topics: bool
+    has_topic_sidebar: bool
+    can_manage_bots: bool
+    supports_join_request_queries: bool
+    username: Optional[str] = Field(default=None)
+    active_usernames: Optional[List[str]] = Field(default=None)
+    inline_query_placeholder: Optional[str] = Field(default=None) 
+
 class User(BaseModel):
     """
     This object represents a Telegram user or bot.
@@ -78,17 +105,7 @@ class User(BaseModel):
     username: Optional[str] = Field(default=None)
     language_code: Optional[str] = Field(default=None)
     is_premium: Optional[bool] = Field(default=None)
-    added_to_attachment_menu: Optional[bool] = Field(default=None)
-    can_join_groups: Optional[bool] = Field(default=None)
-    can_read_all_group_messages: Optional[bool] = Field(default=None)
-    supports_guest_queries: Optional[bool] = Field(default=None)
-    supports_inline_queries: Optional[bool] = Field(default=None)
-    can_connect_to_business: Optional[bool] = Field(default=None)
-    has_main_web_app: Optional[bool] = Field(default=None)
-    has_topics_enabled: Optional[bool] = Field(default=None)
-    allows_users_to_create_topics: Optional[bool] = Field(default=None)
-    can_manage_bots: Optional[bool] = Field(default=None)
-    supports_join_request_queries: Optional[bool] = Field(default=None) 
+    added_to_attachment_menu: Optional[bool] = Field(default=None) 
 
 class Chat(BaseModel):
     """
@@ -1277,14 +1294,17 @@ class WriteAccessAllowed(BaseModel):
     adding it to the attachment menu, launching a
     Web App from a link, or accepting an
     explicit request from a Web App sent by
-    the method requestWriteAccess.
+    the method requestWriteAccess, or about a user being
+    invited to the private chat with the bot
+    by the owner of the bot.
 
     Reference: https://core.telegram.org/bots/api#writeaccessallowed
     """
 
     from_request: Optional[bool] = Field(default=None)
     web_app_name: Optional[str] = Field(default=None)
-    from_attachment_menu: Optional[bool] = Field(default=None) 
+    from_attachment_menu: Optional[bool] = Field(default=None)
+    inviter: Optional[User] = Field(default=None) 
 
 class VideoChatScheduled(BaseModel):
     """
@@ -1819,14 +1839,17 @@ class DisabledButton(BaseModel):
 class CallbackQuery(BaseModel):
     """
     This object represents an incoming callback query from
-    a callback button in an inline keyboard. If
-    the button that originated the query was attached
-    to a message sent by the bot, the
-    field message will be present. If the button
-    was attached to a message sent via the
-    bot (in inline mode), the field inline_message_id will
-    be present. Exactly one of the fields data
-    or game_short_name will be present.
+    a callback button in an inline keyboard or
+    in a rich message. If the button that
+    originated the query belongs to a message sent
+    by the bot, the field message will be
+    present, unless the field inline_message_id is used instead
+    as specified by the parameter callback_query_mode of the
+    method setMySettings. If the button belongs to a
+    message sent via the bot (in inline mode),
+    the field inline_message_id will be present. Exactly one
+    of the fields data or game_short_name will be
+    present.
 
     Reference: https://core.telegram.org/bots/api#callbackquery
     """
@@ -4004,7 +4027,7 @@ class RichBlockExpandableBlockQuotation(BaseModel):
     """
 
     type: Literal["expandable_blockquote"] = "expandable_blockquote"
-    text: RichText
+    blocks: List[RichBlock]
     credit: Optional[RichText] = Field(default=None) 
 
 class RichBlockPullQuotation(BaseModel):
@@ -4310,7 +4333,7 @@ class InputRichBlockExpandableBlockQuotation(BaseModel):
     """
 
     type: Literal["expandable_blockquote"] = "expandable_blockquote"
-    text: RichText
+    blocks: List[InputRichBlock]
     credit: Optional[RichText] = Field(default=None) 
 
 class InputRichBlockPullQuotation(BaseModel):
@@ -5981,6 +6004,7 @@ _PassportElementErrorAdapter = TypeAdapter(PassportElementError)
 
 Update.model_rebuild()
 WebhookInfo.model_rebuild()
+BotFullInfo.model_rebuild()
 User.model_rebuild()
 Chat.model_rebuild()
 ChatFullInfo.model_rebuild()

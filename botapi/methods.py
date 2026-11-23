@@ -10,6 +10,7 @@ from typing import Union, Optional, List
 from botapi.types import (
     Update,
     WebhookInfo,
+    BotFullInfo,
     User,
     Chat,
     ChatFullInfo,
@@ -556,17 +557,17 @@ class Methods:
 
     async def get_me(
         self: botapi.BotAPI,
-    ) -> Optional[User]:
+    ) -> Optional[BotFullInfo]:
         """
         A simple method for testing your bot's authentication
-        token. Requires no parameters. Returns basic information about
-        the bot in form of a User object.
+        token. Requires no parameters. Returns information about the
+        bot in form of a BotFullInfo object.
 
         Reference: https://core.telegram.org/bots/api#getme
         """
 
         response = await self._send_request("getMe", {})
-        return User.model_validate(response)
+        return BotFullInfo.model_validate(response)
 
     async def log_out(
         self: botapi.BotAPI,
@@ -3051,10 +3052,11 @@ class Methods:
     ) -> Optional[bool]:
         """
         Use this method to send answers to callback
-        queries sent from inline keyboards. The answer will
-        be displayed to the user as a notification
-        at the top of the chat screen or
-        as an alert. On success, True is returned.
+        queries sent from inline keyboards or rich messages.
+        The answer will be displayed to the user
+        as a notification at the top of the
+        chat screen or as an alert. On success,
+        True is returned.
 
         Reference: https://core.telegram.org/bots/api#answercallbackquery
         """
@@ -3216,6 +3218,51 @@ class Methods:
             "user_id": user_id,
             "is_access_restricted": is_access_restricted,
             "added_user_ids": added_user_ids,
+        })
+        return response
+
+    async def set_my_settings(
+        self: botapi.BotAPI,
+        supports_inline_queries: Optional[bool] = None,
+        inline_query_placeholder: Optional[str] = None,
+        needs_inline_query_location: Optional[bool] = None,
+        inline_feedback_share_denominator: Optional[int] = None,
+        can_join_groups: Optional[bool] = None,
+        can_read_all_group_messages: Optional[bool] = None,
+        can_connect_to_business: Optional[bool] = None,
+        can_manage_bots: Optional[bool] = None,
+        supports_guest_queries: Optional[bool] = None,
+        supports_join_request_queries: Optional[bool] = None,
+        has_topics_enabled: Optional[bool] = None,
+        allows_users_to_create_topics: Optional[bool] = None,
+        has_topic_sidebar: Optional[bool] = None,
+        can_communicate_with_bots: Optional[bool] = None,
+        callback_query_mode: Optional[str] = None,
+    ) -> Optional[bool]:
+        """
+        Use this method to change settings of the
+        bot. Settings that aren't specified remain unchanged. Returns
+        True on success.
+
+        Reference: https://core.telegram.org/bots/api#setmysettings
+        """
+
+        response = await self._send_request("setMySettings", {
+            "supports_inline_queries": supports_inline_queries,
+            "inline_query_placeholder": inline_query_placeholder,
+            "needs_inline_query_location": needs_inline_query_location,
+            "inline_feedback_share_denominator": inline_feedback_share_denominator,
+            "can_join_groups": can_join_groups,
+            "can_read_all_group_messages": can_read_all_group_messages,
+            "can_connect_to_business": can_connect_to_business,
+            "can_manage_bots": can_manage_bots,
+            "supports_guest_queries": supports_guest_queries,
+            "supports_join_request_queries": supports_join_request_queries,
+            "has_topics_enabled": has_topics_enabled,
+            "allows_users_to_create_topics": allows_users_to_create_topics,
+            "has_topic_sidebar": has_topic_sidebar,
+            "can_communicate_with_bots": can_communicate_with_bots,
+            "callback_query_mode": callback_query_mode,
         })
         return response
 
