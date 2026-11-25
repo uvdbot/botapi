@@ -418,8 +418,8 @@ class ReplyParameters(BaseModel):
 
 class EphemeralMessageParameters(BaseModel):
     """
-    This object describes the origin of a message.
-    It can be one of
+    Describes the parameters of an ephemeral message to
+    be sent.
 
     Reference: https://core.telegram.org/bots/api#ephemeralmessageparameters
     """
@@ -1223,9 +1223,9 @@ class ForumTopicReopened(BaseModel):
 
 class GeneralForumTopicHidden(BaseModel):
     """
-    This object represents a service message about General
-    forum topic hidden in the chat. Currently holds
-    no information.
+    This object represents a service message about the
+    General forum topic hidden in the chat. Currently
+    holds no information.
 
     Reference: https://core.telegram.org/bots/api#generalforumtopichidden
     """
@@ -1235,9 +1235,9 @@ class GeneralForumTopicHidden(BaseModel):
 
 class GeneralForumTopicUnhidden(BaseModel):
     """
-    This object represents a service message about General
-    forum topic unhidden in the chat. Currently holds
-    no information.
+    This object represents a service message about the
+    General forum topic unhidden in the chat. Currently
+    holds no information.
 
     Reference: https://core.telegram.org/bots/api#generalforumtopicunhidden
     """
@@ -1574,7 +1574,7 @@ class DirectMessagesTopic(BaseModel):
 
 class UserProfilePhotos(BaseModel):
     """
-    This object represent a user's profile pictures.
+    This object represents a user's profile pictures.
 
     Reference: https://core.telegram.org/bots/api#userprofilephotos
     """
@@ -1684,8 +1684,8 @@ class KeyboardButtonRequestChat(BaseModel):
     a suitable chat. Information about the selected chat
     will be shared with the bot when the
     corresponding button is pressed. The bot will be
-    granted requested rights in the chat if appropriate.
-    More about requesting chats ».
+    granted the requested rights in the chat if
+    appropriate. More about requesting chats ».
 
     Reference: https://core.telegram.org/bots/api#keyboardbuttonrequestchat
     """
@@ -1719,9 +1719,9 @@ class KeyboardButtonRequestManagedBot(BaseModel):
 
 class KeyboardButtonPollType(BaseModel):
     """
-    This object represents type of a poll, which
-    is allowed to be created and sent when
-    the corresponding button is pressed.
+    This object represents the type of a poll,
+    which is allowed to be created and sent
+    when the corresponding button is pressed.
 
     Reference: https://core.telegram.org/bots/api#keyboardbuttonpolltype
     """
@@ -1963,7 +1963,7 @@ class ForceReply(BaseModel):
     be extremely useful if you want to create
     user-friendly step-by-step interfaces without having to sacrifice privacy
     mode. Not supported in channels and for messages
-    sent on behalf of a user account.
+    sent on behalf of a business account.
 
     Reference: https://core.telegram.org/bots/api#forcereply
     """
@@ -2267,7 +2267,7 @@ class BusinessOpeningHours(BaseModel):
 class UserRating(BaseModel):
     """
     This object describes the rating of a user
-    based on their Telegram Star spendings.
+    based on their Telegram Star spending.
 
     Reference: https://core.telegram.org/bots/api#userrating
     """
@@ -2628,7 +2628,7 @@ class Gift(BaseModel):
 
 class Gifts(BaseModel):
     """
-    This object represent a list of gifts.
+    This object represents a list of gifts.
 
     Reference: https://core.telegram.org/bots/api#gifts
     """
@@ -4021,7 +4021,7 @@ class RichBlockBlockQuotation(BaseModel):
 class RichBlockExpandableBlockQuotation(BaseModel):
     """
     A block quotation, corresponding to the HTML tag
-    <blockquote> with custom attribute "expandable".
+    <blockquote> with the custom attribute "expandable".
 
     Reference: https://core.telegram.org/bots/api#richblockexpandableblockquotation
     """
@@ -4200,7 +4200,7 @@ class RichBlockThinking(BaseModel):
     """
     A block with a “Thinking…” placeholder, corresponding to
     the custom HTML tag <tg-thinking>. The block may
-    be used only in sendRichMessageDraft, therefore it can't
+    be used only in sendRichMessageDraft; therefore, it can't
     be received in messages. See https://t.me/addemoji/AIActions for examples
     of custom emoji that are recommended for usage
     in the block.
@@ -4327,7 +4327,7 @@ class InputRichBlockBlockQuotation(BaseModel):
 class InputRichBlockExpandableBlockQuotation(BaseModel):
     """
     A block quotation, corresponding to the HTML tag
-    <blockquote> with custom attribute "expandable".
+    <blockquote> with the custom attribute "expandable".
 
     Reference: https://core.telegram.org/bots/api#inputrichblockexpandableblockquotation
     """
@@ -4506,7 +4506,7 @@ class InputRichBlockThinking(BaseModel):
     """
     A block with a “Thinking…” placeholder, corresponding to
     the custom HTML tag <tg-thinking>. The block may
-    be used only in sendRichMessageDraft, therefore it can't
+    be used only in sendRichMessageDraft; therefore, it can't
     be received in messages. See https://t.me/addemoji/AIActions for examples
     of custom emoji that are recommended for usage
     in the block.
@@ -4569,9 +4569,9 @@ class InlineQueryResultPhoto(BaseModel):
     """
     Represents a link to a photo. By default,
     this photo will be sent by the user
-    with optional caption. Alternatively, you can use input_message_content
-    to send a message with the specified content
-    instead of the photo.
+    with an optional caption. Alternatively, you can use
+    input_message_content to send a message with the specified
+    content instead of the photo.
 
     Reference: https://core.telegram.org/bots/api#inlinequeryresultphoto
     """
@@ -4595,9 +4595,10 @@ class InlineQueryResultGif(BaseModel):
     """
     Represents a link to an animated GIF file.
     By default, this animated GIF file will be
-    sent by the user with optional caption. Alternatively,
-    you can use input_message_content to send a message
-    with the specified content instead of the animation.
+    sent by the user with an optional caption.
+    Alternatively, you can use input_message_content to send a
+    message with the specified content instead of the
+    animation.
 
     Reference: https://core.telegram.org/bots/api#inlinequeryresultgif
     """
@@ -4623,9 +4624,9 @@ class InlineQueryResultMpeg4Gif(BaseModel):
     Represents a link to a video animation (H.264/MPEG-4
     AVC video without sound). By default, this animated
     MPEG-4 file will be sent by the user
-    with optional caption. Alternatively, you can use input_message_content
-    to send a message with the specified content
-    instead of the animation.
+    with an optional caption. Alternatively, you can use
+    input_message_content to send a message with the specified
+    content instead of the animation.
 
     Reference: https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
     """
@@ -4705,7 +4706,7 @@ class InlineQueryResultVoice(BaseModel):
     this voice recording will be sent by the
     user. Alternatively, you can use input_message_content to send
     a message with the specified content instead of
-    the the voice message.
+    the voice message.
 
     Reference: https://core.telegram.org/bots/api#inlinequeryresultvoice
     """
@@ -4866,8 +4867,8 @@ class InlineQueryResultCachedGif(BaseModel):
     stored on the Telegram servers. By default, this
     animated GIF file will be sent by the
     user with an optional caption. Alternatively, you can
-    use input_message_content to send a message with specified
-    content instead of the animation.
+    use input_message_content to send a message with the
+    specified content instead of the animation.
 
     Reference: https://core.telegram.org/bots/api#inlinequeryresultcachedgif
     """
@@ -5554,8 +5555,8 @@ class PassportElementErrorReverseSide(BaseModel):
     """
     Represents an issue with the reverse side of
     a document. The error is considered resolved when
-    the file with reverse side of the document
-    changes.
+    the file with the reverse side of the
+    document changes.
 
     Reference: https://core.telegram.org/bots/api#passportelementerrorreverseside
     """
@@ -5625,7 +5626,7 @@ class PassportElementErrorTranslationFiles(BaseModel):
     """
     Represents an issue with the translated version of
     a document. The error is considered resolved when
-    a file with the document translation change.
+    a file with the document translation changes.
 
     Reference: https://core.telegram.org/bots/api#passportelementerrortranslationfiles
     """
@@ -5652,7 +5653,7 @@ class PassportElementErrorUnspecified(BaseModel):
 class Game(BaseModel):
     """
     This object represents a game. Use BotFather to
-    create and edit games, their short names will
+    create and edit games; their short names will
     act as unique identifiers.
 
     Reference: https://core.telegram.org/bots/api#game

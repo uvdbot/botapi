@@ -507,7 +507,7 @@ class Methods:
         of an unsuccessful request (a request with response
         HTTP status code different from 2XY), we will
         repeat the request and give up after a
-        reasonable amount of attempts. Returns True on success.
+        reasonable number of attempts. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#setwebhook
         """
@@ -544,10 +544,11 @@ class Methods:
         self: botapi.BotAPI,
     ) -> Optional[WebhookInfo]:
         """
-        Use this method to get current webhook status.
-        Requires no parameters. On success, returns a WebhookInfo
-        object. If the bot is using getUpdates, will
-        return an object with the url field empty.
+        Use this method to get the current webhook
+        status. Requires no parameters. On success, returns a
+        WebhookInfo object. If the bot is using getUpdates,
+        it will return an object with the url
+        field empty.
 
         Reference: https://core.telegram.org/bots/api#getwebhookinfo
         """
@@ -561,7 +562,7 @@ class Methods:
         """
         A simple method for testing your bot's authentication
         token. Requires no parameters. Returns information about the
-        bot in form of a BotFullInfo object.
+        bot in the form of a BotFullInfo object.
 
         Reference: https://core.telegram.org/bots/api#getme
         """
@@ -576,11 +577,11 @@ class Methods:
         Use this method to log out from the
         cloud Bot API server before launching the bot
         locally. You must log out the bot before
-        running it locally, otherwise there is no guarantee
+        running it locally; otherwise, there is no guarantee
         that the bot will receive updates. After a
         successful call, you can immediately log in on
         a local server, but will not be able
-        to log in back to the cloud Bot
+        to log back in to the cloud Bot
         API server for 10 minutes. Returns True on
         success. Requires no parameters.
 
@@ -953,7 +954,7 @@ class Methods:
         the .MP3 or .M4A format. On success, the
         sent Message is returned. Bots can currently send
         audio files of up to 50 MB in
-        size, this limit may be changed in the
+        size; this limit may be changed in the
         future.
 
         Reference: https://core.telegram.org/bots/api#sendaudio
@@ -1008,7 +1009,7 @@ class Methods:
         Use this method to send general files. On
         success, the sent Message is returned. Bots can
         currently send files of any type of up
-        to 50 MB in size, this limit may
+        to 50 MB in size; this limit may
         be changed in the future.
 
         Reference: https://core.telegram.org/bots/api#senddocument
@@ -1065,11 +1066,11 @@ class Methods:
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
         """
-        Use this method to send video files, Telegram
+        Use this method to send video files; Telegram
         clients support MPEG4 videos (other formats may be
         sent as Document). On success, the sent Message
         is returned. Bots can currently send video files
-        of up to 50 MB in size, this
+        of up to 50 MB in size; this
         limit may be changed in the future.
 
         Reference: https://core.telegram.org/bots/api#sendvideo
@@ -1134,7 +1135,7 @@ class Methods:
         or H.264/MPEG-4 AVC video without sound). On success,
         the sent Message is returned. Bots can currently
         send animation files of up to 50 MB
-        in size, this limit may be changed in
+        in size; this limit may be changed in
         the future.
 
         Reference: https://core.telegram.org/bots/api#sendanimation
@@ -1196,7 +1197,7 @@ class Methods:
         sent as Audio or Document). On success, the
         sent Message is returned. Bots can currently send
         voice messages of up to 50 MB in
-        size, this limit may be changed in the
+        size; this limit may be changed in the
         future.
 
         Reference: https://core.telegram.org/bots/api#sendvoice
@@ -1244,8 +1245,8 @@ class Methods:
     ) -> Optional[Message]:
         """
         Use this method to send a rounded square
-        MPEG4 video of up to 1 minute long.
-        On success, the sent Message is returned.
+        MPEG4 video up to 1 minute long. On
+        success, the sent Message is returned.
 
         Reference: https://core.telegram.org/bots/api#sendvideonote
         """
@@ -1344,12 +1345,12 @@ class Methods:
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
         """
-        Use this method to send again a shared
-        widget created by the bot. Currently, in the
-        production environment, widgets can be sent only to
-        private chats, and sent widgets automatically have protected
-        content and therefore can't be forwarded. On success,
-        the sent Message is returned.
+        Use this method to resend a shared widget
+        created by the bot. Currently, in the production
+        environment, widgets can be sent only to private
+        chats, and sent widgets automatically have protected content
+        and therefore can't be forwarded. On success, the
+        sent Message is returned.
 
         Reference: https://core.telegram.org/bots/api#sendsharedwidget
         """
@@ -1436,8 +1437,8 @@ class Methods:
         """
         Use this method to send a group of
         photos, live photos, videos, documents or audios as
-        an album. Documents and audio files can be
-        only grouped in an album with messages of
+        an album. Documents and audio files can only
+        be grouped in an album with messages of
         the same type. On success, an Array of
         Message objects that were sent is returned.
 
@@ -1480,8 +1481,9 @@ class Methods:
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply]] = None,
     ) -> Optional[Message]:
         """
-        Use this method to send point on the
-        map. On success, the sent Message is returned.
+        Use this method to send a point on
+        the map. On success, the sent Message is
+        returned.
 
         Reference: https://core.telegram.org/bots/api#sendlocation
         """
@@ -2184,7 +2186,7 @@ class Methods:
         for all members. The bot must be an
         administrator in the group or a supergroup for
         this to work and must have the can_restrict_members
-        administrator rights. Returns True on success.
+        administrator right. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#setchatpermissions
         """
@@ -2231,8 +2233,8 @@ class Methods:
         an administrator in the chat for this to
         work and must have the appropriate administrator rights.
         The link can be revoked using the method
-        revokeChatInviteLink. Returns the new invite link as ChatInviteLink
-        object.
+        revokeChatInviteLink. Returns the new invite link as a
+        ChatInviteLink object.
 
         Reference: https://core.telegram.org/bots/api#createchatinvitelink
         """
@@ -2286,7 +2288,7 @@ class Methods:
         """
         Use this method to create a subscription invite
         link for a channel chat. The bot must
-        have the can_invite_users administrator rights. The link can
+        have the can_invite_users administrator right. The link can
         be edited using the method editChatSubscriptionInviteLink or revoked
         using the method revokeChatInviteLink. Returns the new invite
         link as a ChatInviteLink object.
@@ -2311,7 +2313,7 @@ class Methods:
         """
         Use this method to edit a subscription invite
         link created by the bot. The bot must
-        have the can_invite_users administrator rights. Returns the edited
+        have the can_invite_users administrator right. Returns the edited
         invite link as a ChatInviteLink object.
 
         Reference: https://core.telegram.org/bots/api#editchatsubscriptioninvitelink
@@ -2336,7 +2338,7 @@ class Methods:
         The bot must be an administrator in the
         chat for this to work and must have
         the appropriate administrator rights. Returns the revoked invite
-        link as ChatInviteLink object.
+        link as a ChatInviteLink object.
 
         Reference: https://core.telegram.org/bots/api#revokechatinvitelink
         """
@@ -2812,14 +2814,14 @@ class Methods:
         icon_custom_emoji_id: Optional[str] = None,
     ) -> Optional[bool]:
         """
-        Use this method to edit name and icon
-        of a topic in a forum supergroup chat
-        or a private chat with a user. In
-        the case of a supergroup chat the bot
-        must be an administrator in the chat for
-        this to work and must have the can_manage_topics
-        administrator rights, unless it is the creator of
-        the topic. Returns True on success.
+        Use this method to edit the name and
+        icon of a topic in a forum supergroup
+        chat or a private chat with a user.
+        In the case of a supergroup chat the
+        bot must be an administrator in the chat
+        for this to work and must have the
+        can_manage_topics administrator right, unless it is the creator
+        of the topic. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#editforumtopic
         """
@@ -2842,7 +2844,7 @@ class Methods:
         in a forum supergroup chat. The bot must
         be an administrator in the chat for this
         to work and must have the can_manage_topics administrator
-        rights, unless it is the creator of the
+        right, unless it is the creator of the
         topic. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#closeforumtopic
@@ -2864,7 +2866,7 @@ class Methods:
         in a forum supergroup chat. The bot must
         be an administrator in the chat for this
         to work and must have the can_manage_topics administrator
-        rights, unless it is the creator of the
+        right, unless it is the creator of the
         topic. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#reopenforumtopic
@@ -2888,7 +2890,7 @@ class Methods:
         user. In the case of a supergroup chat
         the bot must be an administrator in the
         chat for this to work and must have
-        the can_delete_messages administrator rights. Returns True on success.
+        the can_delete_messages administrator right. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#deleteforumtopic
         """
@@ -2933,7 +2935,7 @@ class Methods:
         the 'General' topic in a forum supergroup chat.
         The bot must be an administrator in the
         chat for this to work and must have
-        the can_manage_topics administrator rights. Returns True on success.
+        the can_manage_topics administrator right. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#editgeneralforumtopic
         """
@@ -2953,7 +2955,7 @@ class Methods:
         topic in a forum supergroup chat. The bot
         must be an administrator in the chat for
         this to work and must have the can_manage_topics
-        administrator rights. Returns True on success.
+        administrator right. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#closegeneralforumtopic
         """
@@ -2972,7 +2974,7 @@ class Methods:
         topic in a forum supergroup chat. The bot
         must be an administrator in the chat for
         this to work and must have the can_manage_topics
-        administrator rights. The topic will be automatically unhidden
+        administrator right. The topic will be automatically unhidden
         if it was hidden. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#reopengeneralforumtopic
@@ -2992,7 +2994,7 @@ class Methods:
         in a forum supergroup chat. The bot must
         be an administrator in the chat for this
         to work and must have the can_manage_topics administrator
-        rights. The topic will be automatically closed if
+        right. The topic will be automatically closed if
         it was open. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#hidegeneralforumtopic
@@ -3012,7 +3014,7 @@ class Methods:
         in a forum supergroup chat. The bot must
         be an administrator in the chat for this
         to work and must have the can_manage_topics administrator
-        rights. Returns True on success.
+        right. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#unhidegeneralforumtopic
         """
@@ -3240,9 +3242,9 @@ class Methods:
         callback_query_mode: Optional[str] = None,
     ) -> Optional[bool]:
         """
-        Use this method to change settings of the
-        bot. Settings that aren't specified remain unchanged. Returns
-        True on success.
+        Use this method to change the settings of
+        the bot. Settings that aren't specified remain unchanged.
+        Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#setmysettings
         """
@@ -3701,9 +3703,9 @@ class Methods:
         message_id: int,
     ) -> Optional[bool]:
         """
-        Marks incoming message as read on behalf of
-        a business account. Requires the can_read_messages business bot
-        right. Returns True on success.
+        Marks an incoming message as read on behalf
+        of a business account. Requires the can_read_messages business
+        bot right. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#readbusinessmessage
         """
@@ -3721,7 +3723,7 @@ class Methods:
         message_ids: List[int],
     ) -> Optional[bool]:
         """
-        Delete messages on behalf of a business account.
+        Deletes messages on behalf of a business account.
         Requires the can_delete_sent_messages business bot right to delete
         messages sent by the bot itself, or the
         can_delete_all_messages business bot right to delete any message.
@@ -3744,7 +3746,7 @@ class Methods:
     ) -> Optional[bool]:
         """
         Changes the first and last name of a
-        managed business account. Requires the can_change_name business bot
+        managed business account. Requires the can_edit_name business bot
         right. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#setbusinessaccountname
@@ -3764,7 +3766,7 @@ class Methods:
     ) -> Optional[bool]:
         """
         Changes the username of a managed business account.
-        Requires the can_change_username business bot right. Returns True
+        Requires the can_edit_username business bot right. Returns True
         on success.
 
         Reference: https://core.telegram.org/bots/api#setbusinessaccountusername
@@ -3783,7 +3785,7 @@ class Methods:
     ) -> Optional[bool]:
         """
         Changes the bio of a managed business account.
-        Requires the can_change_bio business bot right. Returns True
+        Requires the can_edit_bio business bot right. Returns True
         on success.
 
         Reference: https://core.telegram.org/bots/api#setbusinessaccountbio
@@ -4066,9 +4068,9 @@ class Methods:
     ) -> Optional[bool]:
         """
         Transfers an owned unique gift to another user.
-        Requires the can_transfer_and_upgrade_gifts business bot right. Requires can_transfer_stars
-        business bot right if the transfer is paid.
-        Returns True on success.
+        Requires the can_transfer_and_upgrade_gifts business bot right. Requires the
+        can_transfer_stars business bot right if the transfer is
+        paid. Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#transfergift
         """
@@ -4296,12 +4298,12 @@ class Methods:
         link_preview_options: Optional[LinkPreviewOptions] = None,
         rich_message: Optional[InputRichMessage] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
+    ) -> Optional[Message]:
         """
         Use this method to edit text, rich and
         game messages. On success, if the edited message
         is not an inline message, the edited Message
-        is returned, otherwise True is returned. Note that
+        is returned; otherwise, True is returned. Note that
         business messages that were not sent by the
         bot and do not contain an inline keyboard
         can only be edited within 48 hours from
@@ -4322,11 +4324,7 @@ class Methods:
             "rich_message": rich_message,
             "reply_markup": reply_markup,
         })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
+        return Message.model_validate(response)
 
     async def edit_message_caption(
         self: botapi.BotAPI,
@@ -4339,12 +4337,12 @@ class Methods:
         caption_entities: Optional[List[MessageEntity]] = None,
         show_caption_above_media: Optional[bool] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
+    ) -> Optional[Message]:
         """
         Use this method to edit captions of messages.
         On success, if the edited message is not
-        an inline message, the edited Message is returned,
-        otherwise True is returned. Note that business messages
+        an inline message, the edited Message is returned;
+        otherwise, True is returned. Note that business messages
         that were not sent by the bot and
         do not contain an inline keyboard can only
         be edited within 48 hours from the time
@@ -4364,11 +4362,7 @@ class Methods:
             "show_caption_above_media": show_caption_above_media,
             "reply_markup": reply_markup,
         })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
+        return Message.model_validate(response)
 
     async def edit_message_media(
         self: botapi.BotAPI,
@@ -4378,26 +4372,26 @@ class Methods:
         message_id: Optional[int] = None,
         inline_message_id: Optional[str] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
+    ) -> Optional[Message]:
         """
         Use this method to edit animation, audio, document,
         live photo, photo, or video messages, or to
         replace a text or a rich message with
-        a media. If a message is part of
-        a message album, then it can be edited
-        only to an audio for audio albums, only
-        to a document for document albums and to
-        a photo, a live photo, or a video
-        otherwise. When an inline message is edited, a
-        new file can't be uploaded; use a previously
-        uploaded file via its file_id or specify a
-        URL. On success, if the edited message is
-        not an inline message, the edited Message is
-        returned, otherwise True is returned. Note that business
-        messages that were not sent by the bot
-        and do not contain an inline keyboard can
-        only be edited within 48 hours from the
-        time they were sent.
+        media. If a message is part of a
+        message album, then it can be edited only
+        to an audio for audio albums, only to
+        a document for document albums and to a
+        photo, a live photo, or a video otherwise.
+        When an inline message is edited, a new
+        file can't be uploaded; use a previously uploaded
+        file via its file_id or specify a URL.
+        On success, if the edited message is not
+        an inline message, the edited Message is returned;
+        otherwise, True is returned. Note that business messages
+        that were not sent by the bot and
+        do not contain an inline keyboard can only
+        be edited within 48 hours from the time
+        they were sent.
 
         Reference: https://core.telegram.org/bots/api#editmessagemedia
         """
@@ -4410,11 +4404,7 @@ class Methods:
             "media": media,
             "reply_markup": reply_markup,
         })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
+        return Message.model_validate(response)
 
     async def edit_message_live_location(
         self: botapi.BotAPI,
@@ -4429,14 +4419,14 @@ class Methods:
         heading: Optional[int] = None,
         proximity_alert_radius: Optional[int] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
+    ) -> Optional[Message]:
         """
         Use this method to edit live location messages.
         A location can be edited until its live_period
         expires or editing is explicitly disabled by a
         call to stopMessageLiveLocation. On success, if the edited
         message is not an inline message, the edited
-        Message is returned, otherwise True is returned.
+        Message is returned; otherwise, True is returned.
 
         Reference: https://core.telegram.org/bots/api#editmessagelivelocation
         """
@@ -4454,11 +4444,7 @@ class Methods:
             "proximity_alert_radius": proximity_alert_radius,
             "reply_markup": reply_markup,
         })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
+        return Message.model_validate(response)
 
     async def stop_message_live_location(
         self: botapi.BotAPI,
@@ -4467,12 +4453,12 @@ class Methods:
         message_id: Optional[int] = None,
         inline_message_id: Optional[str] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
+    ) -> Optional[Message]:
         """
         Use this method to stop updating a live
         location message before live_period expires. On success, if
         the message is not an inline message, the
-        edited Message is returned, otherwise True is returned.
+        edited Message is returned; otherwise, True is returned.
 
         Reference: https://core.telegram.org/bots/api#stopmessagelivelocation
         """
@@ -4484,11 +4470,7 @@ class Methods:
             "inline_message_id": inline_message_id,
             "reply_markup": reply_markup,
         })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
+        return Message.model_validate(response)
 
     async def edit_message_checklist(
         self: botapi.BotAPI,
@@ -4572,12 +4554,12 @@ class Methods:
         message_id: Optional[int] = None,
         inline_message_id: Optional[str] = None,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
-    ) -> Optional[Union[Message, bool]]:
+    ) -> Optional[Message]:
         """
         Use this method to edit only the reply
         markup of messages. On success, if the edited
         message is not an inline message, the edited
-        Message is returned, otherwise True is returned. Note
+        Message is returned; otherwise, True is returned. Note
         that business messages that were not sent by
         the bot and do not contain an inline
         keyboard can only be edited within 48 hours
@@ -4593,11 +4575,7 @@ class Methods:
             "inline_message_id": inline_message_id,
             "reply_markup": reply_markup,
         })
-        try:
-            return Message.model_validate(response)
-        except ValidationError:
-            pass
-        return response
+        return Message.model_validate(response)
 
     async def stop_poll(
         self: botapi.BotAPI,
@@ -4805,12 +4783,12 @@ class Methods:
         chats.- Bots granted can_post_messages permissions can delete outgoing
         messages in channels.- If the bot is an
         administrator of a group, it can delete any
-        message there.- If the bot has can_delete_messages administrator
-        right in a supergroup or a channel, it
-        can delete any message there.- If the bot
-        has can_manage_direct_messages administrator right in a channel, it
-        can delete any message in the corresponding direct
-        messages chat.Returns True on success.
+        message there.- If the bot has the can_delete_messages
+        administrator right in a supergroup or a channel,
+        it can delete any message there.- If the
+        bot has the can_manage_direct_messages administrator right in a
+        channel, it can delete any message in the
+        corresponding direct messages chat.Returns True on success.
 
         Reference: https://core.telegram.org/bots/api#deletemessage
         """
@@ -5626,7 +5604,7 @@ class Methods:
     ) -> Optional[bool]:
         """
         Informs a user that some of the Telegram
-        Passport elements they provided contains errors. The user
+        Passport elements they provided contain errors. The user
         will not be able to re-submit their Passport
         to you until the errors are fixed (the
         contents of the field for which you returned
@@ -5689,8 +5667,8 @@ class Methods:
         Use this method to set the score of
         the specified user in a game message. On
         success, if the message is not an inline
-        message, the Message is returned, otherwise True is
-        returned. Returns an error, if the new score
+        message, the Message is returned; otherwise, True is
+        returned. Returns an error if the new score
         is not greater than the user's current score
         in the chat and force is False.
 
